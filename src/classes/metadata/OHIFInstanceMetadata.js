@@ -1,4 +1,4 @@
-import { OHIF } from 'meteor/ohif:core';
+
 import { InstanceMetadata } from './InstanceMetadata';
 import { DICOMTagDescriptions } from '../../lib/DICOMTagDescriptions.js';
 

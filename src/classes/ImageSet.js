@@ -1,4 +1,3 @@
-import { OHIF } from 'meteor/ohif:core';
 import { OHIFError } from './OHIFError';
 
 const OBJECT = 'object';
@@ -10,60 +9,57 @@ const OBJECT = 'object';
  * indiscriminately, but this should be changed).
  */
 export class ImageSet {
+  constructor(images) {
+    if (Array.isArray(images) !== true) {
+      throw new OHIFError('ImageSet expects an array of images');
+    }
 
-    constructor(images) {
+    // @property "images"
+    Object.defineProperty(this, 'images', {
+      enumerable: false,
+      configurable: false,
+      writable: false,
+      value: images
+    });
 
-        if (Array.isArray(images) !== true) {
-            throw new OHIFError('ImageSet expects an array of images');
+    // @property "uid"
+    Object.defineProperty(this, 'uid', {
+      enumerable: false,
+      configurable: false,
+      writable: false,
+      value: OHIF.utils.guid() // Unique ID of the instance
+    });
+  }
+
+  getUID() {
+    return this.uid;
+  }
+
+  setAttribute(attribute, value) {
+    this[attribute] = value;
+  }
+
+  getAttribute(attribute) {
+    return this[attribute];
+  }
+
+  setAttributes(attributes) {
+    if (typeof attributes === OBJECT && attributes !== null) {
+      const imageSet = this,
+        hasOwn = Object.prototype.hasOwnProperty;
+      for (let attribute in attributes) {
+        if (hasOwn.call(attributes, attribute)) {
+          imageSet[attribute] = attributes[attribute];
         }
-
-        // @property "images"
-        Object.defineProperty(this, 'images', {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: images
-        });
-
-        // @property "uid"
-        Object.defineProperty(this, 'uid', {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: OHIF.utils.guid() // Unique ID of the instance
-        });
-
+      }
     }
+  }
 
-    getUID() {
-        return this.uid;
-    }
+  getImage(index) {
+    return this.images[index];
+  }
 
-    setAttribute(attribute, value) {
-        this[attribute] = value;
-    }
-
-    getAttribute(attribute) {
-        return this[attribute];
-    }
-
-    setAttributes(attributes) {
-        if (typeof attributes === OBJECT && attributes !== null) {
-            const imageSet = this, hasOwn = Object.prototype.hasOwnProperty;
-            for (let attribute in attributes) {
-                if (hasOwn.call(attributes, attribute)) {
-                    imageSet[attribute] = attributes[attribute];
-                }
-            }
-        }
-    }
-
-    getImage(index) {
-        return this.images[index];
-    }
-
-    sortBy(sortingCallback) {
-        return this.images.sort(sortingCallback);
-    }
-
+  sortBy(sortingCallback) {
+    return this.images.sort(sortingCallback);
+  }
 }

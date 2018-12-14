@@ -1,4 +1,4 @@
-import { OHIF } from 'meteor/ohif:core';
+
 
 import { OHIFPlugin } from './OHIFPlugin';
 import { ViewportPlugin } from './ViewportPlugin';

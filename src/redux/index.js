@@ -2,7 +2,7 @@ import './actions.js';
 import combinedReducer from './reducers';
 
 const redux = {
-    combinedReducer
+  combinedReducer
 };
 
 export default redux;

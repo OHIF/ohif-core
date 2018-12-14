@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema'
-import { Match } from 'meteor/check';
 
 /*
  Extend the available options on schema definitions:
