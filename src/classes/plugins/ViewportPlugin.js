@@ -58,7 +58,7 @@ export class ViewportPlugin extends OHIFPlugin {
         const { layoutManager } = OHIF.viewerbase;
         const viewportData = layoutManager.viewportData[viewportIndex];
         if (viewportData.plugin === this.name) {
-            OHIF.log.info(`setViewportToPlugin: Viewport ${viewportIndex} already set to plugin ${this.name}`);
+            log.info(`setViewportToPlugin: Viewport ${viewportIndex} already set to plugin ${this.name}`);
         }
 
         viewportData.plugin = this.name;
@@ -91,7 +91,7 @@ export class ViewportPlugin extends OHIFPlugin {
             return div.innerHTML.trim() === '';
         });
 
-        OHIF.log.info(`${this.name}: Initializing ${emptyPluginDivs.length} viewports`);
+        log.info(`${this.name}: Initializing ${emptyPluginDivs.length} viewports`);
 
         // Retrieve the list of all viewports, so we can figure out the viewport details
         const allViewports = Array.from(document.querySelectorAll('.viewportContainer'));

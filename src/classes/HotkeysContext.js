@@ -1,3 +1,5 @@
+import log from '../log.js';
+
 export class HotkeysContext {
   constructor(name, definitions, enabled) {
     this.name = name;
@@ -25,7 +27,7 @@ export class HotkeysContext {
     }
 
     if (!command) {
-      return OHIF.log.warn(`No command was defined for hotkey "${hotkey}"`);
+      return log.warn(`No command was defined for hotkey "${hotkey}"`);
     }
 
     const bindingKey = `keydown.hotkey.${this.name}.${command}`;

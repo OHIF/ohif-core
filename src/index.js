@@ -14,16 +14,12 @@ import string from './string.js';
 import user from './user.js';
 import object from './object.js';
 import DICOMWeb from './DICOMWeb';
-import getCurrentServer from './lib/getCurrentServer';
+import log from './log.js';
 
 const viewer = {};
-const servers = {
-  getCurrentServer
-};
 
 const OHIF = {
   viewer,
-  servers,
 	utils,
 	studies,
 	redux,
@@ -36,12 +32,13 @@ const OHIF = {
   ui,
   user,
   object,
-	commands
+	commands,
+  log,
+  DICOMWeb
 }
 
 export {
   viewer, // TODO: Remove this
-  servers,
 	utils,
 	studies,
 	redux,
@@ -54,7 +51,9 @@ export {
   ui,
   user,
   object,
-	commands
+	commands,
+  log,
+  DICOMWeb
 };
 
 export { OHIF };

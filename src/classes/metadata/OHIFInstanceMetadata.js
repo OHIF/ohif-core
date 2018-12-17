@@ -1,6 +1,7 @@
-
 import { InstanceMetadata } from './InstanceMetadata';
 import { DICOMTagDescriptions } from '../../lib/DICOMTagDescriptions.js';
+import { getImageId } from '../../utils/getImageId.js';
+// TODO: getImageId is duplicated in viewerbase and core
 
 export class OHIFInstanceMetadata extends InstanceMetadata {
 
@@ -90,7 +91,7 @@ export class OHIFInstanceMetadata extends InstanceMetadata {
     getImageId(frame, thumbnail) {
         // If _imageID is not cached, create it
         if (this._imageId === null) {
-            this._imageId = OHIF.viewerbase.getImageId(this.getData(), frame, thumbnail);
+            this._imageId = getImageId(this.getData(), frame, thumbnail);
         }
 
         return this._imageId;

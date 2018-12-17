@@ -1,3 +1,4 @@
+import log from '../log.js';
 import _ from 'underscore';
 
 export class CommandsManager {
@@ -11,7 +12,7 @@ export class CommandsManager {
   getContext(contextName) {
     const context = this.contexts[contextName];
     if (!context) {
-      return OHIF.log.warn(`No context found with name "${contextName}"`);
+      return log.warn(`No context found with name "${contextName}"`);
     }
 
     return context;
@@ -20,7 +21,7 @@ export class CommandsManager {
   getCurrentContext() {
     const contextName = OHIF.context.get();
     if (!contextName) {
-      return OHIF.log.warn('There is no selected context');
+      return log.warn('There is no selected context');
     }
 
     return this.getContext(contextName);
@@ -63,7 +64,7 @@ export class CommandsManager {
     if (!context) return;
     const definition = context[command];
     if (!definition) {
-      return OHIF.log.warn(
+      return log.warn(
         `Trying to set a disabled function to a command "${command}" that was not yet defined`
       );
     }
@@ -94,13 +95,13 @@ export class CommandsManager {
   run(command) {
     const definition = this.getDefinition(command);
     if (!definition) {
-      return OHIF.log.warn(`Command "${command}" not found in current context`);
+      return log.warn(`Command "${command}" not found in current context`);
     }
 
     const { action, params } = definition;
     if (this.isDisabled(command)) return;
     if (typeof action !== 'function') {
-      return OHIF.log.warn(`No action was defined for command "${command}"`);
+      return log.warn(`No action was defined for command "${command}"`);
     } else {
       const result = action(params);
       /*if (this.last.get() === command) {

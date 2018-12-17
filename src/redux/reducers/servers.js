@@ -5,8 +5,8 @@ const defaultState = {
 const servers = (state = defaultState, action) => {
     switch (action.type) {
         case 'ADD_SERVER':
-            const { servers } = stats;
-            const alreadyExists = servers.find(server.id === action.server.id);
+            const { servers } = state;
+            const alreadyExists = servers.find(server => server.id === action.server.id);
 
             if (alreadyExists) {
                 return state;
@@ -24,4 +24,4 @@ const servers = (state = defaultState, action) => {
     }
 };
 
-export default viewports;
+export default servers;

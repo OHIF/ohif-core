@@ -220,7 +220,7 @@ export class StackImagePositionOffsetSynchronizer {
       return imagePlane.rowCosines.clone().cross(imagePlane.columnCosines);
     } catch (error) {
       const errorMessage = error.message || error;
-      OHIF.log.info(
+      log.info(
         `StackImagePositionOffsetSynchronizer getViewportImageNormal: ${errorMessage}`
       );
     }

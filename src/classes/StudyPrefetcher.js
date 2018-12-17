@@ -1,3 +1,4 @@
+import log from '../log.js';
 import $ from 'jquery';
 import _ from 'underscore';
 
@@ -149,15 +150,11 @@ export class StudyPrefetcher {
   }
 
   prefetchDisplaySets() {
-    let config;
-    if (Meteor.settings && Meteor.settings.public && Meteor.settings.prefetch) {
-      config = Meteor.settings.public.prefetch;
-    } else {
-      config = {
-        order: 'closest',
-        displaySetCount: 1
-      };
-    }
+    // TODO: Allow passing in config
+    let config = {
+      order: 'closest',
+      displaySetCount: 1
+    };
 
     const displaySetsToPrefetch = this.getDisplaySetsToPrefetch(config);
     const imageIds = this.getImageIdsFromDisplaySets(displaySetsToPrefetch);
@@ -253,9 +250,7 @@ export class StudyPrefetcher {
 
     if (!getDisplaySets) {
       if (prefetchOrder) {
-        OHIF.log.warn(
-          `Invalid prefetch order configuration (${prefetchOrder})`
-        );
+        log.warn(`Invalid prefetch order configuration (${prefetchOrder})`);
       }
 
       return [];
@@ -358,7 +353,7 @@ export class StudyPrefetcher {
   }
 
   cacheFullHandler() {
-    OHIF.log.warn('Cache full');
+    log.warn('Cache full');
     this.stopPrefetching();
   }
 }

@@ -1,3 +1,4 @@
+import guid from '../utils/guid.js';
 import { OHIFError } from './OHIFError';
 
 const OBJECT = 'object';
@@ -27,7 +28,7 @@ export class ImageSet {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: OHIF.utils.guid() // Unique ID of the instance
+      value: guid() // Unique ID of the instance
     });
   }
 

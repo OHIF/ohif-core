@@ -1,3 +1,5 @@
+import Studies from './services/qido/Studies';
+
 const studySearchPromises = new Map();
 
 /**
@@ -6,21 +8,15 @@ const studySearchPromises = new Map();
  * @param {Object} filter Filter that will be used on search
  * @returns {Promise} resolved with an array of studies information or rejected with an error
  */
-export default function searchStudies(filter) {
+export default function searchStudies(server, filter) {
   const promiseKey = JSON.stringify(filter);
   if (studySearchPromises.has(promiseKey)) {
     return studySearchPromises.get(promiseKey);
   } else {
-    const promise = new Promise((resolve, reject) => {
-      const server = OHIF.servers.getCurrentServer();
+    const promise = Studies(server, filter);
 
-      OHIF.studies.services.QIDO.Studies(server, filter).then(
-        resolve,
-        reject
-      );
-    });
     studySearchPromises.set(promiseKey, promise);
 
     return promise;
   }
-};
+}

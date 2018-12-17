@@ -1,4 +1,5 @@
 // Important metadata classes
+import { retrieveStudyMetadata } from '../studies/retrieveStudyMetadata.js';
 const { OHIFError, metadata } = OHIF.viewerbase;
 const { StudySummary, StudyMetadata } = metadata;
 
@@ -9,8 +10,8 @@ export class OHIFStudyMetadataSource extends OHIF.viewerbase
    * @param  {String} studyInstanceUID Study InstanceUID
    * @return {Promise} A Promise object
    */
-  getByInstanceUID(studyInstanceUID) {
-    return OHIF.studies.retrieveStudyMetadata(studyInstanceUID);
+  getByInstanceUID(server, studyInstanceUID) {
+    return retrieveStudyMetadata(server, studyInstanceUID);
   }
 
   /**

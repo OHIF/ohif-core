@@ -1,9 +1,8 @@
-// Return an absolute URL with the page domain using sub path of ROOT_URL
-// to let multiple domains directed to the same server work
 export default function absoluteUrl(path) {
   let absolutePath = '/';
 
-  const absoluteUrl = Meteor.absoluteUrl();
+  // TODO: Find another way to get root url
+  const absoluteUrl = window.location.origin;
   const absoluteUrlParts = absoluteUrl.split('/');
 
   if (absoluteUrlParts.length > 4) {

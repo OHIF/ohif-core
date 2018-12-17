@@ -38,4 +38,4 @@ export default function getScrollbarSize() {
   document.body.removeChild(outer);
 
   return [w1 - w2, h1 - h2];
-};
+}

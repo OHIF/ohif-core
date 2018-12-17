@@ -1,3 +1,4 @@
+import log from '../log.js';
 import $ from 'jquery';
 
 //import { getInstanceClassDefaultViewport } from '../instanceClassSpecificViewport';
@@ -10,7 +11,7 @@ export class ResizeViewportManager {
 
   // Reposition Study Series Quick Switch based whether side bars are opened or not
   repositionStudySeriesQuickSwitch() {
-    OHIF.log.info('ResizeViewportManager repositionStudySeriesQuickSwitch');
+    log.info('ResizeViewportManager repositionStudySeriesQuickSwitch');
 
     // Stop here if viewer is not displayed
     const isViewer = Session.get('ViewerOpened');
@@ -59,7 +60,7 @@ export class ResizeViewportManager {
 
   // Relocate dialogs positions
   relocateDialogs() {
-    OHIF.log.info('ResizeViewportManager relocateDialogs');
+    log.info('ResizeViewportManager relocateDialogs');
 
     const $bottomRightDialogs = $(
       '#annotationDialog, #textMarkerOptionsDialog'
@@ -83,7 +84,7 @@ export class ResizeViewportManager {
 
   // Resize viewport scrollbars
   resizeScrollbars(element) {
-    OHIF.log.info('ResizeViewportManager resizeScrollbars');
+    log.info('ResizeViewportManager resizeScrollbars');
 
     const $currentOverlay = $(element).siblings('.imageViewerViewportOverlay');
     $currentOverlay.find('.scrollbar').trigger('rescale');
@@ -134,7 +135,7 @@ export class ResizeViewportManager {
   handleResize() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(() => {
-      OHIF.log.info('ResizeViewportManager resizeViewportElements');
+      log.info('ResizeViewportManager resizeViewportElements');
       this.resizeViewportElements();
     }, 100);
   }

@@ -1,8 +1,9 @@
-import './actions.js';
+import actions from './actions.js';
 import combinedReducer from './reducers';
 
 const redux = {
-  combinedReducer
+  combinedReducer,
+  actions
 };
 
 export default redux;

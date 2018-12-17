@@ -1,3 +1,5 @@
+import log from '../log.js';
+
 export default function handleError(error) {
   let { title, message } = error;
 
@@ -25,7 +27,7 @@ export default function handleError(error) {
     error || {}
   );
 
-  OHIF.log.error(error);
+  log.error(error);
   // TODO: Find a better way to handle errors instead of displaying a dialog for all of them.
   // OHIF.ui.showDialog('dialogForm', data);
-};
+}

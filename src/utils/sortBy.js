@@ -37,4 +37,4 @@ export default function sortBy() {
 
     return result;
   };
-};
+}

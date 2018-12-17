@@ -2,7 +2,7 @@ import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
 import _ from 'underscore';
 
-function getBoundingBox (context, textLines, x, y, options) {
+function getBoundingBox(context, textLines, x, y, options) {
   if (Object.prototype.toString.call(textLines) !== '[object Array]') {
     textLines = [textLines];
   }
@@ -47,7 +47,7 @@ function getBoundingBox (context, textLines, x, y, options) {
 
   // Return the bounding box so it can be used for pointNearHandle
   return boundingBox;
-};
+}
 
 function pixelToPage(element, position) {
   const enabledElement = cornerstone.getEnabledElement(element);
@@ -72,7 +72,7 @@ function pixelToPage(element, position) {
   result.y += canvasPosition.y;
 
   return result;
-};
+}
 
 function repositionTextBox(eventData, measurementData, config) {
   // Stop here if it's not a measurement creating
@@ -319,10 +319,6 @@ function repositionTextBox(eventData, measurementData, config) {
     const pixelPosition = cornerstone.pageToPixel(element, x, y);
     textBox[toolAxis] = pixelPosition[toolAxis];
   }
-};
+}
 
-export {
-  getBoundingBox,
-  pixelToPage,
-  repositionTextBox
-};
+export { getBoundingBox, pixelToPage, repositionTextBox };

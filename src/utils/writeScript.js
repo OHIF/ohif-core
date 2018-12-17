@@ -3,7 +3,7 @@ import absoluteUrl from './absoluteUrl';
 
 export default function writeScript(fileName, callback) {
   const script = document.createElement('script');
-  script.src = absoluteUrl(`/packages/ohif_polyfill/public/js/${fileName}`);
+  script.src = absoluteUrl(fileName);
   script.onload = () => {
     if (typeof callback === 'function') {
       callback(script);

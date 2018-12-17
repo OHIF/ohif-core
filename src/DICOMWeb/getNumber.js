@@ -5,17 +5,17 @@
  * @returns {*}
  */
 export default function getNumber(element, defaultValue) {
-    if (!element) {
-        return defaultValue;
-    }
-    // Value is not present if the attribute has a zero length value
-    if (!element.Value) {
-        return defaultValue;
-    }
-    // Sanity check to make sure we have at least one entry in the array.
-    if (!element.Value.length) {
-        return defaultValue;
-    }
+  if (!element) {
+    return defaultValue;
+  }
+  // Value is not present if the attribute has a zero length value
+  if (!element.Value) {
+    return defaultValue;
+  }
+  // Sanity check to make sure we have at least one entry in the array.
+  if (!element.Value.length) {
+    return defaultValue;
+  }
 
-    return parseFloat(element.Value[0]);
-};
+  return parseFloat(element.Value[0]);
+}

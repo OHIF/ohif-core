@@ -1981,13 +1981,6 @@ function repositionTextBox(eventData, measurementData, config) {
   }
 }
 
-/**
- * Retrieves the current server configuration used to retrieve studies
- */
-function getCurrentServer() {
-  return window.store.state.servers.find(server => server.active === true);
-}
-
 // TODO: Deprecate since we have the same thing in dcmjs?
 const NUMBER = 'number';
 const STRING = 'string';
@@ -28335,6 +28328,207 @@ SimpleSchema.addValidator(function() {
     notAllowed: '[label] has an invalid value: "[value]"'
 });*/
 
+/**
+ * Returns the specified element as a dicom attribute group/element.
+ *
+ * @param element - The group/element of the element (e.g. '00280009')
+ * @param [defaultValue] - The value to return if the element is not present
+ * @returns {*}
+ */
+function getAttribute(element, defaultValue) {
+  if (!element) {
+    return defaultValue;
+  } // Value is not present if the attribute has a zero length value
+
+
+  if (!element.Value) {
+    return defaultValue;
+  } // Sanity check to make sure we have at least one entry in the array.
+
+
+  if (!element.Value.length) {
+    return defaultValue;
+  }
+
+  return convertToInt(element.Value);
+}
+
+function convertToInt(input) {
+  function padFour(input) {
+    var l = input.length;
+    if (l == 0) return '0000';
+    if (l == 1) return '000' + input;
+    if (l == 2) return '00' + input;
+    if (l == 3) return '0' + input;
+    return input;
+  }
+
+  var output = '';
+
+  for (var i = 0; i < input.length; i++) {
+    for (var j = 0; j < input[i].length; j++) {
+      output += padFour(input[i].charCodeAt(j).toString(16));
+    }
+  }
+
+  return parseInt(output, 16);
+}
+
+var btoa = function btoa(val) {
+  return new Buffer(val).toString('base64');
+};
+
+// These should be overridden by the implementation
+let user = {
+  schema: null,
+  userLoggedIn: () => false,
+  getUserId: () => null,
+  getName: () => null,
+  getAccessToken: () => null,
+  login: () => new Promise((resolve, reject) => reject()),
+  logout: () => new Promise((resolve, reject) => reject()),
+  getData: key => null,
+  setData: (key, value) => null,
+  validate: () => null
+};
+
+/**
+ * Returns the Authorization header as part of an Object.
+ *
+ * @returns {Object}
+ */
+
+function getAuthorizationHeader(server) {
+  const headers = {}; // Check for OHIF.user since this can also be run on the server
+
+  const accessToken = user && user.getAccessToken && user.getAccessToken();
+
+  if (server && server.requestOptions && server.requestOptions.auth) {
+    // HTTP Basic Auth (user:password)
+    headers.Authorization = `Basic ${btoa(server.requestOptions.auth)}`;
+  } else if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+
+  return headers;
+}
+
+function getModalities(modality, modalitiesInStudy) {
+  var modalities = {};
+
+  if (modality) {
+    modalities = modality;
+  }
+
+  if (modalitiesInStudy) {
+    // Find vr in modalities
+    if (modalities.vr && modalities.vr === modalitiesInStudy.vr) {
+      for (var i = 0; i < modalitiesInStudy.Value.length; i++) {
+        var value = modalitiesInStudy.Value[i];
+
+        if (modalities.Value.indexOf(value) === -1) {
+          modalities.Value.push(value);
+        }
+      }
+    } else {
+      modalities = modalitiesInStudy;
+    }
+  }
+
+  return modalities;
+}
+
+/**
+ * Returns the Alphabetic version of a PN
+ *
+ * @param element - The group/element of the element (e.g. '00200013')
+ * @param [defaultValue] - The default value to return if the element is not found
+ * @returns {*}
+ */
+function getName(element, defaultValue) {
+  if (!element) {
+    return defaultValue;
+  } // Value is not present if the attribute has a zero length value
+
+
+  if (!element.Value) {
+    return defaultValue;
+  } // Sanity check to make sure we have at least one entry in the array.
+
+
+  if (!element.Value.length) {
+    return defaultValue;
+  } // Return the Alphabetic component group
+
+
+  if (element.Value[0].Alphabetic) {
+    return element.Value[0].Alphabetic;
+  } // Orthanc does not return PN properly so this is a temporary workaround
+
+
+  return element.Value[0];
+}
+
+/**
+ * Returns the first string value as a Javascript Number
+ * @param element - The group/element of the element (e.g. '00200013')
+ * @param [defaultValue] - The default value to return if the element does not exist
+ * @returns {*}
+ */
+function getNumber(element, defaultValue) {
+  if (!element) {
+    return defaultValue;
+  } // Value is not present if the attribute has a zero length value
+
+
+  if (!element.Value) {
+    return defaultValue;
+  } // Sanity check to make sure we have at least one entry in the array.
+
+
+  if (!element.Value.length) {
+    return defaultValue;
+  }
+
+  return parseFloat(element.Value[0]);
+}
+
+/**
+ * Returns the specified element as a string.  Multi-valued elements will be separated by a backslash
+ *
+ * @param element - The group/element of the element (e.g. '00200013')
+ * @param [defaultValue] - The value to return if the element is not present
+ * @returns {*}
+ */
+function getString(element, defaultValue) {
+  if (!element) {
+    return defaultValue;
+  } // Value is not present if the attribute has a zero length value
+
+
+  if (!element.Value) {
+    return defaultValue;
+  } // Sanity check to make sure we have at least one entry in the array.
+
+
+  if (!element.Value.length) {
+    return defaultValue;
+  } // Join the array together separated by backslash
+  // NOTE: Orthanc does not correctly split values into an array so the join is a no-op
+
+
+  return element.Value.join('\\');
+}
+
+const DICOMWeb = {
+  getAttribute,
+  getAuthorizationHeader,
+  getModalities,
+  getName,
+  getNumber,
+  getString
+};
+
 var dicomwebClient = createCommonjsModule(function (module, exports) {
 (function (global, factory) {
   factory(exports);
@@ -29156,11 +29350,8 @@ var DICOMwebClient = unwrapExports(dicomwebClient);
  */
 
 function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
-  const {
-    DICOMWeb
-  } = OHIF;
-  var seriesMap = {};
-  var seriesList = [];
+  const seriesMap = {};
+  const seriesList = [];
   resultData.forEach(function (instance) {
     // Use seriesMap to cache series data
     // If the series instance UID has already been used to
@@ -29213,7 +29404,7 @@ function Instances(server, studyInstanceUid) {
   // TODO: Are we using this function anywhere?? Can we remove it?
   const config = {
     url: server.qidoRoot,
-    headers: OHIF.DICOMWeb.getAuthorizationHeader()
+    headers: DICOMWeb.getAuthorizationHeader(server)
   };
   const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
   const queryParams = getQIDOQueryParams(filter, server.qidoSupportsIncludeField);
@@ -29306,29 +29497,29 @@ function getQIDOQueryParams$1(filter, serverSupportsQIDOIncludeField) {
 
 function resultDataToStudies(resultData) {
   const {
-    DICOMWeb
+    DICOMWeb: DICOMWeb$$1
   } = OHIF;
   const studies = [];
   if (!resultData || !resultData.length) return;
   resultData.forEach(study => studies.push({
-    studyInstanceUid: DICOMWeb.getString(study['0020000D']),
+    studyInstanceUid: DICOMWeb$$1.getString(study['0020000D']),
     // 00080005 = SpecificCharacterSet
-    studyDate: DICOMWeb.getString(study['00080020']),
-    studyTime: DICOMWeb.getString(study['00080030']),
-    accessionNumber: DICOMWeb.getString(study['00080050']),
-    referringPhysicianName: DICOMWeb.getString(study['00080090']),
+    studyDate: DICOMWeb$$1.getString(study['00080020']),
+    studyTime: DICOMWeb$$1.getString(study['00080030']),
+    accessionNumber: DICOMWeb$$1.getString(study['00080050']),
+    referringPhysicianName: DICOMWeb$$1.getString(study['00080090']),
     // 00081190 = URL
-    patientName: DICOMWeb.getName(study['00100010']),
-    patientId: DICOMWeb.getString(study['00100020']),
-    patientBirthdate: DICOMWeb.getString(study['00100030']),
-    patientSex: DICOMWeb.getString(study['00100040']),
-    studyId: DICOMWeb.getString(study['00200010']),
-    numberOfStudyRelatedSeries: DICOMWeb.getString(study['00201206']),
-    numberOfStudyRelatedInstances: DICOMWeb.getString(study['00201208']),
-    studyDescription: DICOMWeb.getString(study['00081030']),
+    patientName: DICOMWeb$$1.getName(study['00100010']),
+    patientId: DICOMWeb$$1.getString(study['00100020']),
+    patientBirthdate: DICOMWeb$$1.getString(study['00100030']),
+    patientSex: DICOMWeb$$1.getString(study['00100040']),
+    studyId: DICOMWeb$$1.getString(study['00200010']),
+    numberOfStudyRelatedSeries: DICOMWeb$$1.getString(study['00201206']),
+    numberOfStudyRelatedInstances: DICOMWeb$$1.getString(study['00201208']),
+    studyDescription: DICOMWeb$$1.getString(study['00081030']),
     // modality: DICOMWeb.getString(study['00080060']),
     // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
-    modalities: DICOMWeb.getString(DICOMWeb.getModalities(study['00080060'], study['00080061']))
+    modalities: DICOMWeb$$1.getString(DICOMWeb$$1.getModalities(study['00080060'], study['00080061']))
   }));
   return studies;
 }
@@ -29336,7 +29527,7 @@ function resultDataToStudies(resultData) {
 function Studies(server, filter) {
   const config = {
     url: server.qidoRoot,
-    headers: OHIF.DICOMWeb.getAuthorizationHeader()
+    headers: DICOMWeb.getAuthorizationHeader(server)
   };
   const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
   const queryParams = getQIDOQueryParams$1(filter, server.qidoSupportsIncludeField);
@@ -29351,11 +29542,28 @@ const WADOProxy = {
     // TODO: Remove all WADOProxy stuff from this file
     return url;
   }
-  /**
-   * Simple cache schema for retrieved color palettes.
-   */
-
 };
+
+function parseFloatArray(obj) {
+  const result = [];
+
+  if (!obj) {
+    return result;
+  }
+
+  const objs = obj.split('\\');
+
+  for (let i = 0; i < objs.length; i++) {
+    result.push(parseFloat(objs[i]));
+  }
+
+  return result;
+}
+/**
+ * Simple cache schema for retrieved color palettes.
+ */
+
+
 const paletteColorCache = {
   count: 0,
   maxAge: 24 * 60 * 60 * 1000,
@@ -29457,7 +29665,7 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
   const config = {
     url: server.wadoRoot,
     //BulkDataURI is absolute, so this isn't used
-    headers: OHIF.DICOMWeb.getAuthorizationHeader()
+    headers: DICOMWeb.getAuthorizationHeader(server)
   };
   const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
   const options = {
@@ -29495,9 +29703,6 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
 
 
 async function getPaletteColors(server, instance, lutDescriptor) {
-  const {
-    DICOMWeb
-  } = OHIF;
   let paletteUID = DICOMWeb.getString(instance['00281199']);
   return new Promise((resolve, reject) => {
     if (paletteColorCache.isValidUID(paletteUID)) {
@@ -29542,9 +29747,6 @@ function getFrameIncrementPointer(element) {
 }
 
 function getRadiopharmaceuticalInfo(instance) {
-  const {
-    DICOMWeb
-  } = OHIF;
   const modality = DICOMWeb.getString(instance['00080060']);
 
   if (modality !== 'PT') {
@@ -29577,10 +29779,6 @@ function getRadiopharmaceuticalInfo(instance) {
 
 
 async function resultDataToStudyMetadata$1(server, studyInstanceUid, resultData) {
-  const {
-    DICOMWeb
-  } = OHIF;
-
   if (!resultData.length) {
     return;
   }
@@ -29718,7 +29916,7 @@ async function resultDataToStudyMetadata$1(server, studyInstanceUid, resultData)
 async function RetrieveMetadata(server, studyInstanceUid) {
   const config = {
     url: server.wadoRoot,
-    headers: OHIF.DICOMWeb.getAuthorizationHeader()
+    headers: DICOMWeb.getAuthorizationHeader(server)
   };
   const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
   const options = {
@@ -29738,15 +29936,17 @@ const QIDO = {
   Instances
 };
 
-/**
- * Load the study metadata and store its information locally
- *
- * @param {String} studyInstanceUid The UID of the Study to be loaded
- * @returns {Promise} that will be resolved with the study metadata or rejected with an error
- */
+const log$1 = {
+  error: console.error,
+  warn: console.warn,
+  info: console.log,
+  debug: console.debug,
+  time: console.time,
+  timeEnd: console.timeEnd
+};
 
-// Define the StudyMetaDataPromises object. This is used as a cache to store study meta data
 // promises and prevent unnecessary subsequent calls to the server
+
 const StudyMetaDataPromises = new Map();
 /**
  * Delete the cached study metadata retrieval promise to ensure that the browser will
@@ -29768,7 +29968,7 @@ function deleteStudyMetadataPromise(studyInstanceUid) {
  * @returns {Promise} that will be resolved with the metadata or rejected with the error
  */
 
-function retrieveStudyMetadata(studyInstanceUid, seriesInstanceUids) {
+function retrieveStudyMetadata(server, studyInstanceUid, seriesInstanceUids) {
   // @TODO: Whenever a study metadata request has failed, its related promise will be rejected once and for all
   // and further requests for that metadata will always fail. On failure, we probably need to remove the
   // corresponding promise from the "StudyMetaDataPromises" map...
@@ -29780,14 +29980,13 @@ function retrieveStudyMetadata(studyInstanceUid, seriesInstanceUids) {
 
   const seriesKeys = Array.isArray(seriesInstanceUids) ? '|' + seriesInstanceUids.join('|') : '';
   const timingKey = `retrieveStudyMetadata[${studyInstanceUid}${seriesKeys}]`;
-  OHIF.log.time(timingKey); // Create a promise to handle the data retrieval
+  log$1.time(timingKey); // Create a promise to handle the data retrieval
 
   const promise = new Promise((resolve, reject) => {
-    const server = OHIF.servers.getCurrentServer(); // If no study metadata is in the cache variable, we need to retrieve it from
+    // If no study metadata is in the cache variable, we need to retrieve it from
     // the server with a call.
-
     if (server.type === 'dicomWeb' && server.requestOptions.requestFromBrowser === true) {
-      OHIF.studies.services.WADO.RetrieveMetadata(server, studyInstanceUid).then(function (data) {
+      RetrieveMetadata(server, studyInstanceUid).then(function (data) {
         resolve(data);
       }, reject);
     }
@@ -29798,747 +29997,11 @@ function retrieveStudyMetadata(studyInstanceUid, seriesInstanceUids) {
 }
 
 /**
- * Retrieves metaData for multiple studies at once.
- *
- * This function calls retrieveStudyMetadata several times, asynchronously,
- * and waits for all of the results to be returned.
- *
- * @param studyInstanceUids The UIDs of the Studies to be retrieved
- * @return Promise
- */
-function retrieveStudiesMetadata(studyInstanceUids, seriesInstanceUids) {
-  // Create an empty array to store the Promises for each metaData retrieval call
-  const promises = []; // Loop through the array of studyInstanceUids
-
-  studyInstanceUids.forEach(function (studyInstanceUid) {
-    // Send the call and resolve or reject the related promise based on its outcome
-    const promise = OHIF.studies.retrieveStudyMetadata(studyInstanceUid, seriesInstanceUids); // Add the current promise to the array of promises
-
-    promises.push(promise);
-  }); // When all of the promises are complete, this callback runs
-
-  const promise = Promise.all(promises); // Warn the error on console if some retrieval failed
-
-  promise.catch(error => OHIF.log.warn(error));
-  return promise;
-}
-
-/**
- * Overridable namespace to allow getting study boxes data externally.
- *
- * The function must handle the first parameter as a studyInformation object containing at least the
- * studyInstanceUid attribute.
- *
- * Shall return a promise that will be resolved with an object containing those attributes:
- * - studyInstanceUid {String}: copy of studyInformation.studyInstanceUid
- * - modalities {String}: 2 uppercase letters for each modality split by any non-alphabetical char(s)
- * - studyDate {String}: date formatted as YYYYMMDD
- * - studyDescription {String}: study description string
- */
-// TODO: What is this for?
-const getStudyBoxData = false;
-
-const studySearchPromises = new Map();
-/**
- * Search for studies information by the given filter
- *
- * @param {Object} filter Filter that will be used on search
- * @returns {Promise} resolved with an array of studies information or rejected with an error
- */
-
-function searchStudies(filter) {
-  const promiseKey = JSON.stringify(filter);
-
-  if (studySearchPromises.has(promiseKey)) {
-    return studySearchPromises.get(promiseKey);
-  } else {
-    const promise = new Promise((resolve, reject) => {
-      const server = OHIF.servers.getCurrentServer();
-      OHIF.studies.services.QIDO.Studies(server, filter).then(resolve, reject);
-    });
-    studySearchPromises.set(promiseKey, promise);
-    return promise;
-  }
-}
-
-const studies = {
-  services: {
-    QIDO,
-    WADO
-  },
-  loadingDict: {},
-  retrieveStudyMetadata,
-  deleteStudyMetadataPromise,
-  retrieveStudiesMetadata,
-  getStudyBoxData,
-  searchStudies
-};
-
-class CommandsManager {
-  constructor() {
-    this.contexts = {}; // Enable reactivity by storing the last executed command
-    //this.last = new ReactiveVar('');
-  }
-
-  getContext(contextName) {
-    const context = this.contexts[contextName];
-
-    if (!context) {
-      return OHIF.log.warn(`No context found with name "${contextName}"`);
-    }
-
-    return context;
-  }
-
-  getCurrentContext() {
-    const contextName = OHIF.context.get();
-
-    if (!contextName) {
-      return OHIF.log.warn('There is no selected context');
-    }
-
-    return this.getContext(contextName);
-  }
-
-  createContext(contextName) {
-    if (!contextName) return;
-
-    if (this.contexts[contextName]) {
-      return this.clear(contextName);
-    }
-
-    this.contexts[contextName] = {};
-  }
-
-  set(contextName, definitions, extend = false) {
-    if (typeof definitions !== 'object') return;
-    const context = this.getContext(contextName);
-    if (!context) return;
-
-    if (!extend) {
-      this.clear(contextName);
-    }
-
-    Object.keys(definitions).forEach(command => context[command] = definitions[command]);
-  }
-
-  register(contextName, command, definition) {
-    if (typeof definition !== 'object') return;
-    const context = this.getContext(contextName);
-    if (!context) return;
-    context[command] = definition;
-  }
-
-  setDisabledFunction(contextName, command, func) {
-    if (!command || typeof func !== 'function') return;
-    const context = this.getContext(contextName);
-    if (!context) return;
-    const definition = context[command];
-
-    if (!definition) {
-      return OHIF.log.warn(`Trying to set a disabled function to a command "${command}" that was not yet defined`);
-    }
-
-    definition.disabled = func;
-  }
-
-  clear(contextName) {
-    if (!contextName) return;
-    this.contexts[contextName] = {};
-  }
-
-  getDefinition(command) {
-    const context = this.getCurrentContext();
-    if (!context) return;
-    return context[command];
-  }
-
-  isDisabled(command) {
-    const definition = this.getDefinition(command);
-    if (!definition) return false;
-    const {
-      disabled
-    } = definition;
-    if (underscore.isFunction(disabled) && disabled()) return true;
-    if (!underscore.isFunction(disabled) && disabled) return true;
-    return false;
-  }
-
-  run(command) {
-    const definition = this.getDefinition(command);
-
-    if (!definition) {
-      return OHIF.log.warn(`Command "${command}" not found in current context`);
-    }
-
-    const {
-      action,
-      params
-    } = definition;
-    if (this.isDisabled(command)) return;
-
-    if (typeof action !== 'function') {
-      return OHIF.log.warn(`No action was defined for command "${command}"`);
-    } else {
-      const result = action(params);
-      /*if (this.last.get() === command) {
-        this.last.dep.changed();
-      } else {
-        this.last.set(command);
-      }*/
-
-      return result;
-    }
-  }
-
-}
-
-const commands = new CommandsManager(); // Export relevant objects
-
-class HotkeysContext {
-  constructor(name, definitions, enabled) {
-    this.name = name;
-    this.definitions = Object.assign({}, definitions);
-    this.enabled = enabled;
-  }
-
-  extend(definitions = {}) {
-    if (typeof definitions !== 'object') return;
-    this.definitions = Object.assign({}, definitions);
-    Object.keys(definitions).forEach(command => {
-      const hotkey = definitions[command];
-      this.unregister(command);
-
-      if (hotkey) {
-        this.register(command, hotkey);
-      }
-
-      this.definitions[command] = hotkey;
-    });
-  }
-
-  register(command, hotkey) {
-    if (!hotkey) {
-      return;
-    }
-
-    if (!command) {
-      return OHIF.log.warn(`No command was defined for hotkey "${hotkey}"`);
-    }
-
-    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
-
-    const bind = hotkey => $(document).bind(bindingKey, hotkey, event => {
-      if (!this.enabled.get()) return;
-      OHIF.commands.run(command);
-      event.preventDefault();
-    });
-
-    if (hotkey instanceof Array) {
-      hotkey.forEach(hotkey => bind(hotkey));
-    } else {
-      bind(hotkey);
-    }
-  }
-
-  unregister(command) {
-    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
-
-    if (this.definitions[command]) {
-      $(document).unbind(bindingKey);
-      delete this.definitions[command];
-    }
-  }
-
-  initialize() {
-    Object.keys(this.definitions).forEach(command => {
-      const hotkey = this.definitions[command];
-      this.register(command, hotkey);
-    });
-  }
-
-  destroy() {
-    $(document).unbind(`keydown.hotkey.${this.name}`);
-  }
-
-}
-
-class HotkeysManager {
-  constructor() {
-    this.contexts = {};
-    this.defaults = {};
-    this.currentContextName = null;
-    this.enabled = true;
-    this.retrieveFunction = null;
-    this.storeFunction = null;
-  }
-
-  setRetrieveFunction(retrieveFunction) {
-    this.retrieveFunction = retrieveFunction;
-  }
-
-  setStoreFunction(storeFunction) {
-    this.storeFunction = storeFunction;
-  }
-
-  store(contextName, definitions) {
-    const storageKey = `hotkeysDefinitions.${contextName}`;
-    return new Promise((resolve, reject) => {
-      if (this.storeFunction) {
-        this.storeFunction.call(this, storageKey, definitions).then(resolve).catch(reject); //} else if (OHIF.user.userLoggedIn()) {
-        //    OHIF.user.setData(storageKey, definitions).then(resolve).catch(reject);
-      } else {
-        const definitionsJSON = JSON.stringify(definitions);
-        localStorage.setItem(storageKey, definitionsJSON);
-        resolve();
-      }
-    });
-  }
-
-  retrieve(contextName) {
-    const storageKey = `hotkeysDefinitions.${contextName}`;
-    return new Promise((resolve, reject) => {
-      if (this.retrieveFunction) {
-        this.retrieveFunction(contextName).then(resolve).catch(reject);
-      } else if (OHIF.user.userLoggedIn()) {
-        try {
-          resolve(OHIF.user.getData(storageKey));
-        } catch (error) {
-          reject(error);
-        }
-      } else {
-        const definitionsJSON = localStorage.getItem(storageKey) || '';
-        const definitions = JSON.parse(definitionsJSON) || undefined;
-        resolve(definitions);
-      }
-    });
-  }
-
-  disable() {
-    this.enabled.set(false);
-  }
-
-  enable() {
-    this.enabled.set(true);
-  }
-
-  getContext(contextName) {
-    return this.contexts[contextName];
-  }
-
-  getCurrentContext() {
-    return this.getContext(this.currentContextName);
-  }
-
-  load(contextName) {
-    return new Promise((resolve, reject) => {
-      const context = this.getContext(contextName);
-      if (!context) return reject();
-      this.retrieve(contextName).then(defs => {
-        const definitions = defs || this.defaults[contextName];
-
-        if (!definitions) {
-          this.changeObserver.changed();
-          return reject();
-        }
-
-        context.destroy();
-        context.definitions = definitions;
-        context.initialize();
-        this.changeObserver.changed();
-        resolve(definitions);
-      }).catch(reject);
-    });
-  }
-
-  set(contextName, contextDefinitions, isDefaultDefinitions = false) {
-    const enabled = this.enabled;
-    const context = new HotkeysContext(contextName, contextDefinitions, enabled);
-    const currentContext = this.getCurrentContext();
-
-    if (currentContext && currentContext.name === contextName) {
-      currentContext.destroy();
-      context.initialize();
-    }
-
-    this.contexts[contextName] = context;
-
-    if (isDefaultDefinitions) {
-      this.defaults[contextName] = contextDefinitions;
-    }
-  }
-
-  register(contextName, command, hotkey) {
-    if (!command || !hotkey) return;
-    const context = this.getContext(contextName);
-
-    if (!context) {
-      this.set(contextName, {});
-    }
-
-    context.register(command, hotkey);
-  }
-
-  unsetContext(contextName) {
-    if (contextName === this.currentContextName) {
-      this.getCurrentContext().destroy();
-    }
-
-    delete this.contexts[contextName];
-    delete this.defaults[contextName];
-  }
-
-  resetDefaults(contextName) {
-    const context = this.getContext(contextName);
-    const definitions = this.defaults[contextName];
-    if (!context || !definitions) return;
-    context.extend(definitions);
-    return this.store(contextName, definitions);
-  }
-
-  switchToContext(contextName) {
-    const currentContext = this.getCurrentContext();
-
-    if (currentContext) {
-      currentContext.destroy();
-    }
-
-    const newContext = this.contexts[contextName];
-    if (!newContext) return;
-    this.currentContextName = contextName;
-    newContext.initialize();
-    this.load(contextName).catch(() => {});
-  }
-
-}
-
-//import 'jquery.hotkeys';
-// Create hotkeys namespace using a HotkeysManager class instance
-
-const hotkeys = new HotkeysManager(); // Export relevant objects
-
-function handleError(error) {
-  let {
-    title,
-    message
-  } = error;
-
-  if (!title) {
-    if (error instanceof Error) {
-      title = error.name;
-    }
-  }
-
-  if (!message) {
-    if (error instanceof Error) {
-      message = error.message;
-    }
-  }
-
-  const data = Object.assign({
-    title,
-    message,
-    class: 'themed',
-    hideConfirm: true,
-    cancelLabel: 'Dismiss',
-    cancelClass: 'btn-secondary'
-  }, error || {});
-  OHIF.log.error(error); // TODO: Find a better way to handle errors instead of displaying a dialog for all of them.
-  // OHIF.ui.showDialog('dialogForm', data);
-}
-
-/**
- * Check if the pressed key combination will result in a character input
- * Got from https://stackoverflow.com/questions/4179708/how-to-detect-if-the-pressed-key-will-produce-a-character-inside-an-input-text
- *
- * @returns {Boolean} Whether the pressed key combination will input a character or not
- */
-function isCharacterKeyPress(event) {
-  if (typeof event.which === 'undefined') {
-    // This is IE, which only fires keypress events for printable keys
-    return true;
-  } else if (typeof event.which === 'number' && event.which > 0) {
-    // In other browsers except old versions of WebKit, event.which is
-    // only greater than zero if the keypress is a printable key.
-    // We need to filter out backspace and ctrl/alt/meta key combinations
-    return !event.ctrlKey && !event.metaKey && !event.altKey && event.which !== 8;
-  }
-
-  return false;
-}
-
-/**
- * Get the offset for the given element
- *
- * @param {Object} element DOM element which will have the offser calculated
- * @returns {Object} Object containing the top and left offset
- */
-function getOffset(element) {
-  let top = 0;
-  let left = 0;
-
-  if (element.offsetParent) {
-    do {
-      left += element.offsetLeft;
-      top += element.offsetTop;
-    } while (element = element.offsetParent);
-  }
-
-  return {
-    left,
-    top
-  };
-}
-
-/**
- * Get the vertical and horizontal scrollbar sizes
- * Got from https://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
- *
- * @returns {Array} Array containing the scrollbar horizontal and vertical sizes
- */
-function getScrollbarSize() {
-  const inner = document.createElement('p');
-  inner.style.width = '100%';
-  inner.style.height = '100%';
-  const outer = document.createElement('div');
-  outer.style.position = 'absolute';
-  outer.style.top = '0px';
-  outer.style.left = '0px';
-  outer.style.visibility = 'hidden';
-  outer.style.width = '100px';
-  outer.style.height = '100px';
-  outer.style.overflow = 'hidden';
-  outer.appendChild(inner);
-  document.body.appendChild(outer);
-  const w1 = inner.offsetWidth;
-  const h1 = inner.offsetHeight;
-  outer.style.overflow = 'scroll';
-  let w2 = inner.offsetWidth;
-  let h2 = inner.offsetHeight;
-
-  if (w1 === w2) {
-    w2 = outer.clientWidth;
-  }
-
-  if (h1 === h2) {
-    h2 = outer.clientHeight;
-  }
-
-  document.body.removeChild(outer);
-  return [w1 - w2, h1 - h2];
-}
-
-const ui = {
-  getScrollbarSize,
-  getOffset,
-  isCharacterKeyPress,
-  handleError
-};
-
-//import Dropdown from './ui/dropdown/class.js';
-
-/*
- * Defines the base OHIF header object
- */
-//const dropdown = new OHIF.ui.Dropdown();
-const header = {};
-
-class ObjectPath {
-  /**
-   * Set an object property based on "path" (namespace) supplied creating
-   * ... intermediary objects if they do not exist.
-   * @param object {Object} An object where the properties specified on path should be set.
-   * @param path {String} A string representing the property to be set, e.g. "user.study.series.timepoint".
-   * @param value {Any} The value of the property that will be set.
-   * @return {Boolean} Returns "true" on success, "false" if any intermediate component of the supplied path
-   * ... is not a valid Object, in which case the property cannot be set. No excpetions are thrown.
-   */
-  static set(object, path, value) {
-    let components = ObjectPath.getPathComponents(path),
-        length = components !== null ? components.length : 0,
-        result = false;
-
-    if (length > 0 && ObjectPath.isValidObject(object)) {
-      let i = 0,
-          last = length - 1,
-          currentObject = object;
-
-      while (i < last) {
-        let field = components[i];
-
-        if (field in currentObject) {
-          if (!ObjectPath.isValidObject(currentObject[field])) {
-            break;
-          }
-        } else {
-          currentObject[field] = {};
-        }
-
-        currentObject = currentObject[field];
-        i++;
-      }
-
-      if (i === last) {
-        currentObject[components[last]] = value;
-        result = true;
-      }
-    }
-
-    return result;
-  }
-  /**
-   * Get an object property based on "path" (namespace) supplied traversing the object
-   * ... tree as necessary.
-   * @param object {Object} An object where the properties specified might exist.
-   * @param path {String} A string representing the property to be searched for, e.g. "user.study.series.timepoint".
-   * @return {Any} The value of the property if found. By default, returns the special type "undefined".
-   */
-
-
-  static get(object, path) {
-    let found,
-        // undefined by default
-    components = ObjectPath.getPathComponents(path),
-        length = components !== null ? components.length : 0;
-
-    if (length > 0 && ObjectPath.isValidObject(object)) {
-      let i = 0,
-          last = length - 1,
-          currentObject = object;
-
-      while (i < last) {
-        let field = components[i];
-        const isValid = ObjectPath.isValidObject(currentObject[field]);
-
-        if (field in currentObject && isValid) {
-          currentObject = currentObject[field];
-          i++;
-        } else {
-          break;
-        }
-      }
-
-      if (i === last && components[last] in currentObject) {
-        found = currentObject[components[last]];
-      }
-    }
-
-    return found;
-  }
-  /**
-   * Check if the supplied argument is a real JavaScript Object instance.
-   * @param object {Any} The subject to be tested.
-   * @return {Boolean} Returns "true" if the object is a real Object instance and "false" otherwise.
-   */
-
-
-  static isValidObject(object) {
-    return typeof object === 'object' && object !== null && object instanceof Object;
-  }
-
-  static getPathComponents(path) {
-    return typeof path === 'string' ? path.split('.') : null;
-  }
-
-}
-
-/**
- * Create a random GUID
- *
- * @return {string}
- */
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  }
-
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
-// Return an absolute URL with the page domain using sub path of ROOT_URL
-// to let multiple domains directed to the same server work
-function absoluteUrl(path) {
-  let absolutePath = '/';
-  const absoluteUrl = Meteor.absoluteUrl();
-  const absoluteUrlParts = absoluteUrl.split('/');
-
-  if (absoluteUrlParts.length > 4) {
-    const rootUrlPrefixIndex = absoluteUrl.indexOf(absoluteUrlParts[3]);
-    absolutePath += absoluteUrl.substring(rootUrlPrefixIndex) + path;
-  } else {
-    absolutePath += path;
-  }
-
-  return absolutePath.replace(/\/\/+/g, '/');
-}
-
-// TODO: figure out where else to put this function
-function addServers(servers, store) {
-  Object.keys(servers).forEach(serverType => {
-    const endpoints = servers[serverType];
-    endpoints.forEach(endpoint => {
-      const server = Object.assign({}, endpoint);
-      server.type = serverType;
-      store.dispatch({
-        type: 'ADD_SERVER',
-        server
-      });
-    });
-  });
-}
-
-// Return the array sorting function for its object's properties
-function sortBy() {
-  var fields = [].slice.call(arguments),
-      n_fields = fields.length;
-  return function (A, B) {
-    var a, b, field, key, reverse, result, i;
-
-    for (i = 0; i < n_fields; i++) {
-      result = 0;
-      field = fields[i];
-      key = typeof field === 'string' ? field : field.name;
-      a = A[key];
-      b = B[key];
-
-      if (typeof field.primer !== 'undefined') {
-        a = field.primer(a);
-        b = field.primer(b);
-      }
-
-      reverse = field.reverse ? -1 : 1;
-
-      if (a < b) {
-        result = reverse * -1;
-      }
-
-      if (a > b) {
-        result = reverse * 1;
-      }
-
-      if (result !== 0) {
-        break;
-      }
-    }
-
-    return result;
-  };
-}
-
-const utils = {
-  guid,
-  ObjectPath,
-  absoluteUrl,
-  addServers,
-  sortBy
-};
-
-/**
  * Constants
  */
-const STRING$2 = 'string';
+const STRING$1 = 'string';
 const NUMBER$1 = 'number';
-const FUNCTION$1 = 'function';
+const FUNCTION = 'function';
 const OBJECT = 'object';
 /**
  * Class Definition
@@ -30649,7 +30112,7 @@ class Metadata {
 
 
   static isValidUID(uid) {
-    return typeof uid === STRING$2 && uid.length > 0;
+    return typeof uid === STRING$1 && uid.length > 0;
   }
 
   static isValidIndex(index) {
@@ -30657,7 +30120,7 @@ class Metadata {
   }
 
   static isValidCallback(callback) {
-    return typeof callback === FUNCTION$1;
+    return typeof callback === FUNCTION;
   }
 
 }
@@ -30683,8 +30146,8 @@ class OHIFError extends Error {
  * possibly cause circular dependency issues.
  */
 
-const UNDEFINED$1 = 'undefined';
-const STRING$3 = 'string';
+const UNDEFINED = 'undefined';
+const STRING$2 = 'string';
 const STUDY_INSTANCE_UID = 'x0020000d';
 const SERIES_INSTANCE_UID = 'x0020000e';
 class InstanceMetadata extends Metadata {
@@ -30770,7 +30233,7 @@ class InstanceMetadata extends Metadata {
   getStringValue(tagOrProperty, index, defaultValue) {
     let value = this.getTagValue(tagOrProperty, defaultValue);
 
-    if (typeof value !== STRING$3 && typeof value !== UNDEFINED$1) {
+    if (typeof value !== STRING$2 && typeof value !== UNDEFINED) {
       value = value.toString();
     }
 
@@ -30789,7 +30252,7 @@ class InstanceMetadata extends Metadata {
       return value;
     }
 
-    return typeof value === STRING$3 ? parseFloat(value) : value;
+    return typeof value === STRING$2 ? parseFloat(value) : value;
   } // @TODO: Improve this... (E.g.: blob data)
 
 
@@ -30804,7 +30267,7 @@ class InstanceMetadata extends Metadata {
       return value;
     }
 
-    return typeof value === STRING$3 ? parseInt(value) : value;
+    return typeof value === STRING$2 ? parseInt(value) : value;
   }
   /**
    * @deprecated Please use getTagValue instead.
@@ -30879,7 +30342,7 @@ class InstanceMetadata extends Metadata {
   static getIndexedValue(value, index, defaultValue) {
     let result = defaultValue;
 
-    if (typeof value === STRING$3) {
+    if (typeof value === STRING$2) {
       const hasIndexValues = value.indexOf('\\') !== -1;
       result = value;
 
@@ -30888,7 +30351,7 @@ class InstanceMetadata extends Metadata {
 
         if (Metadata.isValidIndex(index)) {
           const indexedValue = splitValues[index];
-          result = typeof indexedValue !== STRING$3 ? defaultValue : indexedValue;
+          result = typeof indexedValue !== STRING$2 ? defaultValue : indexedValue;
         } else {
           result = splitValues;
         }
@@ -31106,6 +30569,19 @@ class SeriesMetadata extends Metadata {
 
 }
 
+/**
+ * Create a random GUID
+ *
+ * @return {string}
+ */
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
 const OBJECT$1 = 'object';
 /**
  * This class defines an ImageSet object which will be used across the viewer. This object represents
@@ -31132,7 +30608,7 @@ class ImageSet {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: OHIF.utils.guid() // Unique ID of the instance
+      value: guid() // Unique ID of the instance
 
     });
   }
@@ -31589,6 +31065,941 @@ class StudyMetadata extends Metadata {
 
 }
 
+/**
+ * Retrieves metaData for multiple studies at once.
+ *
+ * This function calls retrieveStudyMetadata several times, asynchronously,
+ * and waits for all of the results to be returned.
+ *
+ * @param studyInstanceUids The UIDs of the Studies to be retrieved
+ * @return Promise
+ */
+
+function retrieveStudiesMetadata(server, studyInstanceUids, seriesInstanceUids) {
+  // Create an empty array to store the Promises for each metaData retrieval call
+  const promises = []; // Loop through the array of studyInstanceUids
+
+  studyInstanceUids.forEach(function (studyInstanceUid) {
+    // Send the call and resolve or reject the related promise based on its outcome
+    const promise = retrieveStudyMetadata(server, studyInstanceUid, seriesInstanceUids); // Add the current promise to the array of promises
+
+    promises.push(promise);
+  }); // When all of the promises are complete, this callback runs
+
+  const promise = Promise.all(promises); // Warn the error on console if some retrieval failed
+
+  promise.catch(error => log$1.warn(error));
+  return promise;
+}
+
+/**
+ * Overridable namespace to allow getting study boxes data externally.
+ *
+ * The function must handle the first parameter as a studyInformation object containing at least the
+ * studyInstanceUid attribute.
+ *
+ * Shall return a promise that will be resolved with an object containing those attributes:
+ * - studyInstanceUid {String}: copy of studyInformation.studyInstanceUid
+ * - modalities {String}: 2 uppercase letters for each modality split by any non-alphabetical char(s)
+ * - studyDate {String}: date formatted as YYYYMMDD
+ * - studyDescription {String}: study description string
+ */
+// TODO: What is this for?
+const getStudyBoxData = false;
+
+/**
+ * Creates a QIDO date string for a date range query
+ * Assumes the year is positive, at most 4 digits long.
+ *
+ * @param date The Date object to be formatted
+ * @returns {string} The formatted date string
+ */
+
+function dateToString$1(date) {
+  if (!date) return '';
+  let year = date.getFullYear().toString();
+  let month = (date.getMonth() + 1).toString();
+  let day = date.getDate().toString();
+  year = '0'.repeat(4 - year.length).concat(year);
+  month = '0'.repeat(2 - month.length).concat(month);
+  day = '0'.repeat(2 - day.length).concat(day);
+  return ''.concat(year, month, day);
+}
+/**
+ * Produces a QIDO URL given server details and a set of specified search filter
+ * items
+ *
+ * @param filter
+ * @param serverSupportsQIDOIncludeField
+ * @returns {string} The URL with encoded filter query data
+ */
+
+
+function getQIDOQueryParams$2(filter, serverSupportsQIDOIncludeField) {
+  const commaSeparatedFields = ['00081030', // Study Description
+  '00080060' //Modality
+  // Add more fields here if you want them in the result
+  ].join(',');
+  const parameters = {
+    PatientName: filter.patientName,
+    PatientID: filter.patientId,
+    AccessionNumber: filter.accessionNumber,
+    StudyDescription: filter.studyDescription,
+    ModalitiesInStudy: filter.modalitiesInStudy,
+    limit: filter.limit,
+    offset: filter.offset,
+    includefield: serverSupportsQIDOIncludeField ? commaSeparatedFields : 'all'
+  }; // build the StudyDate range parameter
+
+  if (filter.studyDateFrom || filter.studyDateTo) {
+    const dateFrom = dateToString$1(new Date(filter.studyDateFrom));
+    const dateTo = dateToString$1(new Date(filter.studyDateTo));
+    parameters.StudyDate = `${dateFrom}-${dateTo}`;
+  } // Build the StudyInstanceUID parameter
+
+
+  if (filter.studyInstanceUid) {
+    let studyUids = filter.studyInstanceUid;
+    studyUids = Array.isArray(studyUids) ? studyUids.join() : studyUids;
+    studyUids = studyUids.replace(/[^0-9.]+/g, '\\');
+    parameters.StudyInstanceUID = studyUids;
+  } // Clean query params of undefined values.
+
+
+  const params = {};
+  Object.keys(parameters).forEach(key => {
+    if (parameters[key] !== undefined && parameters[key] !== "") {
+      params[key] = parameters[key];
+    }
+  });
+  return params;
+}
+/**
+ * Parses resulting data from a QIDO call into a set of Study MetaData
+ *
+ * @param resultData
+ * @returns {Array} An array of Study MetaData objects
+ */
+
+
+function resultDataToStudies$1(resultData) {
+  const {
+    DICOMWeb: DICOMWeb$$1
+  } = OHIF;
+  const studies = [];
+  if (!resultData || !resultData.length) return;
+  resultData.forEach(study => studies.push({
+    studyInstanceUid: DICOMWeb$$1.getString(study['0020000D']),
+    // 00080005 = SpecificCharacterSet
+    studyDate: DICOMWeb$$1.getString(study['00080020']),
+    studyTime: DICOMWeb$$1.getString(study['00080030']),
+    accessionNumber: DICOMWeb$$1.getString(study['00080050']),
+    referringPhysicianName: DICOMWeb$$1.getString(study['00080090']),
+    // 00081190 = URL
+    patientName: DICOMWeb$$1.getName(study['00100010']),
+    patientId: DICOMWeb$$1.getString(study['00100020']),
+    patientBirthdate: DICOMWeb$$1.getString(study['00100030']),
+    patientSex: DICOMWeb$$1.getString(study['00100040']),
+    studyId: DICOMWeb$$1.getString(study['00200010']),
+    numberOfStudyRelatedSeries: DICOMWeb$$1.getString(study['00201206']),
+    numberOfStudyRelatedInstances: DICOMWeb$$1.getString(study['00201208']),
+    studyDescription: DICOMWeb$$1.getString(study['00081030']),
+    // modality: DICOMWeb.getString(study['00080060']),
+    // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
+    modalities: DICOMWeb$$1.getString(DICOMWeb$$1.getModalities(study['00080060'], study['00080061']))
+  }));
+  return studies;
+}
+
+function Studies$1(server, filter) {
+  const config = {
+    url: server.qidoRoot,
+    headers: DICOMWeb.getAuthorizationHeader(server)
+  };
+  const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
+  const queryParams = getQIDOQueryParams$2(filter, server.qidoSupportsIncludeField);
+  const options = {
+    queryParams
+  };
+  return dicomWeb.searchForStudies(options).then(resultDataToStudies$1);
+}
+
+const studySearchPromises = new Map();
+/**
+ * Search for studies information by the given filter
+ *
+ * @param {Object} filter Filter that will be used on search
+ * @returns {Promise} resolved with an array of studies information or rejected with an error
+ */
+
+function searchStudies(server, filter) {
+  const promiseKey = JSON.stringify(filter);
+
+  if (studySearchPromises.has(promiseKey)) {
+    return studySearchPromises.get(promiseKey);
+  } else {
+    const promise = Studies$1(server, filter);
+    studySearchPromises.set(promiseKey, promise);
+    return promise;
+  }
+}
+
+const studies = {
+  services: {
+    QIDO,
+    WADO
+  },
+  loadingDict: {},
+  retrieveStudyMetadata,
+  deleteStudyMetadataPromise,
+  retrieveStudiesMetadata,
+  getStudyBoxData,
+  searchStudies
+};
+
+class CommandsManager {
+  constructor() {
+    this.contexts = {}; // Enable reactivity by storing the last executed command
+    //this.last = new ReactiveVar('');
+  }
+
+  getContext(contextName) {
+    const context = this.contexts[contextName];
+
+    if (!context) {
+      return log$1.warn(`No context found with name "${contextName}"`);
+    }
+
+    return context;
+  }
+
+  getCurrentContext() {
+    const contextName = OHIF.context.get();
+
+    if (!contextName) {
+      return log$1.warn('There is no selected context');
+    }
+
+    return this.getContext(contextName);
+  }
+
+  createContext(contextName) {
+    if (!contextName) return;
+
+    if (this.contexts[contextName]) {
+      return this.clear(contextName);
+    }
+
+    this.contexts[contextName] = {};
+  }
+
+  set(contextName, definitions, extend = false) {
+    if (typeof definitions !== 'object') return;
+    const context = this.getContext(contextName);
+    if (!context) return;
+
+    if (!extend) {
+      this.clear(contextName);
+    }
+
+    Object.keys(definitions).forEach(command => context[command] = definitions[command]);
+  }
+
+  register(contextName, command, definition) {
+    if (typeof definition !== 'object') return;
+    const context = this.getContext(contextName);
+    if (!context) return;
+    context[command] = definition;
+  }
+
+  setDisabledFunction(contextName, command, func) {
+    if (!command || typeof func !== 'function') return;
+    const context = this.getContext(contextName);
+    if (!context) return;
+    const definition = context[command];
+
+    if (!definition) {
+      return log$1.warn(`Trying to set a disabled function to a command "${command}" that was not yet defined`);
+    }
+
+    definition.disabled = func;
+  }
+
+  clear(contextName) {
+    if (!contextName) return;
+    this.contexts[contextName] = {};
+  }
+
+  getDefinition(command) {
+    const context = this.getCurrentContext();
+    if (!context) return;
+    return context[command];
+  }
+
+  isDisabled(command) {
+    const definition = this.getDefinition(command);
+    if (!definition) return false;
+    const {
+      disabled
+    } = definition;
+    if (underscore.isFunction(disabled) && disabled()) return true;
+    if (!underscore.isFunction(disabled) && disabled) return true;
+    return false;
+  }
+
+  run(command) {
+    const definition = this.getDefinition(command);
+
+    if (!definition) {
+      return log$1.warn(`Command "${command}" not found in current context`);
+    }
+
+    const {
+      action,
+      params
+    } = definition;
+    if (this.isDisabled(command)) return;
+
+    if (typeof action !== 'function') {
+      return log$1.warn(`No action was defined for command "${command}"`);
+    } else {
+      const result = action(params);
+      /*if (this.last.get() === command) {
+        this.last.dep.changed();
+      } else {
+        this.last.set(command);
+      }*/
+
+      return result;
+    }
+  }
+
+}
+
+const commands = new CommandsManager(); // Export relevant objects
+
+class HotkeysContext {
+  constructor(name, definitions, enabled) {
+    this.name = name;
+    this.definitions = Object.assign({}, definitions);
+    this.enabled = enabled;
+  }
+
+  extend(definitions = {}) {
+    if (typeof definitions !== 'object') return;
+    this.definitions = Object.assign({}, definitions);
+    Object.keys(definitions).forEach(command => {
+      const hotkey = definitions[command];
+      this.unregister(command);
+
+      if (hotkey) {
+        this.register(command, hotkey);
+      }
+
+      this.definitions[command] = hotkey;
+    });
+  }
+
+  register(command, hotkey) {
+    if (!hotkey) {
+      return;
+    }
+
+    if (!command) {
+      return log$1.warn(`No command was defined for hotkey "${hotkey}"`);
+    }
+
+    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+
+    const bind = hotkey => $(document).bind(bindingKey, hotkey, event => {
+      if (!this.enabled.get()) return;
+      OHIF.commands.run(command);
+      event.preventDefault();
+    });
+
+    if (hotkey instanceof Array) {
+      hotkey.forEach(hotkey => bind(hotkey));
+    } else {
+      bind(hotkey);
+    }
+  }
+
+  unregister(command) {
+    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+
+    if (this.definitions[command]) {
+      $(document).unbind(bindingKey);
+      delete this.definitions[command];
+    }
+  }
+
+  initialize() {
+    Object.keys(this.definitions).forEach(command => {
+      const hotkey = this.definitions[command];
+      this.register(command, hotkey);
+    });
+  }
+
+  destroy() {
+    $(document).unbind(`keydown.hotkey.${this.name}`);
+  }
+
+}
+
+class HotkeysManager {
+  constructor() {
+    this.contexts = {};
+    this.defaults = {};
+    this.currentContextName = null;
+    this.enabled = true;
+    this.retrieveFunction = null;
+    this.storeFunction = null;
+  }
+
+  setRetrieveFunction(retrieveFunction) {
+    this.retrieveFunction = retrieveFunction;
+  }
+
+  setStoreFunction(storeFunction) {
+    this.storeFunction = storeFunction;
+  }
+
+  store(contextName, definitions) {
+    const storageKey = `hotkeysDefinitions.${contextName}`;
+    return new Promise((resolve, reject) => {
+      if (this.storeFunction) {
+        this.storeFunction.call(this, storageKey, definitions).then(resolve).catch(reject); //} else if (OHIF.user.userLoggedIn()) {
+        //    OHIF.user.setData(storageKey, definitions).then(resolve).catch(reject);
+      } else {
+        const definitionsJSON = JSON.stringify(definitions);
+        localStorage.setItem(storageKey, definitionsJSON);
+        resolve();
+      }
+    });
+  }
+
+  retrieve(contextName) {
+    const storageKey = `hotkeysDefinitions.${contextName}`;
+    return new Promise((resolve, reject) => {
+      if (this.retrieveFunction) {
+        this.retrieveFunction(contextName).then(resolve).catch(reject);
+      } else if (OHIF.user.userLoggedIn()) {
+        try {
+          resolve(OHIF.user.getData(storageKey));
+        } catch (error) {
+          reject(error);
+        }
+      } else {
+        const definitionsJSON = localStorage.getItem(storageKey) || '';
+        const definitions = JSON.parse(definitionsJSON) || undefined;
+        resolve(definitions);
+      }
+    });
+  }
+
+  disable() {
+    this.enabled.set(false);
+  }
+
+  enable() {
+    this.enabled.set(true);
+  }
+
+  getContext(contextName) {
+    return this.contexts[contextName];
+  }
+
+  getCurrentContext() {
+    return this.getContext(this.currentContextName);
+  }
+
+  load(contextName) {
+    return new Promise((resolve, reject) => {
+      const context = this.getContext(contextName);
+      if (!context) return reject();
+      this.retrieve(contextName).then(defs => {
+        const definitions = defs || this.defaults[contextName];
+
+        if (!definitions) {
+          this.changeObserver.changed();
+          return reject();
+        }
+
+        context.destroy();
+        context.definitions = definitions;
+        context.initialize();
+        this.changeObserver.changed();
+        resolve(definitions);
+      }).catch(reject);
+    });
+  }
+
+  set(contextName, contextDefinitions, isDefaultDefinitions = false) {
+    const enabled = this.enabled;
+    const context = new HotkeysContext(contextName, contextDefinitions, enabled);
+    const currentContext = this.getCurrentContext();
+
+    if (currentContext && currentContext.name === contextName) {
+      currentContext.destroy();
+      context.initialize();
+    }
+
+    this.contexts[contextName] = context;
+
+    if (isDefaultDefinitions) {
+      this.defaults[contextName] = contextDefinitions;
+    }
+  }
+
+  register(contextName, command, hotkey) {
+    if (!command || !hotkey) return;
+    const context = this.getContext(contextName);
+
+    if (!context) {
+      this.set(contextName, {});
+    }
+
+    context.register(command, hotkey);
+  }
+
+  unsetContext(contextName) {
+    if (contextName === this.currentContextName) {
+      this.getCurrentContext().destroy();
+    }
+
+    delete this.contexts[contextName];
+    delete this.defaults[contextName];
+  }
+
+  resetDefaults(contextName) {
+    const context = this.getContext(contextName);
+    const definitions = this.defaults[contextName];
+    if (!context || !definitions) return;
+    context.extend(definitions);
+    return this.store(contextName, definitions);
+  }
+
+  switchToContext(contextName) {
+    const currentContext = this.getCurrentContext();
+
+    if (currentContext) {
+      currentContext.destroy();
+    }
+
+    const newContext = this.contexts[contextName];
+    if (!newContext) return;
+    this.currentContextName = contextName;
+    newContext.initialize();
+    this.load(contextName).catch(() => {});
+  }
+
+}
+
+//import 'jquery.hotkeys';
+// Create hotkeys namespace using a HotkeysManager class instance
+
+const hotkeys = new HotkeysManager(); // Export relevant objects
+
+function handleError(error) {
+  let {
+    title,
+    message
+  } = error;
+
+  if (!title) {
+    if (error instanceof Error) {
+      title = error.name;
+    }
+  }
+
+  if (!message) {
+    if (error instanceof Error) {
+      message = error.message;
+    }
+  }
+
+  const data = Object.assign({
+    title,
+    message,
+    class: 'themed',
+    hideConfirm: true,
+    cancelLabel: 'Dismiss',
+    cancelClass: 'btn-secondary'
+  }, error || {});
+  log$1.error(error); // TODO: Find a better way to handle errors instead of displaying a dialog for all of them.
+  // OHIF.ui.showDialog('dialogForm', data);
+}
+
+/**
+ * Check if the pressed key combination will result in a character input
+ * Got from https://stackoverflow.com/questions/4179708/how-to-detect-if-the-pressed-key-will-produce-a-character-inside-an-input-text
+ *
+ * @returns {Boolean} Whether the pressed key combination will input a character or not
+ */
+function isCharacterKeyPress(event) {
+  if (typeof event.which === 'undefined') {
+    // This is IE, which only fires keypress events for printable keys
+    return true;
+  } else if (typeof event.which === 'number' && event.which > 0) {
+    // In other browsers except old versions of WebKit, event.which is
+    // only greater than zero if the keypress is a printable key.
+    // We need to filter out backspace and ctrl/alt/meta key combinations
+    return !event.ctrlKey && !event.metaKey && !event.altKey && event.which !== 8;
+  }
+
+  return false;
+}
+
+/**
+ * Get the offset for the given element
+ *
+ * @param {Object} element DOM element which will have the offser calculated
+ * @returns {Object} Object containing the top and left offset
+ */
+function getOffset(element) {
+  let top = 0;
+  let left = 0;
+
+  if (element.offsetParent) {
+    do {
+      left += element.offsetLeft;
+      top += element.offsetTop;
+    } while (element = element.offsetParent);
+  }
+
+  return {
+    left,
+    top
+  };
+}
+
+/**
+ * Get the vertical and horizontal scrollbar sizes
+ * Got from https://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
+ *
+ * @returns {Array} Array containing the scrollbar horizontal and vertical sizes
+ */
+function getScrollbarSize() {
+  const inner = document.createElement('p');
+  inner.style.width = '100%';
+  inner.style.height = '100%';
+  const outer = document.createElement('div');
+  outer.style.position = 'absolute';
+  outer.style.top = '0px';
+  outer.style.left = '0px';
+  outer.style.visibility = 'hidden';
+  outer.style.width = '100px';
+  outer.style.height = '100px';
+  outer.style.overflow = 'hidden';
+  outer.appendChild(inner);
+  document.body.appendChild(outer);
+  const w1 = inner.offsetWidth;
+  const h1 = inner.offsetHeight;
+  outer.style.overflow = 'scroll';
+  let w2 = inner.offsetWidth;
+  let h2 = inner.offsetHeight;
+
+  if (w1 === w2) {
+    w2 = outer.clientWidth;
+  }
+
+  if (h1 === h2) {
+    h2 = outer.clientHeight;
+  }
+
+  document.body.removeChild(outer);
+  return [w1 - w2, h1 - h2];
+}
+
+const ui = {
+  getScrollbarSize,
+  getOffset,
+  isCharacterKeyPress,
+  handleError
+};
+
+//import Dropdown from './ui/dropdown/class.js';
+
+/*
+ * Defines the base OHIF header object
+ */
+//const dropdown = new OHIF.ui.Dropdown();
+const header = {};
+
+class ObjectPath {
+  /**
+   * Set an object property based on "path" (namespace) supplied creating
+   * ... intermediary objects if they do not exist.
+   * @param object {Object} An object where the properties specified on path should be set.
+   * @param path {String} A string representing the property to be set, e.g. "user.study.series.timepoint".
+   * @param value {Any} The value of the property that will be set.
+   * @return {Boolean} Returns "true" on success, "false" if any intermediate component of the supplied path
+   * ... is not a valid Object, in which case the property cannot be set. No excpetions are thrown.
+   */
+  static set(object, path, value) {
+    let components = ObjectPath.getPathComponents(path),
+        length = components !== null ? components.length : 0,
+        result = false;
+
+    if (length > 0 && ObjectPath.isValidObject(object)) {
+      let i = 0,
+          last = length - 1,
+          currentObject = object;
+
+      while (i < last) {
+        let field = components[i];
+
+        if (field in currentObject) {
+          if (!ObjectPath.isValidObject(currentObject[field])) {
+            break;
+          }
+        } else {
+          currentObject[field] = {};
+        }
+
+        currentObject = currentObject[field];
+        i++;
+      }
+
+      if (i === last) {
+        currentObject[components[last]] = value;
+        result = true;
+      }
+    }
+
+    return result;
+  }
+  /**
+   * Get an object property based on "path" (namespace) supplied traversing the object
+   * ... tree as necessary.
+   * @param object {Object} An object where the properties specified might exist.
+   * @param path {String} A string representing the property to be searched for, e.g. "user.study.series.timepoint".
+   * @return {Any} The value of the property if found. By default, returns the special type "undefined".
+   */
+
+
+  static get(object, path) {
+    let found,
+        // undefined by default
+    components = ObjectPath.getPathComponents(path),
+        length = components !== null ? components.length : 0;
+
+    if (length > 0 && ObjectPath.isValidObject(object)) {
+      let i = 0,
+          last = length - 1,
+          currentObject = object;
+
+      while (i < last) {
+        let field = components[i];
+        const isValid = ObjectPath.isValidObject(currentObject[field]);
+
+        if (field in currentObject && isValid) {
+          currentObject = currentObject[field];
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      if (i === last && components[last] in currentObject) {
+        found = currentObject[components[last]];
+      }
+    }
+
+    return found;
+  }
+  /**
+   * Check if the supplied argument is a real JavaScript Object instance.
+   * @param object {Any} The subject to be tested.
+   * @return {Boolean} Returns "true" if the object is a real Object instance and "false" otherwise.
+   */
+
+
+  static isValidObject(object) {
+    return typeof object === 'object' && object !== null && object instanceof Object;
+  }
+
+  static getPathComponents(path) {
+    return typeof path === 'string' ? path.split('.') : null;
+  }
+
+}
+
+function absoluteUrl(path) {
+  let absolutePath = '/'; // TODO: Find another way to get root url
+
+  const absoluteUrl = window.location.origin;
+  const absoluteUrlParts = absoluteUrl.split('/');
+
+  if (absoluteUrlParts.length > 4) {
+    const rootUrlPrefixIndex = absoluteUrl.indexOf(absoluteUrlParts[3]);
+    absolutePath += absoluteUrl.substring(rootUrlPrefixIndex) + path;
+  } else {
+    absolutePath += path;
+  }
+
+  return absolutePath.replace(/\/\/+/g, '/');
+}
+
+// TODO: figure out where else to put this function
+function addServers(servers, store) {
+  Object.keys(servers).forEach(serverType => {
+    const endpoints = servers[serverType];
+    endpoints.forEach(endpoint => {
+      const server = Object.assign({}, endpoint);
+      server.type = serverType;
+      store.dispatch({
+        type: 'ADD_SERVER',
+        server
+      });
+    });
+  });
+}
+
+// Return the array sorting function for its object's properties
+function sortBy() {
+  var fields = [].slice.call(arguments),
+      n_fields = fields.length;
+  return function (A, B) {
+    var a, b, field, key, reverse, result, i;
+
+    for (i = 0; i < n_fields; i++) {
+      result = 0;
+      field = fields[i];
+      key = typeof field === 'string' ? field : field.name;
+      a = A[key];
+      b = B[key];
+
+      if (typeof field.primer !== 'undefined') {
+        a = field.primer(a);
+        b = field.primer(b);
+      }
+
+      reverse = field.reverse ? -1 : 1;
+
+      if (a < b) {
+        result = reverse * -1;
+      }
+
+      if (a > b) {
+        result = reverse * 1;
+      }
+
+      if (result !== 0) {
+        break;
+      }
+    }
+
+    return result;
+  };
+}
+
+/* jshint -W060 */
+function writeScript(fileName, callback) {
+  const script = document.createElement('script');
+  script.src = absoluteUrl(fileName);
+
+  script.onload = () => {
+    if (typeof callback === 'function') {
+      callback(script);
+    }
+  };
+
+  document.body.appendChild(script);
+}
+
+const utils = {
+  guid,
+  ObjectPath,
+  absoluteUrl,
+  addServers,
+  sortBy,
+  writeScript
+};
+
+function getWADORSImageUrl(instance, frame) {
+  let wadorsuri = instance.wadorsuri;
+
+  if (!wadorsuri) {
+    return;
+  } // We need to sum 1 because WADO-RS frame number is 1-based
+
+
+  frame = (frame || 0) + 1; // Replaces /frame/1 by /frame/{frame}
+
+  wadorsuri = wadorsuri.replace(/(%2Fframes%2F)(\d+)/, `$1${frame}`);
+  return wadorsuri;
+}
+/**
+ * Obtain an imageId for Cornerstone based on the WADO-RS scheme
+ *
+ * @param {object} instanceMetada metadata object (InstanceMetadata)
+ * @returns {string} The imageId to be used by Cornerstone
+ */
+
+
+function getWADORSImageId(instance, frame) {
+  const uri = getWADORSImageUrl(instance, frame);
+
+  if (!uri) {
+    return;
+  }
+
+  return `wadors:${uri}`;
+}
+
+function updateQueryStringParameter(uri, key, value) {
+  const regex = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+  const separator = uri.indexOf('?') !== -1 ? '&' : '?';
+
+  if (uri.match(regex)) {
+    return uri.replace(regex, '$1' + key + '=' + value + '$2');
+  } else {
+    return uri + separator + key + '=' + value;
+  }
+}
+/**
+ * Obtain an imageId for Cornerstone from an image instance
+ *
+ * @param instance
+ * @param frame
+ * @param thumbnail
+ * @returns {string} The imageId to be used by Cornerstone
+ */
+
+
+function getImageId(instance, frame, thumbnail = false) {
+  if (!instance) {
+    return;
+  }
+
+  if (typeof instance.getImageId === 'function') {
+    return instance.getImageId();
+  }
+
+  if (instance.url) {
+    if (frame !== undefined) {
+      instance.url = updateQueryStringParameter(instance.url, 'frame', frame);
+    }
+
+    return instance.url;
+  }
+
+  const renderingAttr = thumbnail ? 'thumbnailRendering' : 'imageRendering';
+
+  if (!instance[renderingAttr] || instance[renderingAttr] === 'wadouri' || !instance.wadorsuri) {
+    let imageId = 'dicomweb:' + instance.wadouri;
+
+    if (frame !== undefined) {
+      imageId += '&frame=' + frame;
+    }
+
+    return imageId;
+  } else {
+    return getWADORSImageId(instance, frame, thumbnail); // WADO-RS Retrieve Frame
+  }
+}
+
 class OHIFInstanceMetadata extends InstanceMetadata {
   /**
    * @param {Object} Instance object.
@@ -31673,7 +32084,7 @@ class OHIFInstanceMetadata extends InstanceMetadata {
   getImageId(frame, thumbnail) {
     // If _imageID is not cached, create it
     if (this._imageId === null) {
-      this._imageId = OHIF.viewerbase.getImageId(this.getData(), frame, thumbnail);
+      this._imageId = getImageId(this.getData(), frame, thumbnail);
     }
 
     return this._imageId;
@@ -42613,17 +43024,11 @@ class StudyPrefetcher {
   }
 
   prefetchDisplaySets() {
-    let config;
-
-    if (Meteor.settings && Meteor.settings.public && Meteor.settings.prefetch) {
-      config = Meteor.settings.public.prefetch;
-    } else {
-      config = {
-        order: 'closest',
-        displaySetCount: 1
-      };
-    }
-
+    // TODO: Allow passing in config
+    let config = {
+      order: 'closest',
+      displaySetCount: 1
+    };
     const displaySetsToPrefetch = this.getDisplaySetsToPrefetch(config);
     const imageIds = this.getImageIdsFromDisplaySets(displaySetsToPrefetch);
     this.prefetchImageIds(imageIds);
@@ -42702,7 +43107,7 @@ class StudyPrefetcher {
 
     if (!getDisplaySets) {
       if (prefetchOrder) {
-        OHIF.log.warn(`Invalid prefetch order configuration (${prefetchOrder})`);
+        log$1.warn(`Invalid prefetch order configuration (${prefetchOrder})`);
       }
 
       return [];
@@ -42795,7 +43200,7 @@ class StudyPrefetcher {
   }
 
   cacheFullHandler() {
-    OHIF.log.warn('Cache full');
+    log$1.warn('Cache full');
     this.stopPrefetching();
   }
 
@@ -42810,7 +43215,7 @@ class ResizeViewportManager {
 
 
   repositionStudySeriesQuickSwitch() {
-    OHIF.log.info('ResizeViewportManager repositionStudySeriesQuickSwitch'); // Stop here if viewer is not displayed
+    log$1.info('ResizeViewportManager repositionStudySeriesQuickSwitch'); // Stop here if viewer is not displayed
 
     const isViewer = Session.get('ViewerOpened');
     if (!isViewer) return; // Stop here if there is no one or only one viewport
@@ -42848,7 +43253,7 @@ class ResizeViewportManager {
 
 
   relocateDialogs() {
-    OHIF.log.info('ResizeViewportManager relocateDialogs');
+    log$1.info('ResizeViewportManager relocateDialogs');
     const $bottomRightDialogs = jquery('#annotationDialog, #textMarkerOptionsDialog');
     $bottomRightDialogs.css({
       top: '',
@@ -42868,7 +43273,7 @@ class ResizeViewportManager {
 
 
   resizeScrollbars(element) {
-    OHIF.log.info('ResizeViewportManager resizeScrollbars');
+    log$1.info('ResizeViewportManager resizeScrollbars');
     const $currentOverlay = jquery(element).siblings('.imageViewerViewportOverlay');
     $currentOverlay.find('.scrollbar').trigger('rescale');
   } // Resize a single viewport element
@@ -42916,7 +43321,7 @@ class ResizeViewportManager {
   handleResize() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(() => {
-      OHIF.log.info('ResizeViewportManager resizeViewportElements');
+      log$1.info('ResizeViewportManager resizeViewportElements');
       this.resizeViewportElements();
     }, 100);
   }
@@ -43250,7 +43655,7 @@ class StackLoadingListener extends BaseLoadingListener {
     }
 
     progressBar += ']';
-    OHIF.log.info(`${displaySetInstanceUid}: ${progressBar}`);
+    log.info(`${displaySetInstanceUid}: ${progressBar}`);
   }
 
 }
@@ -43886,6 +44291,19 @@ const classes = {
   StudyMetadataSource
 };
 
+const setToolActive = tool => ({
+  type: 'SET_TOOL_ACTIVE',
+  tool
+});
+const setViewportActive = viewportIndex => ({
+  type: 'SET_VIEWPORT_ACTIVE',
+  viewportIndex
+});
+const actions = {
+  setToolActive,
+  setViewportActive
+};
+
 function symbolObservablePonyfill(root) {
 	var result;
 	var Symbol = root.Symbol;
@@ -44235,13 +44653,46 @@ const viewports = (state = defaultState, action) => {
   }
 };
 
+const defaultState$1 = {
+  servers: []
+};
+
+const servers = (state = defaultState$1, action) => {
+  switch (action.type) {
+    case 'ADD_SERVER':
+      const {
+        servers
+      } = state;
+      const alreadyExists = servers.find(server => server.id === action.server.id);
+
+      if (alreadyExists) {
+        return state;
+      }
+
+      servers.push(action.server);
+
+      if (servers.length === 1) {
+        servers[0].active = true;
+      }
+
+      return Object.assign({}, state, {
+        servers
+      });
+
+    default:
+      return state;
+  }
+};
+
 const combinedReducer = combineReducers({
   tools,
-  viewports
+  viewports,
+  servers
 });
 
 const redux = {
-  combinedReducer
+  combinedReducer,
+  actions
 };
 
 function search(object, query, property = null, result = []) {
@@ -44288,20 +44739,6 @@ function encodeId(input) {
 const string = {
   search,
   encodeId
-};
-
-// These should be overridden by the implementation
-let user = {
-  schema: null,
-  userLoggedIn: () => false,
-  getUserId: () => null,
-  getName: () => null,
-  getAccessToken: () => null,
-  login: () => new Promise((resolve, reject) => reject()),
-  logout: () => new Promise((resolve, reject) => reject()),
-  getData: key => null,
-  setData: (key, value) => null,
-  validate: () => null
 };
 
 // Transforms a shallow object with keys separated by "." into a nested object
@@ -44361,44 +44798,9 @@ const object = {
   getShallowObject
 };
 
-/**
- * Returns the specified element as a dicom attribute group/element.
- *
- * @param element - The group/element of the element (e.g. '00280009')
- * @param [defaultValue] - The value to return if the element is not present
- * @returns {*}
- */
-
-/**
- * Returns the Alphabetic version of a PN
- *
- * @param element - The group/element of the element (e.g. '00200013')
- * @param [defaultValue] - The default value to return if the element is not found
- * @returns {*}
- */
-
-/**
- * Returns the first string value as a Javascript Number
- * @param element - The group/element of the element (e.g. '00200013')
- * @param [defaultValue] - The default value to return if the element does not exist
- * @returns {*}
- */
-
-/**
- * Returns the specified element as a string.  Multi-valued elements will be separated by a backslash
- *
- * @param element - The group/element of the element (e.g. '00200013')
- * @param [defaultValue] - The value to return if the element is not present
- * @returns {*}
- */
-
 const viewer = {};
-const servers = {
-  getCurrentServer
-};
 const OHIF$1 = {
   viewer,
-  servers,
   utils,
   studies,
   redux,
@@ -44411,9 +44813,11 @@ const OHIF$1 = {
   ui,
   user,
   object,
-  commands
+  commands,
+  log: log$1,
+  DICOMWeb
 };
 
 export default OHIF$1;
-export { viewer, servers, utils, studies, redux, classes, metadata, hotkeys, header, cornerstone$2 as cornerstone, string, ui, user, object, commands, OHIF$1 as OHIF };
+export { viewer, utils, studies, redux, classes, metadata, hotkeys, header, cornerstone$2 as cornerstone, string, ui, user, object, commands, log$1 as log, DICOMWeb, OHIF$1 as OHIF };
 //# sourceMappingURL=index.es.js.map

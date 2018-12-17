@@ -18,4 +18,4 @@ export default function getOffset(element) {
     left,
     top
   };
-};
+}

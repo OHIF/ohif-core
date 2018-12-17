@@ -1,3 +1,4 @@
+import DICOMWeb from '../../../DICOMWeb/';
 import DICOMwebClient from 'dicomweb-client';
 
 const WADOProxy = {
@@ -5,6 +6,21 @@ const WADOProxy = {
         // TODO: Remove all WADOProxy stuff from this file
         return url;
     }
+}
+
+function parseFloatArray(obj) {
+  const result = [];
+
+  if (!obj) {
+    return result;
+  }
+
+  const objs = obj.split('\\');
+  for (let i = 0; i < objs.length; i++) {
+    result.push(parseFloat(objs[i]));
+  }
+
+  return result;
 }
 
 /**
@@ -111,7 +127,7 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
 
     const config = {
         url: server.wadoRoot, //BulkDataURI is absolute, so this isn't used
-        headers: OHIF.DICOMWeb.getAuthorizationHeader()
+        headers: DICOMWeb.getAuthorizationHeader(server)
     };
     const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
     const options = {
@@ -148,8 +164,6 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
  * @returns {String} The ReferenceSOPInstanceUID
  */
 async function getPaletteColors(server, instance, lutDescriptor) {
-    const { DICOMWeb } = OHIF;
-
     let paletteUID = DICOMWeb.getString(instance['00281199']);
 
     return new Promise((resolve, reject) => {
@@ -199,8 +213,6 @@ function getFrameIncrementPointer(element) {
 }
 
 function getRadiopharmaceuticalInfo(instance) {
-    const { DICOMWeb } = OHIF;
-
     const modality = DICOMWeb.getString(instance['00080060']);
 
     if (modality !== 'PT') {
@@ -231,8 +243,6 @@ function getRadiopharmaceuticalInfo(instance) {
  * @returns {{seriesList: Array, patientName: *, patientId: *, accessionNumber: *, studyDate: *, modalities: *, studyDescription: *, imageCount: *, studyInstanceUid: *}}
  */
 async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
-    const { DICOMWeb } = OHIF;
-
     if (!resultData.length) {
         return;
     }
@@ -373,7 +383,7 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
 async function RetrieveMetadata (server, studyInstanceUid) {
     const config = {
         url: server.wadoRoot,
-        headers: OHIF.DICOMWeb.getAuthorizationHeader()
+        headers: DICOMWeb.getAuthorizationHeader(server)
     };
     const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
     const options = {

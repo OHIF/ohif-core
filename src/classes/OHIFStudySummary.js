@@ -1,4 +1,4 @@
-import 'meteor/ohif:viewerbase';
+import StudySummary from './StudySummary';
 
 /**
  * Constants
@@ -13,7 +13,7 @@ const propertyReplacementMap = {
 /**
  * OHIF Viewers specialized version of StudySummary class
  */
-export class OHIFStudySummary extends OHIF.viewerbase.metadata.StudySummary {
+export class OHIFStudySummary extends StudySummary {
   // @Override
   addTags(tagMap) {
     const _hasOwn = Object.prototype.hasOwnProperty;

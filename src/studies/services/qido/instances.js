@@ -1,7 +1,5 @@
-
+import DICOMWeb from '../../../DICOMWeb/';
 import DICOMwebClient from 'dicomweb-client';
-
-const { DICOMWeb } = OHIF;
 
 /**
  * Parses data returned from a QIDO search and transforms it into
@@ -13,10 +11,8 @@ const { DICOMWeb } = OHIF;
  * @returns {Array} Series List
  */
 function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
-    const { DICOMWeb } = OHIF;
-
-    var seriesMap = {};
-    var seriesList = [];
+    const seriesMap = {};
+    const seriesList = [];
 
     resultData.forEach(function(instance) {
         // Use seriesMap to cache series data
@@ -74,7 +70,7 @@ export default function Instances(server, studyInstanceUid) {
 
     const config = {
         url: server.qidoRoot,
-        headers: OHIF.DICOMWeb.getAuthorizationHeader()
+        headers: DICOMWeb.getAuthorizationHeader(server)
     };
     const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
     const queryParams = getQIDOQueryParams(filter, server.qidoSupportsIncludeField);

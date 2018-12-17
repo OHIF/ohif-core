@@ -1,3 +1,5 @@
+import log from '../../log.js';
+
 export class SidebarModule {
     constructor(name) {
         super();
@@ -11,7 +13,7 @@ export class SidebarModule {
     }
 
     setup(div) {
-        OHIF.log.info(`Setup for plugin: ${this.name}`);
+        log.info(`Setup for plugin: ${this.name}`);
     }
 
     /**

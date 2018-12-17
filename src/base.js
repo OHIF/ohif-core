@@ -1,5 +1,0 @@
-
-
-OHIF.servers = {
-    collections: {}
-};

@@ -1,6 +1,6 @@
 import DICOMwebClient from 'dicomweb-client';
+import DICOMWeb from '../../../DICOMWeb/';
 
-const { DICOMWeb } = OHIF;
 
 /**
  * Creates a QIDO date string for a date range query
@@ -113,7 +113,7 @@ function resultDataToStudies(resultData) {
 export default function Studies(server, filter) {
     const config = {
         url: server.qidoRoot,
-        headers: OHIF.DICOMWeb.getAuthorizationHeader()
+        headers: DICOMWeb.getAuthorizationHeader(server)
     };
 
     const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);

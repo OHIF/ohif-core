@@ -7,3 +7,10 @@ export const setViewportActive = viewportIndex => ({
   type: 'SET_VIEWPORT_ACTIVE',
   viewportIndex
 });
+
+const actions = {
+  setToolActive,
+  setViewportActive
+};
+
+export default actions;

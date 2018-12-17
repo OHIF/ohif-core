@@ -18,4 +18,4 @@ export default function isCharacterKeyPress(event) {
   }
 
   return false;
-};
+}

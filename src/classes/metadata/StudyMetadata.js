@@ -5,7 +5,6 @@ import { ImageSet } from '../ImageSet';
 import { OHIFError } from '../OHIFError';
 
 export class StudyMetadata extends Metadata {
-
     constructor(data, uid) {
         super(data, uid);
         // Initialize Private Properties

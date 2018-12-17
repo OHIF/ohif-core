@@ -1,29 +1,34 @@
+import { retrieveStudyMetadata } from './retrieveStudyMetadata';
+import { StudyMetadata } from '../classes/metadata/StudyMetadata';
+
+// TODO: Use callbacks or redux?
+const loadingDict = {};
+
 /**
  * Load the study metadata and store its information locally
  *
  * @param {String} studyInstanceUid The UID of the Study to be loaded
  * @returns {Promise} that will be resolved with the study metadata or rejected with an error
  */
-export default function loadStudy(studyInstanceUid) {
+export default function loadStudy(server, studyInstanceUid) {
   return new Promise((resolve, reject) => {
-    let currentLoadingState = OHIF.studies.loadingDict[studyInstanceUid] || '';
+    let currentLoadingState = loadingDict[studyInstanceUid] || '';
 
     // Set the loading state as the study is not yet loaded
     if (currentLoadingState !== 'loading') {
-      OHIF.studies.loadingDict[studyInstanceUid] = 'loading';
+      loadingDict[studyInstanceUid] = 'loading';
     }
 
-    const studyLoaded = OHIF.viewer.Studies.findBy({
+    /*const studyLoaded = OHIF.viewer.Studies.findBy({
       studyInstanceUid: studyInstanceUid
     });
     if (studyLoaded) {
-      OHIF.studies.loadingDict[studyInstanceUid] = 'loaded';
+      loadingDict[studyInstanceUid] = 'loaded';
       resolve(studyLoaded);
       return;
-    }
+    }*/
 
-    return OHIF.studies
-      .retrieveStudyMetadata(studyInstanceUid)
+    return retrieveStudyMetadata(server, studyInstanceUid)
       .then(study => {
         if (
           window.HipaaLogger &&
@@ -49,7 +54,7 @@ export default function loadStudy(studyInstanceUid) {
         OHIF.viewerbase.updateMetaDataManager(study);
 
         // Transform the study in a StudyMetadata object
-        const studyMetadata = new OHIF.metadata.StudyMetadata(study);
+        const studyMetadata = new StudyMetadata(study);
 
         // Add the display sets to the study
         study.displaySets = OHIF.viewerbase.sortingManager.getDisplaySets(
@@ -69,12 +74,12 @@ export default function loadStudy(studyInstanceUid) {
         studyLoadingListener.addStudy(study);
 
         // Add the studyInstanceUid to the loaded state dictionary
-        OHIF.studies.loadingDict[studyInstanceUid] = 'loaded';
+        loadingDict[studyInstanceUid] = 'loaded';
 
         resolve(study);
       })
       .catch((...args) => {
-        OHIF.studies.loadingDict[studyInstanceUid] = 'failed';
+        loadingDict[studyInstanceUid] = 'failed';
         reject(args);
       });
   });

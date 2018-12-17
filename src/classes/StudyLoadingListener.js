@@ -331,7 +331,7 @@ class StackLoadingListener extends BaseLoadingListener {
     }
 
     progressBar += ']';
-    OHIF.log.info(`${displaySetInstanceUid}: ${progressBar}`);
+    log.info(`${displaySetInstanceUid}: ${progressBar}`);
   }
 }
 
