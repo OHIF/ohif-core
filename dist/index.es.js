@@ -44684,14 +44684,16 @@ const servers = (state = defaultState$1, action) => {
   }
 };
 
-const combinedReducer = combineReducers({
+const reducers = {
   tools,
   viewports,
   servers
-});
+};
+const combinedReducer = combineReducers(reducers);
 
 const redux = {
   combinedReducer,
+  reducers,
   actions
 };
 
