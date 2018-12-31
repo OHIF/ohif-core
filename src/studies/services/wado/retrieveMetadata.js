@@ -1,5 +1,5 @@
-import DICOMWeb from '../../../DICOMWeb/';
 import DICOMwebClient from 'dicomweb-client';
+import DICOMWeb from '../../../DICOMWeb/';
 
 const WADOProxy = {
     convertURL: (url, server) => {
@@ -177,8 +177,8 @@ async function getPaletteColors(server, instance, lutDescriptor) {
 
         // no entry in cache... Fetch remote data.
         const r = getPaletteColor(server, instance, '00281201', lutDescriptor);
-        const g = getPaletteColor(server, instance, '00281202', lutDescriptor);;
-        const b = getPaletteColor(server, instance, '00281203', lutDescriptor);;
+        const g = getPaletteColor(server, instance, '00281202', lutDescriptor);
+        const b = getPaletteColor(server, instance, '00281203', lutDescriptor);
 
         const promises = [r, g, b];
 

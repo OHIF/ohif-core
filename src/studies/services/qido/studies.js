@@ -1,7 +1,6 @@
 import DICOMwebClient from 'dicomweb-client';
 import DICOMWeb from '../../../DICOMWeb/';
 
-
 /**
  * Creates a QIDO date string for a date range query
  * Assumes the year is positive, at most 4 digits long.
@@ -80,8 +79,6 @@ function getQIDOQueryParams(filter, serverSupportsQIDOIncludeField) {
  * @returns {Array} An array of Study MetaData objects
  */
 function resultDataToStudies(resultData) {
-    const { DICOMWeb } = OHIF;
-
     const studies = [];
 
     if (!resultData || !resultData.length) return;

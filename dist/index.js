@@ -29502,30 +29502,27 @@ function getQIDOQueryParams$1(filter, serverSupportsQIDOIncludeField) {
 
 
 function resultDataToStudies(resultData) {
-  const {
-    DICOMWeb: DICOMWeb$$1
-  } = OHIF;
   const studies = [];
   if (!resultData || !resultData.length) return;
   resultData.forEach(study => studies.push({
-    studyInstanceUid: DICOMWeb$$1.getString(study['0020000D']),
+    studyInstanceUid: DICOMWeb.getString(study['0020000D']),
     // 00080005 = SpecificCharacterSet
-    studyDate: DICOMWeb$$1.getString(study['00080020']),
-    studyTime: DICOMWeb$$1.getString(study['00080030']),
-    accessionNumber: DICOMWeb$$1.getString(study['00080050']),
-    referringPhysicianName: DICOMWeb$$1.getString(study['00080090']),
+    studyDate: DICOMWeb.getString(study['00080020']),
+    studyTime: DICOMWeb.getString(study['00080030']),
+    accessionNumber: DICOMWeb.getString(study['00080050']),
+    referringPhysicianName: DICOMWeb.getString(study['00080090']),
     // 00081190 = URL
-    patientName: DICOMWeb$$1.getName(study['00100010']),
-    patientId: DICOMWeb$$1.getString(study['00100020']),
-    patientBirthdate: DICOMWeb$$1.getString(study['00100030']),
-    patientSex: DICOMWeb$$1.getString(study['00100040']),
-    studyId: DICOMWeb$$1.getString(study['00200010']),
-    numberOfStudyRelatedSeries: DICOMWeb$$1.getString(study['00201206']),
-    numberOfStudyRelatedInstances: DICOMWeb$$1.getString(study['00201208']),
-    studyDescription: DICOMWeb$$1.getString(study['00081030']),
+    patientName: DICOMWeb.getName(study['00100010']),
+    patientId: DICOMWeb.getString(study['00100020']),
+    patientBirthdate: DICOMWeb.getString(study['00100030']),
+    patientSex: DICOMWeb.getString(study['00100040']),
+    studyId: DICOMWeb.getString(study['00200010']),
+    numberOfStudyRelatedSeries: DICOMWeb.getString(study['00201206']),
+    numberOfStudyRelatedInstances: DICOMWeb.getString(study['00201208']),
+    studyDescription: DICOMWeb.getString(study['00081030']),
     // modality: DICOMWeb.getString(study['00080060']),
     // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
-    modalities: DICOMWeb$$1.getString(DICOMWeb$$1.getModalities(study['00080060'], study['00080061']))
+    modalities: DICOMWeb.getString(DICOMWeb.getModalities(study['00080060'], study['00080061']))
   }));
   return studies;
 }
@@ -31189,30 +31186,27 @@ function getQIDOQueryParams$2(filter, serverSupportsQIDOIncludeField) {
 
 
 function resultDataToStudies$1(resultData) {
-  const {
-    DICOMWeb: DICOMWeb$$1
-  } = OHIF;
   const studies = [];
   if (!resultData || !resultData.length) return;
   resultData.forEach(study => studies.push({
-    studyInstanceUid: DICOMWeb$$1.getString(study['0020000D']),
+    studyInstanceUid: DICOMWeb.getString(study['0020000D']),
     // 00080005 = SpecificCharacterSet
-    studyDate: DICOMWeb$$1.getString(study['00080020']),
-    studyTime: DICOMWeb$$1.getString(study['00080030']),
-    accessionNumber: DICOMWeb$$1.getString(study['00080050']),
-    referringPhysicianName: DICOMWeb$$1.getString(study['00080090']),
+    studyDate: DICOMWeb.getString(study['00080020']),
+    studyTime: DICOMWeb.getString(study['00080030']),
+    accessionNumber: DICOMWeb.getString(study['00080050']),
+    referringPhysicianName: DICOMWeb.getString(study['00080090']),
     // 00081190 = URL
-    patientName: DICOMWeb$$1.getName(study['00100010']),
-    patientId: DICOMWeb$$1.getString(study['00100020']),
-    patientBirthdate: DICOMWeb$$1.getString(study['00100030']),
-    patientSex: DICOMWeb$$1.getString(study['00100040']),
-    studyId: DICOMWeb$$1.getString(study['00200010']),
-    numberOfStudyRelatedSeries: DICOMWeb$$1.getString(study['00201206']),
-    numberOfStudyRelatedInstances: DICOMWeb$$1.getString(study['00201208']),
-    studyDescription: DICOMWeb$$1.getString(study['00081030']),
+    patientName: DICOMWeb.getName(study['00100010']),
+    patientId: DICOMWeb.getString(study['00100020']),
+    patientBirthdate: DICOMWeb.getString(study['00100030']),
+    patientSex: DICOMWeb.getString(study['00100040']),
+    studyId: DICOMWeb.getString(study['00200010']),
+    numberOfStudyRelatedSeries: DICOMWeb.getString(study['00201206']),
+    numberOfStudyRelatedInstances: DICOMWeb.getString(study['00201208']),
+    studyDescription: DICOMWeb.getString(study['00081030']),
     // modality: DICOMWeb.getString(study['00080060']),
     // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
-    modalities: DICOMWeb$$1.getString(DICOMWeb$$1.getModalities(study['00080060'], study['00080061']))
+    modalities: DICOMWeb.getString(DICOMWeb.getModalities(study['00080060'], study['00080061']))
   }));
   return studies;
 }
