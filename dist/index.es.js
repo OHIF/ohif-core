@@ -44293,9 +44293,14 @@ const setViewportActive = viewportIndex => ({
   type: 'SET_VIEWPORT_ACTIVE',
   viewportIndex
 });
+const setLayout = layout => ({
+  type: 'SET_LAYOUT',
+  layout
+});
 const actions = {
   setToolActive,
-  setViewportActive
+  setViewportActive,
+  setLayout
 };
 
 function symbolObservablePonyfill(root) {
@@ -44626,13 +44631,24 @@ const tools = (state = {
         buttons
       };
 
+    case 'SET_AVAILABLE_BUTTONS':
+      return {
+        buttons: action.buttons
+      };
+
     default:
       return state;
   }
 };
 
 const defaultState = {
-  activeViewportIndex: 0
+  activeViewportIndex: 0,
+  layout: {
+    viewports: [{
+      height: '100%',
+      width: '100%'
+    }]
+  }
 };
 
 const viewports = (state = defaultState, action) => {
@@ -44640,6 +44656,11 @@ const viewports = (state = defaultState, action) => {
     case 'SET_VIEWPORT_ACTIVE':
       return Object.assign({}, state, {
         activeViewportIndex: action.viewportIndex
+      });
+
+    case 'SET_LAYOUT':
+      return Object.assign({}, state, {
+        layout: action.layout
       });
 
     default:

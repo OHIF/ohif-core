@@ -8,9 +8,15 @@ export const setViewportActive = viewportIndex => ({
   viewportIndex
 });
 
+export const setLayout = layout => ({
+  type: 'SET_LAYOUT',
+  layout
+});
+
 const actions = {
   setToolActive,
-  setViewportActive
+  setViewportActive,
+  setLayout
 };
 
 export default actions;

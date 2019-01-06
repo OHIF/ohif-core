@@ -93,6 +93,10 @@ const tools = (state = { buttons: defaultButtons }, action) => {
             return {
                 buttons
             };
+        case 'SET_AVAILABLE_BUTTONS':
+            return {
+              buttons: action.buttons
+            };
         default:
             return state;
     }
