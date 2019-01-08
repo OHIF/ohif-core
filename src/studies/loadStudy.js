@@ -1,5 +1,6 @@
 import { retrieveStudyMetadata } from './retrieveStudyMetadata';
 import { StudyMetadata } from '../classes/metadata/StudyMetadata';
+import { updateMetaDataManager } from '../utils/updateMetaDataManager';
 
 // TODO: Use callbacks or redux?
 const loadingDict = {};
@@ -30,28 +31,11 @@ export default function loadStudy(server, studyInstanceUid) {
 
     return retrieveStudyMetadata(server, studyInstanceUid)
       .then(study => {
-        if (
-          window.HipaaLogger &&
-          OHIF.user &&
-          OHIF.user.userLoggedIn &&
-          OHIF.user.userLoggedIn()
-        ) {
-          window.HipaaLogger.logEvent({
-            eventType: 'viewed',
-            userId: OHIF.user.getUserId(),
-            userName: OHIF.user.getName(),
-            collectionName: 'Study',
-            recordId: studyInstanceUid,
-            patientId: study.patientId,
-            patientName: study.patientName
-          });
-        }
-
         // Once the data was retrieved, the series are sorted by series and instance number
         OHIF.viewerbase.sortStudy(study);
 
         // Updates WADO-RS metaDataManager
-        OHIF.viewerbase.updateMetaDataManager(study);
+        updateMetaDataManager(study);
 
         // Transform the study in a StudyMetadata object
         const studyMetadata = new StudyMetadata(study);

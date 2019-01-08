@@ -1,8 +1,7 @@
 import actions from './actions.js';
-import { combinedReducer, reducers } from './reducers';
+import reducers from './reducers';
 
 const redux = {
-  combinedReducer,
   reducers,
   actions
 };

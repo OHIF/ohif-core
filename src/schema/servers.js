@@ -1,4 +1,4 @@
-import SimpleSchema from 'simpl-schema';
+/*import SimpleSchema from 'simpl-schema';
 
 const serverNameDefinitions = {
   type: String,
@@ -317,4 +317,4 @@ export const ServerConfiguration = new SimpleSchema({
     label: 'Origin',
     optional: true
   }
-});
+});*/

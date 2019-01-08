@@ -1,6 +1,5 @@
 import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
-import _ from 'underscore';
 
 function getBoundingBox(context, textLines, x, y, options) {
   if (Object.prototype.toString.call(textLines) !== '[object Array]') {
@@ -86,10 +85,10 @@ function repositionTextBox(eventData, measurementData, config) {
 
   const allowedBorders = OHIF.uiSettings.autoPositionMeasurementsTextCallOuts;
   const allow = {
-    T: !allowedBorders || _.contains(allowedBorders, 'T'),
-    R: !allowedBorders || _.contains(allowedBorders, 'R'),
-    B: !allowedBorders || _.contains(allowedBorders, 'B'),
-    L: !allowedBorders || _.contains(allowedBorders, 'L')
+    T: !allowedBorders || allowedBorders.includes('T'),
+    R: !allowedBorders || allowedBorders.includes('R'),
+    B: !allowedBorders || allowedBorders.includes('B'),
+    L: !allowedBorders || allowedBorders.includes('L')
   };
 
   const getAvailableBlankAreas = (enabledElement, labelWidth, labelHeight) => {
@@ -219,7 +218,11 @@ function repositionTextBox(eventData, measurementData, config) {
   bounds.x = textBox.boundingBox.width;
   bounds.y = textBox.boundingBox.height;
 
-  const getHandlePosition = key => _.pick(handles[key], ['x', 'y']);
+  const getHandlePosition = key => {
+    const { x, y } = handles[key];
+
+    return { x, y };
+  };
   const start = getHandlePosition('start');
   const end = getHandlePosition('end');
 
@@ -238,7 +241,7 @@ function repositionTextBox(eventData, measurementData, config) {
     bounds.x,
     bounds.y
   );
-  const tempDirections = _.clone(directions);
+  const tempDirections = Object.assign({}, directions);
   let tempCornerAxis = cornerAxis;
   let foundPlace = false;
   let current = 0;
@@ -259,11 +262,11 @@ function repositionTextBox(eventData, measurementData, config) {
 
   let cornerAxisPosition;
   if (foundPlace) {
-    _.extend(directions, tempDirections);
+    directions = Object.assign({}, directions, tempDirections);
     cornerAxis = tempCornerAxis;
     cornerAxisPosition = directions[cornerAxis] < 0 ? 0 : limits[cornerAxis];
   } else {
-    _.extend(limits, canvasDimensions);
+    limits = Object.assign({}, limits, canvasDimensions);
 
     const toolPositionOnCanvas = cornerstone.pixelToCanvas(element, tool);
     const renderingInformation = getRenderingInformation(

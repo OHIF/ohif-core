@@ -1,10 +1,11 @@
-// Important metadata classes
+import OHIFError from '../OHIFError';
 import { retrieveStudyMetadata } from '../studies/retrieveStudyMetadata.js';
-const { OHIFError, metadata } = OHIF.viewerbase;
-const { StudySummary, StudyMetadata } = metadata;
+import { StudyMetadata } from './StudyMetadata';
+import { StudySummary } from './StudySummary';
+import { StudyMetadataSource } from '../StudyMetadataSource.js';
+import { sortingManager } from '../utils/sortingManager.js';
 
-export class OHIFStudyMetadataSource extends OHIF.viewerbase
-  .StudyMetadataSource {
+export class OHIFStudyMetadataSource extends StudyMetadataSource {
   /**
    * Get study metadata for a study with given study InstanceUID
    * @param  {String} studyInstanceUID Study InstanceUID
@@ -44,15 +45,13 @@ export class OHIFStudyMetadataSource extends OHIF.viewerbase
       this.getByInstanceUID(studyInstanceUID)
         .then(studyInfo => {
           // Create study metadata object
-          const studyMetadata = new OHIF.metadata.StudyMetadata(
+          const studyMetadata = new StudyMetadata(
             studyInfo,
             studyInfo.studyInstanceUid
           );
 
           // Get Study display sets
-          const displaySets = OHIF.viewerbase.sortingManager.getDisplaySets(
-            studyMetadata
-          );
+          const displaySets = sortingManager.getDisplaySets(studyMetadata);
 
           // Set studyMetadata display sets
           studyMetadata.setDisplaySets(displaySets);

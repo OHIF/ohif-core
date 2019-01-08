@@ -2,10 +2,9 @@ import MetadataProvider from './MetadataProvider.js';
 import CommandsManager from './CommandsManager.js';
 import HotkeysContext from './HotkeysContext.js';
 import HotkeysManager from './HotkeysManager.js';
-import { ImageSet } from './ImageSet';
+import ImageSet from './ImageSet';
 import { StudyPrefetcher } from './StudyPrefetcher';
-import { ResizeViewportManager } from './ResizeViewportManager';
-//import { StudyLoadingListener } from './StudyLoadingListener';
+import { StudyLoadingListener } from './StudyLoadingListener';
 import { StackLoadingListener } from './StudyLoadingListener';
 import { DICOMFileLoadingListener } from './StudyLoadingListener';
 import { StudyMetadata } from './metadata/StudyMetadata';
@@ -14,8 +13,7 @@ import { InstanceMetadata } from './metadata/InstanceMetadata';
 //import { StudySummary } from './metadata/StudySummary';
 //import { plugins } from './plugins/';
 import { TypeSafeCollection } from './TypeSafeCollection';
-import { OHIFError } from './OHIFError.js';
-//import { StackImagePositionOffsetSynchronizer } from './StackImagePositionOffsetSynchronizer';
+import OHIFError from './OHIFError.js';
 import { StudyMetadataSource } from './StudyMetadataSource';
 
 export {
@@ -25,7 +23,6 @@ export {
   HotkeysManager,
   ImageSet,
   StudyPrefetcher,
-  ResizeViewportManager,
   //StudyLoadingListener,
   StackLoadingListener,
   DICOMFileLoadingListener,
@@ -35,7 +32,6 @@ export {
   //StudySummary,
   TypeSafeCollection,
   OHIFError,
-  //StackImagePositionOffsetSynchronizer,
   StudyMetadataSource
 };
 
@@ -46,8 +42,7 @@ const classes = {
   HotkeysManager,
   ImageSet,
   StudyPrefetcher,
-  ResizeViewportManager,
-  //StudyLoadingListener,
+  StudyLoadingListener,
   StackLoadingListener,
   DICOMFileLoadingListener,
   StudyMetadata,
@@ -56,7 +51,6 @@ const classes = {
   //StudySummary,
   TypeSafeCollection,
   OHIFError,
-  //StackImagePositionOffsetSynchronizer,
   StudyMetadataSource
 };
 

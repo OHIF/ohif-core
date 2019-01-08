@@ -20,7 +20,7 @@ function getWADORSImageUrl(instance, frame) {
  * @param {object} instanceMetada metadata object (InstanceMetadata)
  * @returns {string} The imageId to be used by Cornerstone
  */
-export function getWADORSImageId(instance, frame) {
+export default function getWADORSImageId(instance, frame) {
   const uri = getWADORSImageUrl(instance, frame);
 
   if (!uri) {
@@ -28,4 +28,4 @@ export function getWADORSImageId(instance, frame) {
   }
 
   return `wadors:${uri}`;
-};
+}

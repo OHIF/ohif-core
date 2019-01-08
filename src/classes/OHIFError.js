@@ -1,9 +1,8 @@
 // @TODO: improve this object
 /**
- * Objects to be used to throw errors, specially
- * in Trackers functions (afterFlush, Flush).
+ * Objects to be used to throw errors
  */
-export class OHIFError extends Error {
+class OHIFError extends Error {
   constructor(message) {
     super();
     this.message = message;
@@ -11,3 +10,5 @@ export class OHIFError extends Error {
     this.name = this.constructor.name;
   }
 }
+
+export default OHIFError;

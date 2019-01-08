@@ -1,5 +1,5 @@
 import guid from '../utils/guid.js';
-import { OHIFError } from './OHIFError';
+import OHIFError from './OHIFError';
 
 const OBJECT = 'object';
 
@@ -9,7 +9,7 @@ const OBJECT = 'object';
  * main attributes (images and uid) it allows additional attributes to be appended to it (currently
  * indiscriminately, but this should be changed).
  */
-export class ImageSet {
+class ImageSet {
   constructor(images) {
     if (Array.isArray(images) !== true) {
       throw new OHIFError('ImageSet expects an array of images');
@@ -64,3 +64,5 @@ export class ImageSet {
     return this.images.sort(sortingCallback);
   }
 }
+
+export default ImageSet;

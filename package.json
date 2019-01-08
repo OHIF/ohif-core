@@ -70,9 +70,6 @@
     "cornerstone-math": "^0.1.7",
     "isomorphic-base64": "^1.0.2",
     "jquery": "^3.3.1",
-    "jquery.hotkeys": "^0.1.0",
-    "redux": "^4.0.1",
-    "simpl-schema": "^1.5.3",
-    "underscore": "^1.9.1"
+    "jquery.hotkeys": "^0.1.0"
   }
 }

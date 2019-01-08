@@ -1,4 +1,4 @@
-import { getWADORSImageId } from './getWADORSImageId';
+import getWADORSImageId from './getWADORSImageId';
 
 // https://stackoverflow.com/a/6021027/3895126
 function updateQueryStringParameter(uri, key, value) {
@@ -19,7 +19,7 @@ function updateQueryStringParameter(uri, key, value) {
  * @param thumbnail
  * @returns {string} The imageId to be used by Cornerstone
  */
-export function getImageId(instance, frame, thumbnail=false) {
+export default function getImageId(instance, frame, thumbnail = false) {
   if (!instance) {
     return;
   }
@@ -38,7 +38,11 @@ export function getImageId(instance, frame, thumbnail=false) {
 
   const renderingAttr = thumbnail ? 'thumbnailRendering' : 'imageRendering';
 
-  if (!instance[renderingAttr] || instance[renderingAttr] === 'wadouri' || !instance.wadorsuri) {
+  if (
+    !instance[renderingAttr] ||
+    instance[renderingAttr] === 'wadouri' ||
+    !instance.wadorsuri
+  ) {
     let imageId = 'dicomweb:' + instance.wadouri;
     if (frame !== undefined) {
       imageId += '&frame=' + frame;

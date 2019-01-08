@@ -1,4 +1,4 @@
-import SimpleSchema from 'simpl-schema'
+//import SimpleSchema from 'simpl-schema'
 
 /*
  Extend the available options on schema definitions:

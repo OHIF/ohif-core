@@ -10,7 +10,8 @@ import { retrieveStudyMetadata } from './retrieveStudyMetadata';
  * @param studyInstanceUids The UIDs of the Studies to be retrieved
  * @return Promise
  */
-export default function retrieveStudiesMetadata(server,
+export default function retrieveStudiesMetadata(
+  server,
   studyInstanceUids,
   seriesInstanceUids
 ) {
@@ -20,7 +21,11 @@ export default function retrieveStudiesMetadata(server,
   // Loop through the array of studyInstanceUids
   studyInstanceUids.forEach(function(studyInstanceUid) {
     // Send the call and resolve or reject the related promise based on its outcome
-    const promise = retrieveStudyMetadata(server, studyInstanceUid, seriesInstanceUids);
+    const promise = retrieveStudyMetadata(
+      server,
+      studyInstanceUid,
+      seriesInstanceUids
+    );
 
     // Add the current promise to the array of promises
     promises.push(promise);

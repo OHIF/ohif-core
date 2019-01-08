@@ -13,10 +13,23 @@ export const setLayout = layout => ({
   layout
 });
 
+export const setStudyLoadingProgress = (progressId, progressData) => ({
+  type: 'SET_STUDY_LOADING_PROGRESS',
+  progressId,
+  progressData
+});
+
+export const clearStudyLoadingProgress = progressId => ({
+  type: 'CLEAR_STUDY_LOADING_PROGRESS',
+  progressId
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
-  setLayout
+  setLayout,
+  setStudyLoadingProgress,
+  clearStudyLoadingProgress
 };
 
 export default actions;

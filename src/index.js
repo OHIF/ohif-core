@@ -1,5 +1,5 @@
 import './lib';
-import './schema.js';
+//import './schema.js';
 import studies from './studies/';
 import commands from './commands';
 import hotkeys from './hotkeys';
@@ -15,43 +15,45 @@ import user from './user.js';
 import object from './object.js';
 import DICOMWeb from './DICOMWeb';
 import log from './log.js';
+import external from './externalModules.js';
 
 const viewer = {};
 
 const OHIF = {
   viewer,
-	utils,
-	studies,
-	redux,
-	classes,
-	metadata,
-	hotkeys,
-	header,
-	cornerstone,
+  utils,
+  studies,
+  redux,
+  classes,
+  metadata,
+  hotkeys,
+  header,
+  cornerstone,
   string,
   ui,
   user,
   object,
-	commands,
+  commands,
   log,
+  external,
   DICOMWeb
-}
+};
 
 export {
   viewer, // TODO: Remove this
-	utils,
-	studies,
-	redux,
-	classes,
-	metadata,
-	hotkeys,
-	header,
-	cornerstone,
+  utils,
+  studies,
+  redux,
+  classes,
+  metadata,
+  hotkeys,
+  header,
+  cornerstone,
   string,
   ui,
   user,
   object,
-	commands,
+  commands,
   log,
   DICOMWeb
 };

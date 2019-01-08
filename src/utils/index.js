@@ -4,6 +4,9 @@ import absoluteUrl from './absoluteUrl';
 import addServers from './addServers';
 import sortBy from './sortBy.js';
 import writeScript from './writeScript.js';
+import StackManager from './StackManager.js';
+import createStacks from './createStacks.js';
+import createDisplaySets from './createDisplaySets.js';
 
 const utils = {
   guid,
@@ -11,7 +14,10 @@ const utils = {
   absoluteUrl,
   addServers,
   sortBy,
-  writeScript
+  writeScript,
+  StackManager,
+  createStacks,
+  createDisplaySets
 };
 
 export default utils;

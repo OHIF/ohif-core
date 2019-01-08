@@ -1,6 +1,5 @@
 // These should be overridden by the implementation
 let user = {
-  schema: null,
   userLoggedIn: () => false,
   getUserId: () => null,
   getName: () => null,
@@ -8,8 +7,7 @@ let user = {
   login: () => new Promise((resolve, reject) => reject()),
   logout: () => new Promise((resolve, reject) => reject()),
   getData: key => null,
-  setData: (key, value) => null,
-  validate: () => null,
-}
+  setData: (key, value) => null
+};
 
 export default user;

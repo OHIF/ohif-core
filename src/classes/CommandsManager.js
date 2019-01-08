@@ -1,5 +1,9 @@
 import log from '../log.js';
-import _ from 'underscore';
+
+// TODO: this is duplicated in TypeSafeCollection
+function isFunction(subject) {
+  return typeof subject === 'function';
+}
 
 export class CommandsManager {
   constructor() {
@@ -87,8 +91,8 @@ export class CommandsManager {
     const definition = this.getDefinition(command);
     if (!definition) return false;
     const { disabled } = definition;
-    if (_.isFunction(disabled) && disabled()) return true;
-    if (!_.isFunction(disabled) && disabled) return true;
+    if (isFunction(disabled) && disabled()) return true;
+    if (!isFunction(disabled) && disabled) return true;
     return false;
   }
 

@@ -1,4 +1,4 @@
-import { OHIFError } from './OHIFError';
+import OHIFError from './OHIFError';
 
 /**
  * Abstract class to fetch study metadata.

@@ -1,5 +1,3 @@
-import _ from 'underscore';
-
 const FUNCTION = 'function';
 const STRING = 'string';
 const UNDEFINED = 'undefined';
@@ -402,7 +400,7 @@ export const unsavedChanges = {
     if (probe > 0) {
       // Unsaved changes exist...
       hasChanges = true;
-      let dialogOptions = _.extend(
+      let dialogOptions = Object.assign(
         {
           title: 'You have unsaved changes!',
           message:
@@ -465,10 +463,13 @@ export const unsavedChanges = {
   },
 
   addHook(saveCallback, options = {}) {
-    _.defaults(options, {
-      path: '*',
-      message: 'There are unsaved changes'
-    });
+    if (!options.path) {
+      options.path = '*';
+    }
+
+    if (!options.message) {
+      options.message = 'There are unsaved changes';
+    }
 
     this.hooks.set(saveCallback, options);
   },

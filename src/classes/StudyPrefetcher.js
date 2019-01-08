@@ -1,34 +1,31 @@
 import log from '../log.js';
-import $ from 'jquery';
-import _ from 'underscore';
-
-import { OHIFError } from './OHIFError';
-//import { getImageId } from '../getImageId.js';
+import OHIFError from './OHIFError';
+import getImageId from '../utils/getImageId.js';
+import external from '../externalModules.js';
 
 export class StudyPrefetcher {
   constructor(studies) {
     this.studies = studies || [];
     this.prefetchDisplaySetsTimeout = 300;
     this.lastActiveViewportElement = null;
-    this.cacheFullHandlerBound = _.bind(this.cacheFullHandler, this);
 
-    cornerstone.events.addEventListener(
+    external.cornerstone.events.addEventListener(
       'cornerstoneimagecachefull.StudyPrefetcher',
-      this.cacheFullHandlerBound
+      this.cacheFullHandler
     );
   }
 
   destroy() {
     this.stopPrefetching();
-    cornerstone.events.removeEventListener(
+    external.cornerstone.events.removeEventListener(
       'cornerstoneimagecachefull.StudyPrefetcher',
-      this.cacheFullHandlerBound
+      this.cacheFullHandler
     );
   }
 
   static getInstance() {
     if (!StudyPrefetcher.instance) {
-      StudyPrefetcher.instance = new StudyPrefetcher();
+      StudyPrefetcher.instance = new StudyPrefetcher([]);
     }
 
     return StudyPrefetcher.instance;
@@ -45,99 +42,11 @@ export class StudyPrefetcher {
     }
 
     this.stopPrefetching();
-    this.prefetchActiveViewport();
     this.prefetchDisplaySets();
   }
 
   stopPrefetching() {
-    this.disableViewportPrefetch();
-    cornerstoneTools.requestPoolManager.clearRequestStack('prefetch');
-  }
-
-  prefetchActiveViewport() {
-    const activeViewportElement = OHIF.viewerbase.viewportUtils.getActiveViewportElement();
-    this.enablePrefetchOnElement(activeViewportElement);
-    this.attachActiveViewportListeners(activeViewportElement);
-  }
-
-  disableViewportPrefetch() {
-    $('.imageViewerViewport').each(function() {
-      if (!$(this).find('canvas').length) {
-        return;
-      }
-
-      cornerstoneTools.stackPrefetch.disable(this);
-    });
-  }
-
-  hasStack(element) {
-    const stack = cornerstoneTools.getToolState(element, 'stack');
-    return stack && stack.data.length && stack.data[0].imageIds.length > 1;
-  }
-
-  /**
-   * This function enables stack prefetching for a specified element (viewport)
-   * It first disables any prefetching currently occurring on any other viewports.
-   *
-   * @param element {node} DOM Node representing the viewport element
-   */
-  enablePrefetchOnElement(element) {
-    if (!$(element).find('canvas').length) {
-      return;
-    }
-
-    // Make sure there is a stack to fetch
-    if (this.hasStack(element)) {
-      // Check if this is a clip or not
-      const activeViewportIndex = window.store.getState().viewports
-        .activeViewport;
-      const displaySetInstanceUid =
-        OHIF.viewer.data.loadedSeriesData[activeViewportIndex]
-          .displaySetInstanceUid;
-
-      const { StackManager } = OHIF.viewerbase;
-
-      const stack = StackManager.findStack(displaySetInstanceUid);
-
-      if (!stack) {
-        throw new OHIFError(
-          `Requested stack ${displaySetInstanceUid} was not created`
-        );
-      }
-
-      cornerstoneTools.stackPrefetch.enable(element);
-    }
-  }
-
-  attachActiveViewportListeners(activeViewportElement) {
-    function newImageHandler() {
-      // It needs to be called asynchronously because cornerstone does it at the same way.
-      // All instance urls to be prefetched will be removed again if we add them before
-      // Cornerstone callback (see stackPrefetch.onImageUpdated).
-      StudyPrefetcher.prefetchDisplaySetsAsync();
-    }
-
-    if (this.lastActiveViewportElement) {
-      this.lastActiveViewportElement.removeEventListener(
-        'cornerstonenewimage.StudyPrefetcher',
-        newImageHandler
-      );
-    }
-
-    activeViewportElement.removeEventListener(
-      'cornerstonenewimage.StudyPrefetcher',
-      newImageHandler
-    );
-
-    // Cornerstone will not attach an event listener if the element doesn't have a stack
-    if (this.hasStack(activeViewportElement)) {
-      activeViewportElement.addEventListener(
-        'cornerstonenewimage.StudyPrefetcher',
-        newImageHandler
-      );
-    }
-
-    this.lastActiveViewportElement = activeViewportElement;
+    external.cornerstoneTools.requestPoolManager.clearRequestStack('prefetch');
   }
 
   prefetchDisplaySetsAsync(timeout) {
@@ -164,7 +73,7 @@ export class StudyPrefetcher {
 
   prefetchImageIds(imageIds) {
     const nonCachedImageIds = this.filterCachedImageIds(imageIds);
-    const requestPoolManager = cornerstoneTools.requestPoolManager;
+    const requestPoolManager = external.cornerstoneTools.requestPoolManager;
     const requestType = 'prefetch';
     const preventCache = false;
     const noop = () => {};
@@ -183,35 +92,28 @@ export class StudyPrefetcher {
     requestPoolManager.startGrabbing();
   }
 
-  getActiveViewportImage() {
-    const element = OHIF.viewerbase.viewportUtils.getActiveViewportElement();
-
-    if (!element) {
-      return;
-    }
-
-    const enabledElement = cornerstone.getEnabledElement(element);
-    const image = enabledElement.image;
-
-    return image;
-  }
-
   getStudy(image) {
-    const studyMetadata = cornerstone.metaData.get('study', image.imageId);
+    const studyMetadata = external.cornerstone.metaData.get(
+      'study',
+      image.imageId
+    );
     return OHIF.viewer.Studies.find(
       study => study.studyInstanceUid === studyMetadata.studyInstanceUid
     );
   }
 
   getSeries(study, image) {
-    const seriesMetadata = cornerstone.metaData.get('series', image.imageId);
+    const seriesMetadata = external.cornerstone.metaData.get(
+      'series',
+      image.imageId
+    );
     const studyMetadata = OHIF.viewerbase.getStudyMetadata(study);
 
     return studyMetadata.getSeriesByUID(seriesMetadata.seriesInstanceUid);
   }
 
   getInstance(series, image) {
-    const instanceMetadata = cornerstone.metaData.get(
+    const instanceMetadata = external.cornerstone.metaData.get(
       'instance',
       image.imageId
     );
@@ -219,8 +121,8 @@ export class StudyPrefetcher {
   }
 
   getActiveDisplaySet(displaySets, instance) {
-    return _.find(displaySets, displaySet => {
-      return _.some(displaySet.images, displaySetImage => {
+    return displaySets.find(displaySet => {
+      return displaySet.images.some(displaySetImage => {
         return displaySetImage.sopInstanceUid === instance.sopInstanceUid;
       });
     });
@@ -233,11 +135,11 @@ export class StudyPrefetcher {
       return [];
     }
 
-    const study = this.getStudy(image);
+    /*const study = this.getStudy(image);
     const series = this.getSeries(study, image);
-    const instance = this.getInstance(series, image);
+    const instance = this.getInstance(series, image);*/
     const displaySets = study.displaySets;
-    const activeDisplaySet = this.getActiveDisplaySet(displaySets, instance);
+    const activeDisplaySet = null; //this.getActiveDisplaySet(displaySets, instance);
     const prefetchMethodMap = {
       topdown: 'getFirstDisplaySets',
       downward: 'getNextDisplaySets',
@@ -325,35 +227,34 @@ export class StudyPrefetcher {
   getImageIdsFromDisplaySet(displaySet) {
     const imageIds = [];
 
-    /*displaySet.images.forEach(image => {
-            const numFrames = image.numFrames;
-            if (numFrames > 1) {
-                for (let i = 0; i < numFrames; i++) {
-                    let imageId = getImageId(image, i);
-                    imageIds.push(imageId);
-                }
-            } else {
-                let imageId = getImageId(image);
-                imageIds.push(imageId);
-            }
-        });*/
+    // TODO: This duplicates work done by the stack manager
+    displaySet.images.forEach(image => {
+      const numFrames = image.numFrames;
+      if (numFrames > 1) {
+        for (let i = 0; i < numFrames; i++) {
+          let imageId = getImageId(image, i);
+          imageIds.push(imageId);
+        }
+      } else {
+        let imageId = getImageId(image);
+        imageIds.push(imageId);
+      }
+    });
 
-    return []; //imageIds;
+    return imageIds;
   }
 
   filterCachedImageIds(imageIds) {
-    return _.filter(imageIds, imageId => {
-      return !this.isImageCached(imageId);
-    });
+    return imageIds.filter(imageId => !this.isImageCached(imageId));
   }
 
   isImageCached(imageId) {
-    const image = cornerstone.imageCache.imageCache[imageId];
+    const image = external.cornerstone.imageCache.imageCache[imageId];
     return image && image.sizeInBytes;
   }
 
-  cacheFullHandler() {
+  cacheFullHandler = () => {
     log.warn('Cache full');
     this.stopPrefetching();
-  }
+  };
 }

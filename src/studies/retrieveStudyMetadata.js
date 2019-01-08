@@ -24,7 +24,11 @@ export function deleteStudyMetadataPromise(studyInstanceUid) {
  * @param {String} studyInstanceUid The UID of the Study to be retrieved
  * @returns {Promise} that will be resolved with the metadata or rejected with the error
  */
-export function retrieveStudyMetadata(server, studyInstanceUid, seriesInstanceUids) {
+export function retrieveStudyMetadata(
+  server,
+  studyInstanceUid,
+  seriesInstanceUids
+) {
   // @TODO: Whenever a study metadata request has failed, its related promise will be rejected once and for all
   // and further requests for that metadata will always fail. On failure, we probably need to remove the
   // corresponding promise from the "StudyMetaDataPromises" map...
@@ -49,10 +53,7 @@ export function retrieveStudyMetadata(server, studyInstanceUid, seriesInstanceUi
       server.type === 'dicomWeb' &&
       server.requestOptions.requestFromBrowser === true
     ) {
-      RetrieveMetadata(
-        server,
-        studyInstanceUid
-      ).then(function(data) {
+      RetrieveMetadata(server, studyInstanceUid).then(function(data) {
         resolve(data);
       }, reject);
     }
