@@ -6780,13 +6780,13 @@ function (_Metadata) {
       return instance;
     }
     /**
-    * Search the associated series to find an specific instance using the supplied callback as criteria.
-    * The callback is passed two arguments: instance (a InstanceMetadata instance) and index (the integer
-    * index of the instance within the current series)
-    * @param {function} callback The callback function which will be invoked for each instance instance.
-    * @returns {Object} Result object containing series (SeriesMetadata) and instance (InstanceMetadata)
-    *                   objects or an empty object if not found.
-    */
+     * Search the associated series to find an specific instance using the supplied callback as criteria.
+     * The callback is passed two arguments: instance (a InstanceMetadata instance) and index (the integer
+     * index of the instance within the current series)
+     * @param {function} callback The callback function which will be invoked for each instance instance.
+     * @returns {Object} Result object containing series (SeriesMetadata) and instance (InstanceMetadata)
+     *                   objects or an empty object if not found.
+     */
 
   }, {
     key: "findSeriesAndInstanceByInstance",
@@ -10999,7 +10999,8 @@ var servers = function servers() {
 };
 
 var defaultState$2 = {
-  progress: {}
+  progress: {},
+  lastUpdated: null
 };
 
 var loading = function loading() {
@@ -11008,10 +11009,16 @@ var loading = function loading() {
 
   switch (action.type) {
     case 'SET_STUDY_LOADING_PROGRESS':
-      var progress = {};
-      progress[action.progressId] = action.progressData;
+      var progress = state.progress;
+      progress[action.progressId] = action.progressData; // This is a workaround so we can easily identify changes
+      // to the progress object without doing deep comparison.
+      // See FlexboxLayout
+
+      var date = new Date();
+      var lastUpdated = date.getTime();
       return Object.assign({}, state, {
-        progress: progress
+        progress: progress,
+        lastUpdated: lastUpdated
       });
 
     case 'CLEAR_STUDY_LOADING_PROGRESS':
@@ -11074,7 +11081,8 @@ function search(object, query) {
   }); // Return the found items
 
   return result;
-}
+} // Encode any string into a safe format for HTML id attribute
+
 
 function encodeId(input) {
   var string = input && input.toString ? input.toString() : input; // Return an underscore if the given string is empty or if it's not a string
@@ -11091,6 +11099,7 @@ function encodeId(input) {
 
   return string.replace(/[^a-zA-Z0-9-]/g, converter);
 }
+
 var string = {
   search: search,
   encodeId: encodeId
