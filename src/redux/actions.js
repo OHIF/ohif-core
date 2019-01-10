@@ -24,12 +24,18 @@ export const clearStudyLoadingProgress = progressId => ({
   progressId
 });
 
+export const setUserPreferences = state => ({
+  type: 'SET_USER_PREFERENCES',
+  state
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
   setLayout,
   setStudyLoadingProgress,
-  clearStudyLoadingProgress
+  clearStudyLoadingProgress,
+  setUserPreferences
 };
 
 export default actions;

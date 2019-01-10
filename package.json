@@ -70,6 +70,7 @@
     "cornerstone-math": "^0.1.7",
     "isomorphic-base64": "^1.0.2",
     "jquery": "^3.3.1",
-    "jquery.hotkeys": "^0.1.0"
+    "jquery.hotkeys": "^0.1.0",
+    "lodash.clonedeep": "^4.5.0"
   }
 }
