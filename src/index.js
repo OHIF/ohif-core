@@ -16,6 +16,7 @@ import object from './object.js';
 import DICOMWeb from './DICOMWeb';
 import log from './log.js';
 import external from './externalModules.js';
+import hangingProtocols from './hanging-protocols/';
 
 const viewer = {};
 

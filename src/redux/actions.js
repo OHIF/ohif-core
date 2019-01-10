@@ -24,12 +24,25 @@ export const clearStudyLoadingProgress = progressId => ({
   progressId
 });
 
+export const setViewportSpecificData = (viewportIndex, data) => ({
+  type: 'SET_VIEWPORT_SPECIFIC_DATA',
+  viewportIndex,
+  data
+});
+
+export const clearViewportSpecificData = viewportIndex => ({
+  type: 'CLEAR_VIEWPORT_SPECIFIC_DATA',
+  viewportIndex
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
   setLayout,
   setStudyLoadingProgress,
-  clearStudyLoadingProgress
+  clearStudyLoadingProgress,
+  setViewportSpecificData,
+  clearViewportSpecificData
 };
 
 export default actions;
