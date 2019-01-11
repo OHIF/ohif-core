@@ -4080,7 +4080,43 @@ function createCommonjsModule(fn, module) {
 var dicomwebClient = createCommonjsModule(function (module, exports) {
 (function (global, factory) {
   factory(exports);
-})(commonjsGlobal, function (exports) {
+}(commonjsGlobal, (function (exports) {
+  function _typeof(obj) {
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
   /**
    * Converts a Uint8Array to a String.
    * @param {Uint8Array} array that should be converted
@@ -4088,13 +4124,12 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
    * @param {Number} limit maximum number of array items that should be extracted (defaults to length of array)
    * @returns {String}
    */
-
   function uint8ArrayToString(arr, offset, limit) {
     offset = offset || 0;
     limit = limit || arr.length - offset;
-    let str = '';
+    var str = '';
 
-    for (let i = offset; i < offset + limit; i++) {
+    for (var i = offset; i < offset + limit; i++) {
       str += String.fromCharCode(arr[i]);
     }
 
@@ -4108,9 +4143,9 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
 
 
   function stringToUint8Array(str) {
-    const arr = new Uint8Array(str.length);
+    var arr = new Uint8Array(str.length);
 
-    for (let i = 0, j = str.length; i < j; i++) {
+    for (var i = 0, j = str.length; i < j; i++) {
       arr[i] = str.charCodeAt(i);
     }
 
@@ -4124,9 +4159,9 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
 
 
   function identifyBoundary(header) {
-    const parts = header.split('\r\n');
+    var parts = header.split('\r\n');
 
-    for (let i = 0; i < parts.length; i++) {
+    for (var i = 0; i < parts.length; i++) {
       if (parts[i].substr(0, 2) === '--') {
         return parts[i];
       }
@@ -4141,14 +4176,16 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
    */
 
 
-  function containsToken(message, token, offset = 0) {
+  function containsToken(message, token) {
+    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
     if (message + token.length > message.length) {
       return false;
     }
 
-    let index = offset;
+    var index = offset;
 
-    for (let i = 0; i < token.length; i++) {
+    for (var i = 0; i < token.length; i++) {
       if (token[i] !== message[index++]) {
         return false;
       }
@@ -4165,10 +4202,11 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
    */
 
 
-  function findToken(message, token, offset = 0) {
-    const messageLength = message.length;
+  function findToken(message, token) {
+    var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    var messageLength = message.length;
 
-    for (let i = offset; i < messageLength; i++) {
+    for (var i = offset; i < messageLength; i++) {
       // If the first value of the message matches
       // the first value of the token, check if
       // this is the full token.
@@ -4197,30 +4235,32 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
    */
 
 
-  function multipartEncode(datasets, boundary = guid(), contentType = 'application/dicom') {
-    const contentTypeString = `Content-Type: ${contentType}`;
-    const header = `\r\n--${boundary}\r\n${contentTypeString}\r\n\r\n`;
-    const footer = `\r\n--${boundary}--`;
-    const headerArray = stringToUint8Array(header);
-    const footerArray = stringToUint8Array(footer);
-    const headerLength = headerArray.length;
-    const footerLength = footerArray.length;
-    let length = 0; // Calculate the total length for the final array
+  function multipartEncode(datasets) {
+    var boundary = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : guid();
+    var contentType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'application/dicom';
+    var contentTypeString = "Content-Type: ".concat(contentType);
+    var header = "\r\n--".concat(boundary, "\r\n").concat(contentTypeString, "\r\n\r\n");
+    var footer = "\r\n--".concat(boundary, "--");
+    var headerArray = stringToUint8Array(header);
+    var footerArray = stringToUint8Array(footer);
+    var headerLength = headerArray.length;
+    var footerLength = footerArray.length;
+    var length = 0; // Calculate the total length for the final array
 
-    const contentArrays = datasets.map(datasetBuffer => {
-      const contentArray = new Uint8Array(datasetBuffer);
-      const contentLength = contentArray.length;
+    var contentArrays = datasets.map(function (datasetBuffer) {
+      var contentArray = new Uint8Array(datasetBuffer);
+      var contentLength = contentArray.length;
       length += headerLength + contentLength + footerLength;
       return contentArray;
     }); // Allocate the array
 
-    const multipartArray = new Uint8Array(length); // Set the initial header
+    var multipartArray = new Uint8Array(length); // Set the initial header
 
     multipartArray.set(headerArray, 0); // Write each dataset into the multipart array
 
-    let position = 0;
-    contentArrays.forEach(contentArray => {
-      const contentLength = contentArray.length;
+    var position = 0;
+    contentArrays.forEach(function (contentArray) {
+      var contentLength = contentArray.length;
       multipartArray.set(headerArray, position);
       multipartArray.set(contentArray, position + headerLength);
       position += headerLength + contentArray.length;
@@ -4228,7 +4268,7 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     multipartArray.set(footerArray, position);
     return {
       data: multipartArray.buffer,
-      boundary
+      boundary: boundary
     };
   }
   /**
@@ -4238,30 +4278,29 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
    * @returns {Array} The content
    */
 
-
   function multipartDecode(response) {
-    const message = new Uint8Array(response); // First look for the multipart mime header
+    var message = new Uint8Array(response); // First look for the multipart mime header
 
-    const separator = stringToUint8Array('\r\n\r\n');
-    const headerIndex = findToken(message, separator);
+    var separator = stringToUint8Array('\r\n\r\n');
+    var headerIndex = findToken(message, separator);
 
     if (headerIndex === -1) {
       throw new Error('Response message has no multipart mime header');
     }
 
-    const header = uint8ArrayToString(message, 0, headerIndex);
-    const boundaryString = identifyBoundary(header);
+    var header = uint8ArrayToString(message, 0, headerIndex);
+    var boundaryString = identifyBoundary(header);
 
     if (!boundaryString) {
       throw new Error('Header of response message does not specify boundary');
     }
 
-    const boundary = stringToUint8Array(boundaryString);
-    const boundaryLength = boundary.length;
-    const components = [];
-    let offset = headerIndex + separator.length; // Loop until we cannot find any more boundaries
+    var boundary = stringToUint8Array(boundaryString);
+    var boundaryLength = boundary.length;
+    var components = [];
+    var offset = headerIndex + separator.length; // Loop until we cannot find any more boundaries
 
-    let boundaryIndex;
+    var boundaryIndex;
 
     while (boundaryIndex !== -1) {
       // Search for the next boundary in the message, starting
@@ -4273,9 +4312,9 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
       } // Extract data from response message, excluding "\r\n"
 
 
-      const spacingLength = 2;
-      const length = boundaryIndex - offset - spacingLength;
-      const data = response.slice(offset, offset + length); // Add the data to the array of results
+      var spacingLength = 2;
+      var length = boundaryIndex - offset - spacingLength;
+      var data = response.slice(offset, offset + length); // Add the data to the array of results
 
       components.push(data); // Move the offset to the end of the current section,
       // plus the identified boundary
@@ -4304,27 +4343,35 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 
-  const getFirstResult = result => result[0];
+  var getFirstResult = function getFirstResult(result) {
+    return result[0];
+  };
 
-  const MIMETYPES = {
+  var MIMETYPES = {
     DICOM: 'application/dicom',
     DICOM_JSON: 'application/dicom+json',
-    OCTET_STREAM: 'application/octet-stream'
+    OCTET_STREAM: 'application/octet-stream',
+    JPEG: 'image/jpeg',
+    PNG: 'image/png'
   };
   /**
   * Class for interacting with DICOMweb RESTful services.
   */
 
-  class DICOMwebClient {
+  var DICOMwebClient =
+  /*#__PURE__*/
+  function () {
     /**
     * @constructor
     * @param {Object} options (choices: "url", "username", "password", "headers")
     */
-    constructor(options) {
+    function DICOMwebClient(options) {
+      _classCallCheck(this, DICOMwebClient);
+
       this.baseURL = options.url;
 
       if (!this.baseURL) {
-        console.error('DICOMweb base url provided - calls will fail');
+        console.error('no DICOMweb base url provided - calls will fail');
       }
 
       if ('username' in options) {
@@ -4337,470 +4384,548 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
         this.password = options.password;
       }
 
+      if ('qidoURLPrefix' in options) {
+        console.log("use URL prefix for QIDO-RS: ".concat(options.qidoURLPrefix));
+        this.qidoURL = this.baseURL + '/' + options.qidoURLPrefix;
+      } else {
+        this.qidoURL = this.baseURL;
+      }
+
+      if ('wadoURLPrefix' in options) {
+        console.log("use URL prefix for WADO-RS: ".concat(options.wadoURLPrefix));
+        this.wadoURL = this.baseURL + '/' + options.wadoURLPrefix;
+      } else {
+        this.wadoURL = this.baseURL;
+      }
+
+      if ('stowURLPrefix' in options) {
+        console.log("use URL prefix for STOW-RS: ".concat(options.stowURLPrefix));
+        this.stowURL = this.baseURL + '/' + options.stowURLPrefix;
+      } else {
+        this.stowURL = this.baseURL;
+      }
+
       this.headers = options.headers || {};
     }
 
-    static _parseQueryParameters(params = {}) {
-      let queryString = '?';
-      Object.keys(params).forEach(function (key, index) {
-        if (index !== 0) {
-          queryString += '&';
-        }
+    _createClass(DICOMwebClient, [{
+      key: "_httpRequest",
+      value: function _httpRequest(url, method, headers) {
+        var _this = this;
 
-        queryString += key + '=' + encodeURIComponent(params[key]);
-      });
-      return queryString;
-    }
+        var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+        return new Promise(function (resolve, reject) {
+          var request = new XMLHttpRequest();
+          request.open(method, url, true);
 
-    _httpRequest(url, method, headers, options = {}) {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-        request.open(method, url, true);
+          if ('responseType' in options) {
+            request.responseType = options.responseType;
+          }
 
-        if ('responseType' in options) {
-          request.responseType = options.responseType;
-        }
-
-        if (typeof headers === 'object') {
-          Object.keys(headers).forEach(function (key) {
-            request.setRequestHeader(key, headers[key]);
-          });
-        } // now add custom headers from the user
-        // (e.g. access tokens)
+          if (_typeof(headers) === 'object') {
+            Object.keys(headers).forEach(function (key) {
+              request.setRequestHeader(key, headers[key]);
+            });
+          } // now add custom headers from the user
+          // (e.g. access tokens)
 
 
-        const userHeaders = this.headers;
-        Object.keys(userHeaders).forEach(function (key) {
-          request.setRequestHeader(key, userHeaders[key]);
-        }); // Event triggered when upload starts
+          var userHeaders = _this.headers;
+          Object.keys(userHeaders).forEach(function (key) {
+            request.setRequestHeader(key, userHeaders[key]);
+          }); // Event triggered when upload starts
 
-        request.onloadstart = function (event) {//console.log('upload started: ', url)
-        }; // Event triggered when upload ends
-
-
-        request.onloadend = function (event) {//console.log('upload finished')
-        }; // Handle response message
+          request.onloadstart = function (event) {//console.log('upload started: ', url)
+          }; // Event triggered when upload ends
 
 
-        request.onreadystatechange = function (event) {
-          if (request.readyState === 4) {
-            if (request.status === 200) {
-              resolve(request.response);
-            } else if (request.status === 202) {
-              console.warn('some resources already existed: ', request);
-              resolve(request.response);
-            } else if (request.status === 204) {
-              console.warn('empty response for request: ', request);
-              resolve([]);
-            } else {
-              console.error('request failed: ', request);
-              const error = new Error('request failed');
-              error.request = request;
-              error.response = request.response;
-              error.status = request.status;
-              console.error(error);
-              console.error(error.response);
-              reject(error);
+          request.onloadend = function (event) {//console.log('upload finished')
+          }; // Handle response message
+
+
+          request.onreadystatechange = function (event) {
+            if (request.readyState === 4) {
+              if (request.status === 200) {
+                resolve(request.response);
+              } else if (request.status === 202) {
+                console.warn('some resources already existed: ', request);
+                resolve(request.response);
+              } else if (request.status === 204) {
+                console.warn('empty response for request: ', request);
+                resolve([]);
+              } else {
+                console.error('request failed: ', request);
+                var error = new Error('request failed');
+                error.request = request;
+                error.response = request.response;
+                error.status = request.status;
+                console.error(error);
+                console.error(error.response);
+                reject(error);
+              }
             }
+          }; // Event triggered while download progresses
+
+
+          if ('progressCallback' in options) {
+            if (typeof options.progressCallback === 'function') {
+              request.onprogress = options.progressCallback;
+            }
+          } // request.onprogress = function (event) {
+          //   const loaded = progress.loaded;
+          //   let total;
+          //   let percentComplete;
+          //   if (progress.lengthComputable) {
+          //     total = progress.total;
+          //     percentComplete = Math.round((loaded / total) * 100);
+          //   j
+          //   // console.log('download progress: ', percentComplete, ' %');
+          //   return(percentComplete);
+          // };
+
+
+          if ('data' in options) {
+            request.send(options.data);
+          } else {
+            request.send();
           }
-        }; // Event triggered while download progresses
+        });
+      }
+    }, {
+      key: "_httpGet",
+      value: function _httpGet(url, headers, responseType, progressCallback) {
+        return this._httpRequest(url, 'get', headers, {
+          responseType: responseType,
+          progressCallback: progressCallback
+        });
+      }
+    }, {
+      key: "_httpGetApplicationJson",
+      value: function _httpGetApplicationJson(url) {
+        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var progressCallback = arguments.length > 2 ? arguments[2] : undefined;
 
-
-        if ('progressCallback' in options) {
-          if (typeof options.progressCallback === 'function') {
-            request.onprogress = options.progressCallback;
+        if (_typeof(params) === 'object') {
+          if (!isEmptyObject(params)) {
+            url += DICOMwebClient._parseQueryParameters(params);
           }
-        } // request.onprogress = function (event) {
-        //   const loaded = progress.loaded;
-        //   let total;
-        //   let percentComplete;
-        //   if (progress.lengthComputable) {
-        //     total = progress.total;
-        //     percentComplete = Math.round((loaded / total) * 100);
-        //   j
-        //   // console.log('download progress: ', percentComplete, ' %');
-        //   return(percentComplete);
-        // };
+        }
 
+        var headers = {
+          'Accept': MIMETYPES.DICOM_JSON
+        };
+        var responseType = 'json';
+        return this._httpGet(url, headers, responseType, progressCallback);
+      }
+    }, {
+      key: "_httpGetByMimeType",
+      value: function _httpGetByMimeType(url, mimeType, params) {
+        var responseType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'arraybuffer';
+        var progressCallback = arguments.length > 4 ? arguments[4] : undefined;
 
-        if ('data' in options) {
-          request.send(options.data);
+        if (_typeof(params) === 'object') {
+          if (!isEmptyObject(params)) {
+            url += DICOMwebClient._parseQueryParameters(params);
+          }
+        }
+
+        var headers = {
+          'Accept': "multipart/related; type=\"".concat(mimeType, "\"")
+        };
+        return this._httpGet(url, headers, responseType, progressCallback);
+      }
+    }, {
+      key: "_httpPost",
+      value: function _httpPost(url, headers, data, progressCallback) {
+        return this._httpRequest(url, 'post', headers, {
+          data: data,
+          progressCallback: progressCallback
+        });
+      }
+    }, {
+      key: "_httpPostApplicationJson",
+      value: function _httpPostApplicationJson(url, data, progressCallback) {
+        var headers = {
+          'Content-Type': MIMETYPES.DICOM_JSON
+        };
+        return this._httpPost(url, headers, data, progressCallback);
+      }
+      /**
+       * Searches for DICOM studies.
+       * @param {Object} options options object
+       * @return {Array} study representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2)
+       */
+
+    }, {
+      key: "searchForStudies",
+      value: function searchForStudies() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        console.log('search for studies');
+        var url = this.qidoURL + '/studies';
+
+        if ('queryParams' in options) {
+          url += DICOMwebClient._parseQueryParameters(options.queryParams);
+        }
+
+        return this._httpGetApplicationJson(url);
+      }
+      /**
+       * Retrieves metadata for a DICOM study.
+       * @param {Object} options options object
+       * @returns {Array} metadata elements in DICOM JSON format for each instance belonging to the study
+       */
+
+    }, {
+      key: "retrieveStudyMetadata",
+      value: function retrieveStudyMetadata(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required for retrieval of study metadata');
+        }
+
+        console.log("retrieve metadata of study ".concat(options.studyInstanceUID));
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/metadata';
+        return this._httpGetApplicationJson(url);
+      }
+      /**
+       * Searches for DICOM series.
+       * @param {Object} options options object
+       * @returns {Array} series representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2a)
+       */
+
+    }, {
+      key: "searchForSeries",
+      value: function searchForSeries() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var url = this.qidoURL;
+
+        if ('studyInstanceUID' in options) {
+          console.log("search series of study ".concat(options.studyInstanceUID));
+          url += '/studies/' + options.studyInstanceUID;
+        }
+
+        url += '/series';
+
+        if ('queryParams' in options) {
+          url += DICOMwebClient._parseQueryParameters(options.queryParams);
+        }
+
+        return this._httpGetApplicationJson(url);
+      }
+      /**
+       * Retrieves metadata for a DICOM series.
+       * @param {Object} options options object
+       * @returns {Array} metadata elements in DICOM JSON format for each instance belonging to the series
+       */
+
+    }, {
+      key: "retrieveSeriesMetadata",
+      value: function retrieveSeriesMetadata(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required for retrieval of series metadata');
+        }
+
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required for retrieval of series metadata');
+        }
+
+        console.log("retrieve metadata of series ".concat(options.seriesInstanceUID));
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/metadata';
+        return this._httpGetApplicationJson(url);
+      }
+      /**
+       * Searches for DICOM instances.
+       * @param {Object} options options object
+       * @returns {Array} instance representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2b)
+       */
+
+    }, {
+      key: "searchForInstances",
+      value: function searchForInstances() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var url = this.qidoURL;
+
+        if ('studyInstanceUID' in options) {
+          url += '/studies/' + options.studyInstanceUID;
+
+          if ('seriesInstanceUID' in options) {
+            console.log("search for instances of series ".concat(options.seriesInstanceUID));
+            url += '/series/' + options.seriesInstanceUID;
+          } else {
+            console.log("search for instances of study ".concat(options.studyInstanceUID));
+          }
         } else {
-          request.send();
+          console.log('search for instances');
         }
-      });
-    }
 
-    _httpGet(url, headers, responseType, progressCallback) {
-      return this._httpRequest(url, 'get', headers, {
-        responseType,
-        progressCallback
-      });
-    }
+        url += '/instances';
 
-    _httpGetApplicationJson(url, params = {}, progressCallback) {
-      if (typeof params === 'object') {
-        if (!isEmptyObject(params)) {
-          url += DICOMwebClient._parseQueryParameters(params);
+        if ('queryParams' in options) {
+          url += DICOMwebClient._parseQueryParameters(options.queryParams);
         }
+
+        return this._httpGetApplicationJson(url);
       }
+      /** Returns a WADO-URI URL for an instance
+       * @param {Object} options options object
+       * @returns {String} WADO-URI URL
+       */
 
-      const headers = {
-        'Accept': MIMETYPES.DICOM_JSON
-      };
-      const responseType = 'json';
-      return this._httpGet(url, headers, responseType, progressCallback);
-    }
-
-    _httpGetByMimeType(url, mimeType, params, responseType = 'arraybuffer', progressCallback) {
-      if (typeof params === 'object') {
-        if (!isEmptyObject(params)) {
-          url += DICOMwebClient._parseQueryParameters(params);
+    }, {
+      key: "buildInstanceWadoURIUrl",
+      value: function buildInstanceWadoURIUrl(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required.');
         }
-      }
 
-      const headers = {
-        'Accept': `multipart/related; type="${mimeType}"`
-      };
-      return this._httpGet(url, headers, responseType, progressCallback);
-    }
-
-    _httpPost(url, headers, data, progressCallback) {
-      return this._httpRequest(url, 'post', headers, {
-        data,
-        progressCallback
-      });
-    }
-
-    _httpPostApplicationJson(url, data, progressCallback) {
-      const headers = {
-        'Content-Type': MIMETYPES.DICOM_JSON
-      };
-      return this._httpPost(url, headers, data, progressCallback);
-    }
-    /**
-     * Searches for DICOM studies.
-     * @param {Object} options options object - "queryParams" optional query parameters (choices: "fuzzymatching", "offset", "limit" or any valid DICOM attribute identifier)
-     * @return {Array} study representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2)
-     */
-
-
-    searchForStudies(options = {}) {
-      console.log('search for studies');
-      let url = this.baseURL + '/studies';
-
-      if ('queryParams' in options) {
-        url += DICOMwebClient._parseQueryParameters(options.queryParams);
-      }
-
-      return this._httpGetApplicationJson(url);
-    }
-    /**
-     * Retrieves metadata for a DICOM study.
-     * @param {String} studyInstanceUID Study Instance UID
-     * @returns {Array} metadata elements in DICOM JSON format for each instance belonging to the study
-     */
-
-
-    retrieveStudyMetadata(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required for retrieval of study metadata');
-      }
-
-      console.log(`retrieve metadata of study ${options.studyInstanceUID}`);
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/metadata';
-      return this._httpGetApplicationJson(url);
-    }
-    /**
-     * Searches for DICOM series.
-     * @param {Object} options optional DICOM identifiers (choices: "studyInstanceUID")
-     * @param {Object} queryParams optional query parameters (choices: "fuzzymatching", "offset", "limit" or any valid DICOM attribute identifier)
-     * @returns {Array} series representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2a)
-     */
-
-
-    searchForSeries(options = {}) {
-      let url = this.baseURL;
-
-      if ('studyInstanceUID' in options) {
-        console.log(`search series of study ${options.studyInstanceUID}`);
-        url += '/studies/' + options.studyInstanceUID;
-      }
-
-      url += '/series';
-
-      if ('queryParams' in options) {
-        url += DICOMwebClient._parseQueryParameters(options.queryParams);
-      }
-
-      return this._httpGetApplicationJson(url);
-    }
-    /**
-     * Retrieves metadata for a DICOM series.
-     * @param {String} studyInstanceUID Study Instance UID
-     * @param {String} seriesInstanceUID Series Instance UID
-     * @returns {Array} metadata elements in DICOM JSON format for each instance belonging to the series
-     */
-
-
-    retrieveSeriesMetadata(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required for retrieval of series metadata');
-      }
-
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required for retrieval of series metadata');
-      }
-
-      console.log(`retrieve metadata of series ${options.seriesInstanceUID}`);
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/metadata';
-      return this._httpGetApplicationJson(url);
-    }
-    /**
-     * Searches for DICOM instances.
-     * @param {Object} options optional DICOM identifiers (choices: "studyInstanceUID", "seriesInstanceUID")
-     * @param {Object} queryParams optional query parameters (choices: "fuzzymatching", "offset", "limit" or any valid DICOM attribute identifier)
-     * @returns {Array} instance representations (http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.7.html#table_6.7.1-2b)
-     */
-
-
-    searchForInstances(options = {}) {
-      let url = this.baseURL;
-
-      if ('studyInstanceUID' in options) {
-        url += '/studies/' + options.studyInstanceUID;
-
-        if ('seriesInstanceUID' in options) {
-          console.log(`search for instances of series ${options.seriesInstanceUID}`);
-          url += '/series/' + options.seriesInstanceUID;
-        } else {
-          console.log(`search for instances of study ${options.studyInstanceUID}`);
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required.');
         }
-      } else {
-        console.log('search for instances');
+
+        if (!('sopInstanceUID' in options)) {
+          throw new Error('SOP Instance UID is required.');
+        }
+
+        var contentType = options.contentType || MIMETYPES.DICOM;
+        var transferSyntax = options.transferSyntax || '*';
+        var params = [];
+        params.push('requestType=WADO');
+        params.push("studyUID=".concat(options.studyInstanceUID));
+        params.push("seriesUID=".concat(options.seriesInstanceUID));
+        params.push("objectUID=".concat(options.sopInstanceUID));
+        params.push("contentType=".concat(contentType));
+        params.push("transferSyntax=".concat(transferSyntax));
+        var paramString = params.join('&');
+        return "".concat(this.wadoURL, "?").concat(paramString);
       }
+      /**
+       * Retrieves metadata for a DICOM instance.
+       *
+       * @param {Object} options object
+       * @returns {Object} metadata elements in DICOM JSON format
+       */
 
-      url += '/instances';
+    }, {
+      key: "retrieveInstanceMetadata",
+      value: function retrieveInstanceMetadata(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required for retrieval of instance metadata');
+        }
 
-      if ('queryParams' in options) {
-        url += DICOMwebClient._parseQueryParameters(options.queryParams);
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required for retrieval of instance metadata');
+        }
+
+        if (!('sopInstanceUID' in options)) {
+          throw new Error('SOP Instance UID is required for retrieval of instance metadata');
+        }
+
+        console.log("retrieve metadata of instance ".concat(options.sopInstanceUID));
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID + '/metadata';
+        return this._httpGetApplicationJson(url);
       }
+      /**
+       * Retrieves frames for a DICOM instance.
+       * @param {Object} options options object
+       * @returns {Array} frame items as byte arrays of the pixel data element
+       */
 
-      return this._httpGetApplicationJson(url);
-    }
-    /** Returns a WADO-URI URL for an instance
-     *
-     * @param {Object} options
-     * @returns {String} WADO-URI URL
-     */
+    }, {
+      key: "retrieveInstanceFrames",
+      value: function retrieveInstanceFrames(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required for retrieval of instance frames');
+        }
 
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required for retrieval of instance frames');
+        }
 
-    buildInstanceWadoURIUrl(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required.');
+        if (!('sopInstanceUID' in options)) {
+          throw new Error('SOP Instance UID is required for retrieval of instance frames');
+        }
+
+        if (!('frameNumbers' in options)) {
+          throw new Error('frame numbers are required for retrieval of instance frames');
+        }
+
+        console.log("retrieve frames ".concat(options.frameNumbers.toString(), " of instance ").concat(options.sopInstanceUID));
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID + '/frames/' + options.frameNumbers.toString();
+        var mimeType = options.mimeType ? "".concat(options.mimeType) : MIMETYPES.OCTET_STREAM;
+        return this._httpGetByMimeType(url, mimeType).then(multipartDecode);
       }
+      /**
+       * Retrieves rendered frames for a DICOM instance.
+       * @param {Object} options options object
+       * @returns {Array} frame items as byte arrays of the pixel data element
+       */
 
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required.');
+    }, {
+      key: "retrieveInstanceFramesRendered",
+      value: function retrieveInstanceFramesRendered(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required for retrieval of rendered instance frames');
+        }
+
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required for retrieval of rendered instance frames');
+        }
+
+        if (!('sopInstanceUID' in options)) {
+          throw new Error('SOP Instance UID is required for retrieval of rendered instance frames');
+        }
+
+        if (!('frameNumbers' in options)) {
+          throw new Error('frame numbers are required for retrieval of rendered instance frames');
+        }
+
+        console.log("retrieve rendered frames ".concat(options.frameNumbers.toString(), " of instance ").concat(options.sopInstanceUID));
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID + '/frames/' + options.frameNumbers.toString() + '/rendered';
+        var headers = {}; // The choice of an acceptable media type depends on a variety of things:
+        // http://dicom.nema.org/medical/dicom/current/output/chtml/part18/chapter_6.html#table_6.1.1-3
+
+        if ('mimeType' in options) {
+          headers['Accept'] = options.mimeType;
+        }
+
+        var responseType = 'arraybuffer';
+        return this._httpGet(url, headers, responseType);
       }
+      /**
+       * Retrieves a DICOM instance.
+       * @param {Object} options options object
+       * @returns {Arraybuffer} DICOM Part 10 file as Arraybuffer
+       */
 
-      if (!('sopInstanceUID' in options)) {
-        throw new Error('SOP Instance UID is required.');
+    }, {
+      key: "retrieveInstance",
+      value: function retrieveInstance(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required');
+        }
+
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required');
+        }
+
+        if (!('sopInstanceUID' in options)) {
+          throw new Error('SOP Instance UID is required');
+        }
+
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID;
+        return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode).then(getFirstResult);
       }
+      /**
+       * Retrieves a set of DICOM instance for a series.
+       * @param {Object} options options object
+       * @returns {Arraybuffer[]} Array of DICOM Part 10 files as Arraybuffers
+       */
 
-      const contentType = options.contentType || MIMETYPES.DICOM;
-      const transferSyntax = options.transferSyntax || '*';
-      const params = [];
-      params.push('requestType=WADO');
-      params.push(`studyUID=${options.studyInstanceUID}`);
-      params.push(`seriesUID=${options.seriesInstanceUID}`);
-      params.push(`objectUID=${options.sopInstanceUID}`);
-      params.push(`contentType=${contentType}`);
-      params.push(`transferSyntax=${transferSyntax}`);
-      const paramString = params.join('&');
-      return `${this.baseURL}?${paramString}`;
-    }
-    /**
-     * Retrieves metadata for a DICOM instance.
-     * @param {String} studyInstanceUID Study Instance UID
-     * @param {String} seriesInstanceUID Series Instance UID
-     * @param {String} sopInstanceUID SOP Instance UID
-     * @returns {Object} metadata elements in DICOM JSON format
-     */
+    }, {
+      key: "retrieveSeries",
+      value: function retrieveSeries(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required');
+        }
 
+        if (!('seriesInstanceUID' in options)) {
+          throw new Error('Series Instance UID is required');
+        }
 
-    retrieveInstanceMetadata(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required for retrieval of instance metadata');
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID;
+        return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode);
       }
+      /**
+       * Retrieves a set of DICOM instance for a study.
+       * @param {Object} options options object
+       * @returns {Arraybuffer[]} Array of DICOM Part 10 files as Arraybuffers
+       */
 
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required for retrieval of instance metadata');
+    }, {
+      key: "retrieveStudy",
+      value: function retrieveStudy(options) {
+        if (!('studyInstanceUID' in options)) {
+          throw new Error('Study Instance UID is required');
+        }
+
+        var url = this.wadoURL + '/studies/' + options.studyInstanceUID;
+        return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode);
       }
+      /**
+       * Retrieves and parses BulkData from a BulkDataURI location.
+       * Decodes the multipart encoded data and returns the resulting data
+       * as an ArrayBuffer.
+       *
+       * See http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.5.5.html
+       *
+       * @param {Object} options options object
+       * @return {Promise}
+       */
 
-      if (!('sopInstanceUID' in options)) {
-        throw new Error('SOP Instance UID is required for retrieval of instance metadata');
+    }, {
+      key: "retrieveBulkData",
+      value: function retrieveBulkData(options) {
+        if (!('BulkDataURI' in options)) {
+          throw new Error('BulkDataURI is required.');
+        }
+
+        return this._httpGetByMimeType(options.BulkDataURI, MIMETYPES.OCTET_STREAM).then(multipartDecode).then(getFirstResult);
       }
+      /**
+       * Stores DICOM instances.
+       *
+       * @param {Object} options options object
+       */
 
-      console.log(`retrieve metadata of instance ${options.sopInstanceUID}`);
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID + '/metadata';
-      return this._httpGetApplicationJson(url);
-    }
-    /**
-     * Retrieves frames for a DICOM instance.
-     * @param {String} studyInstanceUID Study Instance UID
-     * @param {String} seriesInstanceUID Series Instance UID
-     * @param {String} sopInstanceUID SOP Instance UID
-     * @param {Array} frameNumbers one-based index of frames
-     * @param {Object} options optional parameters (key "imageSubtype" to specify MIME image subtypes)
-     * @returns {Array} frame items as byte arrays of the pixel data element
-     */
+    }, {
+      key: "storeInstances",
+      value: function storeInstances(options) {
+        if (!('datasets' in options)) {
+          throw new Error('datasets are required for storing');
+        }
 
+        var url = "".concat(this.stowURL, "/studies");
 
-    retrieveInstanceFrames(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required for retrieval of instance metadata');
+        if ('studyInstanceUID' in options) {
+          url += "/".concat(options.studyInstanceUID);
+        }
+
+        var _multipartEncode = multipartEncode(options.datasets),
+            data = _multipartEncode.data,
+            boundary = _multipartEncode.boundary;
+
+        var headers = {
+          'Content-Type': "multipart/related; type=application/dicom; boundary=".concat(boundary)
+        };
+        return this._httpPost(url, headers, data, options.progressCallback);
       }
+    }], [{
+      key: "_parseQueryParameters",
+      value: function _parseQueryParameters() {
+        var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var queryString = '?';
+        Object.keys(params).forEach(function (key, index) {
+          if (index !== 0) {
+            queryString += '&';
+          }
 
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required for retrieval of instance metadata');
+          queryString += key + '=' + encodeURIComponent(params[key]);
+        });
+        return queryString;
       }
+    }]);
 
-      if (!('sopInstanceUID' in options)) {
-        throw new Error('SOP Instance UID is required for retrieval of instance metadata');
-      }
-
-      if (!('frameNumbers' in options)) {
-        throw new Error('frame numbers are required for retrieval of instance frames');
-      }
-
-      console.log(`retrieve frames ${options.frameNumbers.toString()} of instance ${options.sopInstanceUID}`);
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID + '/frames/' + options.frameNumbers.toString(); // TODO: Easier if user just provided mimetype directly? What is the benefit of adding 'image/'?
-
-      const mimeType = options.imageSubType ? `image/${options.imageSubType}` : MIMETYPES.OCTET_STREAM;
-      return this._httpGetByMimeType(url, mimeType).then(multipartDecode);
-    }
-    /**
-     * Retrieves a DICOM instance.
-     *
-     * @param {String} studyInstanceUID Study Instance UID
-     * @param {String} seriesInstanceUID Series Instance UID
-     * @param {String} sopInstanceUID SOP Instance UID
-     * @returns {Arraybuffer} DICOM Part 10 file as Arraybuffer
-     */
-
-
-    retrieveInstance(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required');
-      }
-
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required');
-      }
-
-      if (!('sopInstanceUID' in options)) {
-        throw new Error('SOP Instance UID is required');
-      }
-
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID + '/instances/' + options.sopInstanceUID;
-      return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode).then(getFirstResult);
-    }
-    /**
-     * Retrieves a set of DICOM instance for a series.
-     *
-     * @param {String} studyInstanceUID Study Instance UID
-     * @param {String} seriesInstanceUID Series Instance UID
-     * @returns {Arraybuffer[]} Array of DICOM Part 10 files as Arraybuffers
-     */
-
-
-    retrieveSeries(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required');
-      }
-
-      if (!('seriesInstanceUID' in options)) {
-        throw new Error('Series Instance UID is required');
-      }
-
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID + '/series/' + options.seriesInstanceUID;
-      return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode);
-    }
-    /**
-     * Retrieves a set of DICOM instance for a study.
-     *
-     * @param {String} studyInstanceUID Study Instance UID
-     * @returns {Arraybuffer[]} Array of DICOM Part 10 files as Arraybuffers
-     */
-
-
-    retrieveStudy(options) {
-      if (!('studyInstanceUID' in options)) {
-        throw new Error('Study Instance UID is required');
-      }
-
-      const url = this.baseURL + '/studies/' + options.studyInstanceUID;
-      return this._httpGetByMimeType(url, MIMETYPES.DICOM).then(multipartDecode);
-    }
-    /**
-     * Retrieve and parse BulkData from a BulkDataURI location.
-     * Decodes the multipart encoded data and returns the resulting data
-     * as an ArrayBuffer.
-     *
-     * See http://dicom.nema.org/medical/dicom/current/output/chtml/part18/sect_6.5.5.html
-     *
-     * @param {Object} options
-     * @return {Promise}
-     */
-
-
-    retrieveBulkData(options) {
-      if (!('BulkDataURI' in options)) {
-        throw new Error('BulkDataURI is required.');
-      }
-
-      return this._httpGetByMimeType(options.BulkDataURI, MIMETYPES.OCTET_STREAM).then(multipartDecode).then(getFirstResult);
-    }
-    /**
-     * Stores DICOM instances.
-     * @param {Array} datasets DICOM datasets of instances that should be stored in DICOM JSON format
-     * @param {Object} options optional parameters (key "studyInstanceUID" to only store instances of a given study)
-     */
-
-
-    storeInstances(options) {
-      if (!('datasets' in options)) {
-        throw new Error('datasets are required for storing');
-      }
-
-      let url = `${this.baseURL}/studies`;
-
-      if ('studyInstanceUID' in options) {
-        url += `/${options.studyInstanceUID}`;
-      }
-
-      const {
-        data,
-        boundary
-      } = multipartEncode(options.datasets);
-      const headers = {
-        'Content-Type': `multipart/related; type=application/dicom; boundary=${boundary}`
-      };
-      return this._httpPost(url, headers, data, options.progressCallback);
-    }
-
-  }
+    return DICOMwebClient;
+  }();
 
   function findSubstring(str, before, after) {
-    const beforeIndex = str.lastIndexOf(before) + before.length;
+    var beforeIndex = str.lastIndexOf(before) + before.length;
 
     if (beforeIndex < before.length) {
       return null;
     }
 
     if (after !== undefined) {
-      const afterIndex = str.lastIndexOf(after);
+      var afterIndex = str.lastIndexOf(after);
 
       if (afterIndex < 0) {
         return null;
@@ -4816,7 +4941,7 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     var uid = findSubstring(uri, "studies/", "/series");
 
     if (!uid) {
-      var uid = findSubstring(uri, "studies/");
+      uid = findSubstring(uri, "studies/");
     }
 
     if (!uid) {
@@ -4830,7 +4955,7 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     var uid = findSubstring(uri, "series/", "/instances");
 
     if (!uid) {
-      var uid = findSubstring(uri, "series/");
+      uid = findSubstring(uri, "series/");
     }
 
     if (!uid) {
@@ -4844,11 +4969,11 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     var uid = findSubstring(uri, "/instances/", "/frames");
 
     if (!uid) {
-      var uid = findSubstring(uri, "/instances/", "/metadata");
+      uid = findSubstring(uri, "/instances/", "/metadata");
     }
 
     if (!uid) {
-      var uid = findSubstring(uri, "/instances/");
+      uid = findSubstring(uri, "/instances/");
     }
 
     if (!uid) {
@@ -4859,7 +4984,11 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
   }
 
   function getFrameNumbersFromUri(uri) {
-    let numbers = findSubstring(uri, "/frames/");
+    var numbers = findSubstring(uri, "/frames/", "/rendered");
+
+    if (!numbers) {
+      numbers = findSubstring(uri, "/frames/");
+    }
 
     if (numbers === undefined) {
       console.debug('Frames Numbers could not be dertermined from URI"' + uri + '"');
@@ -4868,21 +4997,26 @@ var dicomwebClient = createCommonjsModule(function (module, exports) {
     return numbers.split(',');
   }
 
-  let api = {
-    DICOMwebClient
+  var version = '0.3.2';
+
+  var api = {
+    DICOMwebClient: DICOMwebClient
   };
-  let utils = {
-    getStudyInstanceUIDFromUri,
-    getSeriesInstanceUIDFromUri,
-    getSOPInstanceUIDFromUri,
-    getFrameNumbersFromUri
+  var utils = {
+    getStudyInstanceUIDFromUri: getStudyInstanceUIDFromUri,
+    getSeriesInstanceUIDFromUri: getSeriesInstanceUIDFromUri,
+    getSOPInstanceUIDFromUri: getSOPInstanceUIDFromUri,
+    getFrameNumbersFromUri: getFrameNumbersFromUri
   };
+
   exports.api = api;
   exports.utils = utils;
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-});
+  exports.version = version;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+//# sourceMappingURL=dicomweb-client.js.map
 });
 
 var DICOMwebClient = unwrapExports(dicomwebClient);
@@ -7046,122 +7180,6 @@ function retrieveStudiesMetadata(server, studyInstanceUids, seriesInstanceUids) 
 // TODO: What is this for?
 var getStudyBoxData = false;
 
-/**
- * Creates a QIDO date string for a date range query
- * Assumes the year is positive, at most 4 digits long.
- *
- * @param date The Date object to be formatted
- * @returns {string} The formatted date string
- */
-
-function dateToString$1(date) {
-  if (!date) return '';
-  var year = date.getFullYear().toString();
-  var month = (date.getMonth() + 1).toString();
-  var day = date.getDate().toString();
-  year = '0'.repeat(4 - year.length).concat(year);
-  month = '0'.repeat(2 - month.length).concat(month);
-  day = '0'.repeat(2 - day.length).concat(day);
-  return ''.concat(year, month, day);
-}
-/**
- * Produces a QIDO URL given server details and a set of specified search filter
- * items
- *
- * @param filter
- * @param serverSupportsQIDOIncludeField
- * @returns {string} The URL with encoded filter query data
- */
-
-
-function getQIDOQueryParams$2(filter, serverSupportsQIDOIncludeField) {
-  var commaSeparatedFields = ['00081030', // Study Description
-  '00080060' //Modality
-  // Add more fields here if you want them in the result
-  ].join(',');
-  var parameters = {
-    PatientName: filter.patientName,
-    PatientID: filter.patientId,
-    AccessionNumber: filter.accessionNumber,
-    StudyDescription: filter.studyDescription,
-    ModalitiesInStudy: filter.modalitiesInStudy,
-    limit: filter.limit,
-    offset: filter.offset,
-    includefield: serverSupportsQIDOIncludeField ? commaSeparatedFields : 'all'
-  }; // build the StudyDate range parameter
-
-  if (filter.studyDateFrom || filter.studyDateTo) {
-    var dateFrom = dateToString$1(new Date(filter.studyDateFrom));
-    var dateTo = dateToString$1(new Date(filter.studyDateTo));
-    parameters.StudyDate = "".concat(dateFrom, "-").concat(dateTo);
-  } // Build the StudyInstanceUID parameter
-
-
-  if (filter.studyInstanceUid) {
-    var studyUids = filter.studyInstanceUid;
-    studyUids = Array.isArray(studyUids) ? studyUids.join() : studyUids;
-    studyUids = studyUids.replace(/[^0-9.]+/g, '\\');
-    parameters.StudyInstanceUID = studyUids;
-  } // Clean query params of undefined values.
-
-
-  var params = {};
-  Object.keys(parameters).forEach(function (key) {
-    if (parameters[key] !== undefined && parameters[key] !== "") {
-      params[key] = parameters[key];
-    }
-  });
-  return params;
-}
-/**
- * Parses resulting data from a QIDO call into a set of Study MetaData
- *
- * @param resultData
- * @returns {Array} An array of Study MetaData objects
- */
-
-
-function resultDataToStudies$1(resultData) {
-  var studies = [];
-  if (!resultData || !resultData.length) return;
-  resultData.forEach(function (study) {
-    return studies.push({
-      studyInstanceUid: DICOMWeb.getString(study['0020000D']),
-      // 00080005 = SpecificCharacterSet
-      studyDate: DICOMWeb.getString(study['00080020']),
-      studyTime: DICOMWeb.getString(study['00080030']),
-      accessionNumber: DICOMWeb.getString(study['00080050']),
-      referringPhysicianName: DICOMWeb.getString(study['00080090']),
-      // 00081190 = URL
-      patientName: DICOMWeb.getName(study['00100010']),
-      patientId: DICOMWeb.getString(study['00100020']),
-      patientBirthdate: DICOMWeb.getString(study['00100030']),
-      patientSex: DICOMWeb.getString(study['00100040']),
-      studyId: DICOMWeb.getString(study['00200010']),
-      numberOfStudyRelatedSeries: DICOMWeb.getString(study['00201206']),
-      numberOfStudyRelatedInstances: DICOMWeb.getString(study['00201208']),
-      studyDescription: DICOMWeb.getString(study['00081030']),
-      // modality: DICOMWeb.getString(study['00080060']),
-      // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
-      modalities: DICOMWeb.getString(DICOMWeb.getModalities(study['00080060'], study['00080061']))
-    });
-  });
-  return studies;
-}
-
-function Studies$1(server, filter) {
-  var config = {
-    url: server.qidoRoot,
-    headers: DICOMWeb.getAuthorizationHeader(server)
-  };
-  var dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
-  var queryParams = getQIDOQueryParams$2(filter, server.qidoSupportsIncludeField);
-  var options = {
-    queryParams: queryParams
-  };
-  return dicomWeb.searchForStudies(options).then(resultDataToStudies$1);
-}
-
 var studySearchPromises = new Map();
 /**
  * Search for studies information by the given filter
@@ -7176,7 +7194,7 @@ function searchStudies(server, filter) {
   if (studySearchPromises.has(promiseKey)) {
     return studySearchPromises.get(promiseKey);
   } else {
-    var promise = Studies$1(server, filter);
+    var promise = Studies(server, filter);
     studySearchPromises.set(promiseKey, promise);
     return promise;
   }
@@ -13088,7 +13106,7 @@ var preferences = function preferences(state, action) {
       return Object.assign({}, state, newState);
 
     default:
-      return lodash_clonedeep(defaultState$3);
+      return lodash_clonedeep(state) || lodash_clonedeep(defaultState$3);
   }
 };
 

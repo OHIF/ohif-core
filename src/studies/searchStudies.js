@@ -1,4 +1,4 @@
-import Studies from './services/qido/Studies';
+import Studies from './services/qido/studies';
 
 const studySearchPromises = new Map();
 

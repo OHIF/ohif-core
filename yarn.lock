@@ -1730,6 +1730,11 @@ del@^3.0.0:
     pify "^3.0.0"
     rimraf "^2.2.8"
 
+dicomweb-client@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/dicomweb-client/-/dicomweb-client-0.4.1.tgz#b846556e61677566e36f5ea3cf0c1b48014bcbe4"
+  integrity sha512-kTNklf8TTnLToybOFzpEArmdMx2ibOETkCVNTcHMHnV2P9dZSXAcbn0oWRbN9lt7/eGGeHAOQYYZwYjSfBlk5g==
+
 dir-glob@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dir-glob/-/dir-glob-2.0.0.tgz#0b205d2b6aef98238ca286598a8204d29d0a0034"

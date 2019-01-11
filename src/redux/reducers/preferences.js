@@ -116,7 +116,7 @@ const preferences = (state, action) => {
 
       return Object.assign({}, state, newState);
     default:
-      return cloneDeep(defaultState);
+      return cloneDeep(state) || cloneDeep(defaultState);
   }
 };
 
