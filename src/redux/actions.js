@@ -35,6 +35,16 @@ export const clearViewportSpecificData = viewportIndex => ({
   viewportIndex
 });
 
+export const addPlugin = plugin => ({
+  type: 'ADD_PLUGIN',
+  plugin
+});
+
+export const setAvailableButtons = buttons => ({
+  type: 'SET_AVAILABLE_BUTTONS',
+  buttons
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
@@ -42,7 +52,9 @@ const actions = {
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
   setViewportSpecificData,
-  clearViewportSpecificData
+  clearViewportSpecificData,
+  addPlugin,
+  setAvailableButtons
 };
 
 export default actions;

@@ -78,7 +78,7 @@ function createStacks(study) {
       return;
     }
 
-    // Search through the instances (InstanceMedatada object) of this series
+    // Search through the instances (InstanceMetadata object) of this series
     // Split Multi-frame instances and Single-image modalities
     // into their own specific display sets. Place the rest of each
     // series into another display set.

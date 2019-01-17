@@ -54,6 +54,7 @@ function createAndAddStack(
   });
 
   const stack = {
+    studyInstanceUid: study.studyInstanceUid,
     displaySetInstanceUid: displaySet.displaySetInstanceUid,
     imageIds,
     frameRate: displaySet.frameRate,
