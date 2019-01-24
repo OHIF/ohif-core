@@ -1,4 +1,5 @@
 import log from '../log.js';
+import context from '../';
 
 // TODO: this is duplicated in TypeSafeCollection
 function isFunction(subject) {
@@ -23,7 +24,7 @@ export class CommandsManager {
   }
 
   getCurrentContext() {
-    const contextName = OHIF.context.get();
+    const contextName = 'viewer'; // OHIF.context.get(); TODO: put this in redux
     if (!contextName) {
       return log.warn('There is no selected context');
     }

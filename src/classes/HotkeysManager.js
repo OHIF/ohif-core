@@ -121,7 +121,7 @@ export class HotkeysManager {
       this.set(contextName, {});
     }
 
-    context.register(command, hotkey);
+    this.getContext(contextName).register(command, hotkey);
   }
 
   unsetContext(contextName) {

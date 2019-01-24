@@ -1,4 +1,6 @@
 import log from '../log.js';
+import $ from 'jquery';
+import commands from '../commands';
 
 export class HotkeysContext {
   constructor(name, definitions, enabled) {
@@ -31,10 +33,12 @@ export class HotkeysContext {
     }
 
     const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+    debugger;
     const bind = hotkey =>
       $(document).bind(bindingKey, hotkey, event => {
-        if (!this.enabled.get()) return;
-        OHIF.commands.run(command);
+        if (!this.enabled) return;
+        debugger;
+        commands.run(command);
         event.preventDefault();
       });
 

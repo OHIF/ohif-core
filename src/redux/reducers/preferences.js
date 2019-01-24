@@ -1,4 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
+import HotkeysContext from '../../classes/HotkeysContext';
+import hotkeys from '../../hotkeys';
 
 const defaultState = {
   hotKeysData: {
@@ -113,6 +115,14 @@ const preferences = (state, action) => {
       if (!action.state) {
         newState = cloneDeep(defaultState);
       }
+
+      Object.keys(state.hotKeysData).forEach(key => {
+        hotkeys.register(
+          hotkeys.currentContextName,
+          key,
+          state.hotKeysData[key]
+        );
+      });
 
       return Object.assign({}, state, newState);
     default:
