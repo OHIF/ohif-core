@@ -29,13 +29,19 @@ export const setUserPreferences = state => ({
   state
 });
 
+export const setCommandContext = state => ({
+  type: 'SET_COMMAND_CONTEXT',
+  state
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
   setLayout,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
-  setUserPreferences
+  setUserPreferences,
+  setCommandContext
 };
 
 export default actions;
