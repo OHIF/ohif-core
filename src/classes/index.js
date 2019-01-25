@@ -15,6 +15,7 @@ import { InstanceMetadata } from './metadata/InstanceMetadata';
 import { TypeSafeCollection } from './TypeSafeCollection';
 import OHIFError from './OHIFError.js';
 import { StudyMetadataSource } from './StudyMetadataSource';
+import { HotkeysUtil } from './HotkeysUtil.js';
 
 export {
   MetadataProvider,
@@ -32,7 +33,8 @@ export {
   //StudySummary,
   TypeSafeCollection,
   OHIFError,
-  StudyMetadataSource
+  StudyMetadataSource,
+  HotkeysUtil
 };
 
 const classes = {
@@ -40,6 +42,7 @@ const classes = {
   CommandsManager,
   HotkeysContext,
   HotkeysManager,
+  HotkeysUtil,
   ImageSet,
   StudyPrefetcher,
   StudyLoadingListener,

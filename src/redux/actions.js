@@ -29,13 +29,44 @@ export const setUserPreferences = state => ({
   state
 });
 
+export const setCommandContext = state => ({
+  type: 'SET_COMMAND_CONTEXT',
+  state
+});
+
+export const setViewportSpecificData = (viewportIndex, data) => ({
+  type: 'SET_VIEWPORT_SPECIFIC_DATA',
+  viewportIndex,
+  data
+});
+
+export const clearViewportSpecificData = viewportIndex => ({
+  type: 'CLEAR_VIEWPORT_SPECIFIC_DATA',
+  viewportIndex
+});
+
+export const addPlugin = plugin => ({
+  type: 'ADD_PLUGIN',
+  plugin
+});
+
+export const setAvailableButtons = buttons => ({
+  type: 'SET_AVAILABLE_BUTTONS',
+  buttons
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
   setLayout,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
-  setUserPreferences
+  setUserPreferences,
+  setCommandContext,
+  setViewportSpecificData,
+  clearViewportSpecificData,
+  addPlugin,
+  setAvailableButtons
 };
 
 export default actions;

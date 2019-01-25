@@ -2,7 +2,7 @@ import './lib';
 //import './schema.js';
 import studies from './studies/';
 import commands from './commands';
-import hotkeys from './hotkeys';
+import { hotkeys, hotkeysUtil } from './hotkeys.js';
 import ui from './ui';
 import header from './header.js';
 import utils from './utils/';
@@ -16,6 +16,8 @@ import object from './object.js';
 import DICOMWeb from './DICOMWeb';
 import log from './log.js';
 import external from './externalModules.js';
+import hangingProtocols from './hanging-protocols/';
+import plugins from './plugins.js';
 
 const viewer = {};
 
@@ -27,6 +29,7 @@ const OHIF = {
   classes,
   metadata,
   hotkeys,
+  hotkeysUtil,
   header,
   cornerstone,
   string,
@@ -36,7 +39,8 @@ const OHIF = {
   commands,
   log,
   external,
-  DICOMWeb
+  DICOMWeb,
+  plugins
 };
 
 export {
@@ -55,7 +59,8 @@ export {
   object,
   commands,
   log,
-  DICOMWeb
+  DICOMWeb,
+  plugins
 };
 
 export { OHIF };

@@ -1,5 +1,6 @@
 import ImageSet from '../classes/ImageSet';
 import { isImage } from './isImage';
+import plugins from '../plugins';
 
 const isMultiFrame = instance => {
   // NumberOfFrames (0028,0008)
@@ -51,6 +52,45 @@ const isSingleImageModality = modality => {
   return modality === 'CR' || modality === 'MG' || modality === 'DX';
 };
 
+function getDisplaySetFromSopClassPluginsIfApplicable(series, study) {
+  const uniqueSopClassUidsInSeries = new Set();
+  series.forEachInstance(instance => {
+    const instanceSopClassUid = instance.getRawValue('x00080016');
+
+    uniqueSopClassUidsInSeries.add(instanceSopClassUid);
+  });
+  const sopClassUids = Array.from(uniqueSopClassUidsInSeries);
+
+  // TODO: For now only use the plugins if all instances have the same sopClassUid
+  if (sopClassUids.length !== 1) {
+    return;
+  }
+
+  const sopClassUid = sopClassUids[0];
+
+  const { availablePlugins, PLUGIN_TYPES } = plugins;
+  const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
+    return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
+  });
+
+  // TODO: A bit weird that this is plugin.component
+  const sopClassHandlerPluginClasses = sopClassHandlerPlugins.map(plugin => {
+    return plugin.component;
+  });
+
+  const applicablePlugins = sopClassHandlerPluginClasses.filter(plugin => {
+    return plugin.sopClassUids.includes(sopClassUid);
+  });
+
+  // TODO: Sort by something
+  if (!applicablePlugins || !applicablePlugins.length) {
+    return;
+  }
+
+  const plugin = applicablePlugins[0];
+  return plugin.getDisplaySetFromSeries(series, study);
+}
+
 /**
  * Creates a set of series to be placed in the Study Metadata
  * The series that appear in the Study Metadata must represent
@@ -78,7 +118,17 @@ function createStacks(study) {
       return;
     }
 
-    // Search through the instances (InstanceMedatada object) of this series
+    let displaySet = getDisplaySetFromSopClassPluginsIfApplicable(
+      series,
+      study
+    );
+    if (displaySet) {
+      displaySets.push(displaySet);
+
+      return;
+    }
+
+    // Search through the instances (InstanceMetadata object) of this series
     // Split Multi-frame instances and Single-image modalities
     // into their own specific display sets. Place the rest of each
     // series into another display set.
@@ -92,7 +142,6 @@ function createStacks(study) {
         return;
       }
 
-      let displaySet;
       if (isMultiFrame(instance)) {
         displaySet = makeDisplaySet(series, [instance]);
         displaySet.setAttributes({

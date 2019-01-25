@@ -1,7 +1,8 @@
-import cornerstone from 'cornerstone-core';
-import cornerstoneTools from 'cornerstone-tools';
+import external from '../externalModules.js';
 
 function getBoundingBox(context, textLines, x, y, options) {
+  const { cornerstoneTools } = external;
+
   if (Object.prototype.toString.call(textLines) !== '[object Array]') {
     textLines = [textLines];
   }
@@ -49,6 +50,8 @@ function getBoundingBox(context, textLines, x, y, options) {
 }
 
 function pixelToPage(element, position) {
+  const { cornerstone } = external;
+
   const enabledElement = cornerstone.getEnabledElement(element);
   const result = {
     x: 0,
@@ -74,6 +77,8 @@ function pixelToPage(element, position) {
 }
 
 function repositionTextBox(eventData, measurementData, config) {
+  const { cornerstone } = external;
+
   // Stop here if it's not a measurement creating
   if (!measurementData.isCreating) {
     return;

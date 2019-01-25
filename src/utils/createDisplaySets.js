@@ -27,8 +27,6 @@ export default function createDisplaySets(studies) {
     }
 
     studyMetadata.setDisplaySets(displaySets);
-
-    study.selected = true;
     //OHIF.viewer.Studies.insert(study);
     //OHIF.viewer.StudyMetadataList.insert(studyMetadata);
     //OHIF.viewer.data.studyInstanceUids.push(study.studyInstanceUid);

@@ -10,11 +10,16 @@ export class HotkeysContext {
   }
 
   extend(definitions = {}) {
-    if (typeof definitions !== 'object') return;
+    if (typeof definitions !== 'object') {
+      return;
+    }
+
     this.definitions = Object.assign({}, definitions);
+
     Object.keys(definitions).forEach(command => {
       const hotkey = definitions[command];
       this.unregister(command);
+
       if (hotkey) {
         this.register(command, hotkey);
       }
@@ -33,11 +38,13 @@ export class HotkeysContext {
     }
 
     const bindingKey = `keydown.hotkey.${this.name}.${command}`;
-    debugger;
+
     const bind = hotkey =>
       $(document).bind(bindingKey, hotkey, event => {
-        if (!this.enabled) return;
-        debugger;
+        if (!this.enabled) {
+          return;
+        }
+
         commands.run(command);
         event.preventDefault();
       });
