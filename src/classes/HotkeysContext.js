@@ -1,4 +1,6 @@
 import log from '../log.js';
+import $ from 'jquery';
+import commands from '../commands';
 
 export class HotkeysContext {
   constructor(name, definitions, enabled) {
@@ -8,11 +10,16 @@ export class HotkeysContext {
   }
 
   extend(definitions = {}) {
-    if (typeof definitions !== 'object') return;
+    if (typeof definitions !== 'object') {
+      return;
+    }
+
     this.definitions = Object.assign({}, definitions);
+
     Object.keys(definitions).forEach(command => {
       const hotkey = definitions[command];
       this.unregister(command);
+
       if (hotkey) {
         this.register(command, hotkey);
       }
@@ -31,10 +38,14 @@ export class HotkeysContext {
     }
 
     const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+
     const bind = hotkey =>
       $(document).bind(bindingKey, hotkey, event => {
-        if (!this.enabled.get()) return;
-        OHIF.commands.run(command);
+        if (!this.enabled) {
+          return;
+        }
+
+        commands.run(command);
         event.preventDefault();
       });
 

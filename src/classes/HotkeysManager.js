@@ -102,7 +102,8 @@ export class HotkeysManager {
       contextDefinitions,
       enabled
     );
-    const currentContext = this.getCurrentContext();
+
+    const currentContext = this.getCurrentContext() || context;
     if (currentContext && currentContext.name === contextName) {
       currentContext.destroy();
       context.initialize();
@@ -121,7 +122,7 @@ export class HotkeysManager {
       this.set(contextName, {});
     }
 
-    context.register(command, hotkey);
+    this.getContext(contextName).register(command, hotkey);
   }
 
   unsetContext(contextName) {

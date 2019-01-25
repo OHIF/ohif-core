@@ -14,7 +14,15 @@ export default {
       file: pkg.main,
       format: 'cjs',
       sourcemap: true,
-      exports: 'named'
+      exports: 'named',
+      globals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        'cornerstone-core': 'cornerstone',
+        'cornerstone-tools': 'cornerstoneTools',
+        'cornerstone-math': 'cornerstoneMath',
+        'dicom-parser': 'dicomParser'
+      },
     },
     {
       file: pkg.module,

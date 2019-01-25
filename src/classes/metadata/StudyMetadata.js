@@ -120,7 +120,7 @@ export class StudyMetadata extends Metadata {
 
   /**
    * Search the associated display sets using the supplied callback as criteria. The callback is passed
-   * two arguments: display set (a ImageSet instance) and index (the integer
+   * two arguments: display set (an ImageSet instance) and index (the integer
    * index of the display set within the current study)
    * @param {function} callback The callback function which will be invoked for each display set instance.
    * @returns {undefined} Nothing is returned.
