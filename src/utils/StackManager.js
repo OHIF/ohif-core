@@ -22,7 +22,12 @@ function createAndAddStack(
   stackUpdatedCallbacks,
   metadataProvider
 ) {
-  const numImages = displaySet.images.length;
+  const images = displaySet.images;
+  if (!images) {
+    return;
+  }
+
+  const numImages = images.length;
   const imageIds = [];
   let imageId;
 
@@ -54,6 +59,7 @@ function createAndAddStack(
   });
 
   const stack = {
+    studyInstanceUid: study.studyInstanceUid,
     displaySetInstanceUid: displaySet.displaySetInstanceUid,
     imageIds,
     frameRate: displaySet.frameRate,

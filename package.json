@@ -1,6 +1,6 @@
 {
   "name": "ohif-core",
-  "version": "0.1.4",
+  "version": "0.1.8",
   "description": "Useful functions and classes for building web-based medical imaging applications",
   "author": "OHIF",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "@babel/core": "^7.2.0",
     "@babel/plugin-external-helpers": "^7.2.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
+    "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "@svgr/rollup": "^4.1.0",
@@ -71,10 +72,13 @@
     "cornerstone-math": "^0.1.7",
     "cornerstone-tools": "^2.4.0",
     "dicom-parser": "^1.8.3",
+    "@babel/runtime": "^7.2.0",
     "dicomweb-client": "^0.4.1",
     "isomorphic-base64": "^1.0.2",
     "jquery": "^3.3.1",
     "jquery.hotkeys": "^0.1.0",
-    "lodash.clonedeep": "^4.5.0"
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.merge": "^4.6.1",
+    "validate.js": "^0.12.0"
   }
 }

@@ -1,3 +1,6 @@
+import cloneDeep from 'lodash.clonedeep';
+import merge from 'lodash.merge';
+
 const defaultState = {
   activeViewportIndex: 0,
   layout: {
@@ -7,18 +10,35 @@ const defaultState = {
         width: '100%'
       }
     ]
-  }
+  },
+  viewportSpecificData: {}
 };
 
 const viewports = (state = defaultState, action) => {
+  let viewportSpecificData;
   switch (action.type) {
     case 'SET_VIEWPORT_ACTIVE':
       return Object.assign({}, state, {
         activeViewportIndex: action.viewportIndex
       });
     case 'SET_LAYOUT':
-      debugger;
       return Object.assign({}, state, { layout: action.layout });
+    case 'SET_VIEWPORT_SPECIFIC_DATA':
+      const currentData =
+        cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {};
+      viewportSpecificData = cloneDeep(state.viewportSpecificData);
+      viewportSpecificData[action.viewportIndex] = merge(
+        {},
+        currentData,
+        action.data
+      );
+
+      return Object.assign({}, state, { viewportSpecificData });
+    case 'CLEAR_VIEWPORT_SPECIFIC_DATA':
+      viewportSpecificData = cloneDeep(state.viewportSpecificData);
+      viewportSpecificData[action.viewportIndex] = {};
+
+      return Object.assign({}, state, { viewportSpecificData });
     default:
       return state;
   }

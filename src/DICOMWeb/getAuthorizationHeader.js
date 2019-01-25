@@ -1,4 +1,6 @@
-import { btoa } from 'isomorphic-base64';
+// Commenting this out for now since it looks like Rollup is pulling in the
+// Node.js version instead of the Browser version of this package
+//import { btoa } from 'isomorphic-base64';
 import user from '../user';
 
 /**

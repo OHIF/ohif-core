@@ -6,9 +6,7 @@ import StackManager from '../utils/StackManager';
 import external from '../externalModules.js';
 
 class BaseLoadingListener {
-  constructor(stack, options) {
-    options = options || {};
-
+  constructor(stack, options = {}) {
     this.id = BaseLoadingListener.getNewId();
     this.stack = stack;
     this.startListening();
@@ -19,6 +17,9 @@ class BaseLoadingListener {
       elapsedTime: 0,
       speed: 0
     };
+
+    this._setProgressData = options._setProgressData;
+    this._clearProgressById = options._clearProgressById;
 
     // Register the start point to make it possible to calculate
     // bytes/s or frames/s when the first byte or frame is received
@@ -68,11 +69,11 @@ class BaseLoadingListener {
   }
 
   startListening() {
-    throw new Error('`startListening` must be implemented by child clases');
+    throw new Error('`startListening` must be implemented by child classes');
   }
 
   stopListening() {
-    throw new Error('`stopListening` must be implemented by child clases');
+    throw new Error('`stopListening` must be implemented by child classes');
   }
 
   destroy() {
@@ -92,8 +93,8 @@ class BaseLoadingListener {
 }
 
 class DICOMFileLoadingListener extends BaseLoadingListener {
-  constructor(stack) {
-    super(stack, null);
+  constructor(stack, options) {
+    super(stack, options);
     this._dataSetUrl = this._getDataSetUrl(stack);
     this._lastLoaded = 0;
 
@@ -118,11 +119,16 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
   }
 
   _getImageLoadProgressEventName() {
+    // TODO: Add this event as a constant in Cornerstone
     return 'cornerstoneimageloadprogress.' + this.id;
   }
 
   startListening() {
     const imageLoadProgressEventName = this._getImageLoadProgressEventName();
+
+    this.imageLoadProgressEventHandler = this._imageLoadProgressEventHandle.bind(
+      this
+    );
 
     this.stopListening();
 
@@ -134,10 +140,13 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
 
   stopListening() {
     const imageLoadProgressEventName = this._getImageLoadProgressEventName();
-    external.cornerstone.events.removeEventListener(imageLoadProgressEventName);
+    external.cornerstone.events.removeEventListener(
+      imageLoadProgressEventName,
+      this.imageLoadProgressEventHandle
+    );
   }
 
-  imageLoadProgressEventHandle = e => {
+  _imageLoadProgressEventHandler = e => {
     const eventData = e.detail;
     const dataSetUrl = this._convertImageIdToDataSetUrl(eventData.imageId);
     const bytesDiff = eventData.loaded - this._lastLoaded;
@@ -191,8 +200,9 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
 }
 
 class StackLoadingListener extends BaseLoadingListener {
-  constructor(stack) {
-    super(stack, { statsItemsLimit: 20 });
+  constructor(stack, options = {}) {
+    options.statsItemsLimit = 20;
+    super(stack, options);
 
     this.imageDataMap = this._convertImageIdsArrayToMap(stack.imageIds);
     this.framesStatus = this._createArray(stack.imageIds.length, false);
@@ -242,18 +252,20 @@ class StackLoadingListener extends BaseLoadingListener {
   }
 
   _getImageLoadedEventName() {
-    return 'cornerstoneimageloaded.' + this.id;
+    return `${external.cornerstone.EVENTS.IMAGE_LOADED}.${this.id}`;
   }
 
   _getImageCachePromiseRemoveEventName() {
-    return 'cornerstoneimagecachepromiseremoved.' + this.id;
+    return `${external.cornerstone.EVENTS.IMAGE_CACHE_PROMISE_REMOVED}.${
+      this.id
+    }`;
   }
 
-  _imageLoadedEventHandle(e) {
+  _imageLoadedEventHandler(e) {
     this._updateFrameStatus(e.detail.image.imageId, true);
   }
 
-  _imageCachePromiseRemovedEventHandle(e) {
+  _imageCachePromiseRemovedEventHandler(e) {
     this._updateFrameStatus(e.detail.imageId, false);
   }
 
@@ -261,8 +273,8 @@ class StackLoadingListener extends BaseLoadingListener {
     const imageLoadedEventName = this._getImageLoadedEventName();
     const imageCachePromiseRemovedEventName = this._getImageCachePromiseRemoveEventName();
 
-    this.imageLoadedEventHandle = this._imageLoadedEventHandle.bind(this);
-    this.imageCachePromiseRemovedEventHandle = this._imageCachePromiseRemovedEventHandle.bind(
+    this.imageLoadedEventHandler = this._imageLoadedEventHandler.bind(this);
+    this.imageCachePromiseRemovedEventHandler = this._imageCachePromiseRemovedEventHandler.bind(
       this
     );
 
@@ -270,11 +282,11 @@ class StackLoadingListener extends BaseLoadingListener {
 
     external.cornerstone.events.addEventListener(
       imageLoadedEventName,
-      this.imageLoadedEventHandle
+      this.imageLoadedEventHandler
     );
     external.cornerstone.events.addEventListener(
       imageCachePromiseRemovedEventName,
-      this.imageCachePromiseRemovedEventHandle
+      this.imageCachePromiseRemovedEventHandler
     );
   }
 
@@ -284,11 +296,11 @@ class StackLoadingListener extends BaseLoadingListener {
 
     external.cornerstone.events.removeEventListener(
       imageLoadedEventName,
-      this.imageLoadedEventHandle
+      this.imageLoadedEventHandler
     );
     external.cornerstone.events.removeEventListener(
       imageCachePromiseRemovedEventName,
-      this.imageCachePromiseRemovedEventHandle
+      this.imageCachePromiseRemovedEventHandler
     );
   }
 
@@ -311,11 +323,21 @@ class StackLoadingListener extends BaseLoadingListener {
   }
 
   _setProgressData(progressId, progressData) {
-    window.store.dispatch(setStudyLoadingProgress(progressId, progressData));
+    // TODO: This method (and _clearProgressById) need to access
+    // the Redux store and should therefore be provided from the
+    // application. I've added a workaround to pass this in through
+    // the 'options' variable on instantiation, but this is really ugly.
+    // We could consider making the StudyLoadingListener a higher-order
+    // component which would set this stuff itself.
+    throw new Error(
+      "The _setProgressData function must be provided in StudyLoadingListener's options"
+    );
   }
 
   _clearProgressById(progressId) {
-    window.store.dispatch(clearStudyLoadingProgress(progressId));
+    throw new Error(
+      "The _clearProgressById function must be provided in StudyLoadingListener's options"
+    );
   }
 
   _updateProgress() {
@@ -355,11 +377,18 @@ class StackLoadingListener extends BaseLoadingListener {
 }
 
 class StudyLoadingListener {
-  constructor() {
+  constructor(options) {
     this.listeners = {};
+    this.options = options;
   }
 
   addStack(stack, stackMetaData) {
+    // TODO: Make this work for plugins
+    if (!stack) {
+      //console.log('Skipping adding stack to StudyLoadingListener');
+      return;
+    }
+
     const displaySetInstanceUid = stack.displaySetInstanceUid;
 
     if (!this.listeners[displaySetInstanceUid]) {
@@ -373,6 +402,14 @@ class StudyLoadingListener {
   addStudy(study) {
     study.displaySets.forEach(displaySet => {
       const stack = StackManager.findOrCreateStack(study, displaySet);
+
+      // TODO: Make this work for plugins
+      if (!stack) {
+        console.warn('Skipping adding displaySet to StudyLoadingListener');
+        console.warn(displaySet);
+        return;
+      }
+
       this.addStack(stack, {
         isMultiFrame: displaySet.isMultiFrame
       });
@@ -410,9 +447,9 @@ class StudyLoadingListener {
     // is created only if it's a single DICOM file and there's no way to know
     // how many frames has already been loaded (bytes/s instead of frames/s).
     if (schema === 'wadors' || !stackMetaData.isMultiFrame) {
-      return new StackLoadingListener(stack);
+      return new StackLoadingListener(stack, this.options);
     } else {
-      return new DICOMFileLoadingListener(stack);
+      return new DICOMFileLoadingListener(stack, this.options);
     }
   }
 
@@ -423,9 +460,9 @@ class StudyLoadingListener {
   }
 
   // Singleton
-  static getInstance() {
+  static getInstance(options) {
     if (!StudyLoadingListener._instance) {
-      StudyLoadingListener._instance = new StudyLoadingListener();
+      StudyLoadingListener._instance = new StudyLoadingListener(options);
     }
 
     return StudyLoadingListener._instance;

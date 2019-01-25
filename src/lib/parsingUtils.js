@@ -1,4 +1,4 @@
-import dicomParser from 'dicom-parser';
+import external from '../externalModules';
 
 /**
  * A small set of utilities to help parsing DICOM element values.
@@ -13,6 +13,7 @@ export const parsingUtils = {
    * @returns {Boolean} Returns true if data is a valid instance of the dicomParser.DataSet class.
    */
   isValidDataSet: function(data) {
+    const { dicomParser } = external;
     return data instanceof dicomParser.DataSet;
   },
 
@@ -54,6 +55,7 @@ export const parsingUtils = {
    * @returns {Array} An array of floating point numbers or null if the field is not present or data is not long enough.
    */
   multiValue: function(data, tag, parser) {
+    const { dicomParser } = external;
     if (this.isValidDataSet(data) && tag in data.elements) {
       let element = data.elements[tag];
       if (element && element.length > 0) {
