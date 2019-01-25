@@ -383,6 +383,12 @@ class StudyLoadingListener {
   }
 
   addStack(stack, stackMetaData) {
+    // TODO: Make this work for plugins
+    if (!stack) {
+      //console.log('Skipping adding stack to StudyLoadingListener');
+      return;
+    }
+
     const displaySetInstanceUid = stack.displaySetInstanceUid;
 
     if (!this.listeners[displaySetInstanceUid]) {
@@ -396,6 +402,14 @@ class StudyLoadingListener {
   addStudy(study) {
     study.displaySets.forEach(displaySet => {
       const stack = StackManager.findOrCreateStack(study, displaySet);
+
+      // TODO: Make this work for plugins
+      if (!stack) {
+        console.warn('Skipping adding displaySet to StudyLoadingListener');
+        console.warn(displaySet);
+        return;
+      }
+
       this.addStack(stack, {
         isMultiFrame: displaySet.isMultiFrame
       });

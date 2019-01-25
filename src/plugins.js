@@ -1,5 +1,6 @@
 const PLUGIN_TYPES = {
-  VIEWPORT: 'viewport'
+  VIEWPORT: 'viewport',
+  SOP_CLASS_HANDLER: 'sopClassHandler'
 };
 
 const plugins = {
