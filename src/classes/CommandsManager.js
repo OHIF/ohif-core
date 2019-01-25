@@ -1,5 +1,4 @@
 import log from '../log.js';
-import context from '../';
 
 function isFunction(subject) {
   return typeof subject === 'function';
@@ -12,6 +11,7 @@ export class CommandsManager {
 
   getContext(contextName) {
     const context = this.contexts[contextName];
+
     if (!context) {
       return log.warn(`No context found with name "${contextName}"`);
     }
@@ -20,7 +20,7 @@ export class CommandsManager {
   }
 
   getCurrentContext() {
-    const contextName = window.store.getState().commandContext.context; // OHIF.context.get(); TODO: put this in redux
+    const contextName = window.store.getState().commandContext.context;
 
     if (!contextName) {
       log.warn('There is no selected context');
@@ -31,7 +31,10 @@ export class CommandsManager {
   }
 
   createContext(contextName) {
-    if (!contextName) return;
+    if (!contextName) {
+      return;
+    }
+
     if (this.contexts[contextName]) {
       return this.clear(contextName);
     }
@@ -40,9 +43,14 @@ export class CommandsManager {
   }
 
   set(contextName, definitions, extend = false) {
-    if (typeof definitions !== 'object') return;
+    if (typeof definitions !== 'object') {
+      return;
+    }
+
     const context = this.getContext(contextName);
-    if (!context) return;
+    if (!context) {
+      return;
+    }
 
     if (!extend) {
       this.clear(contextName);
@@ -54,9 +62,14 @@ export class CommandsManager {
   }
 
   register(contextName, command, definition) {
-    if (typeof definition !== 'object') return;
+    if (typeof definition !== 'object') {
+      return;
+    }
+
     const context = this.getContext(contextName);
-    if (!context) return;
+    if (!context) {
+      return;
+    }
 
     context[command] = definition;
   }
@@ -73,22 +86,30 @@ export class CommandsManager {
 
     const definition = context[command];
     if (!definition) {
-      return log.warn(
+      log.warn(
         `Trying to set a disabled function to a command "${command}" that was not yet defined`
       );
+      return;
     }
 
     definition.disabled = func;
   }
 
   clear(contextName) {
-    if (!contextName) return;
+    if (!contextName) {
+      return;
+    }
+
     this.contexts[contextName] = {};
   }
 
   getDefinition(command) {
     const context = this.getCurrentContext();
-    if (!context) return;
+
+    if (!context) {
+      return;
+    }
+
     return context[command];
   }
 

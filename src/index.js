@@ -2,7 +2,7 @@ import './lib';
 //import './schema.js';
 import studies from './studies/';
 import commands from './commands';
-import hotkeys from './hotkeys';
+import { hotkeys, hotkeysUtil } from './hotkeys.js';
 import ui from './ui';
 import header from './header.js';
 import utils from './utils/';
@@ -27,6 +27,7 @@ const OHIF = {
   classes,
   metadata,
   hotkeys,
+  hotkeysUtil,
   header,
   cornerstone,
   string,

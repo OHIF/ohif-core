@@ -102,7 +102,8 @@ export class HotkeysManager {
       contextDefinitions,
       enabled
     );
-    const currentContext = this.getCurrentContext();
+
+    const currentContext = this.getCurrentContext() || context;
     if (currentContext && currentContext.name === contextName) {
       currentContext.destroy();
       context.initialize();
