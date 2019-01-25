@@ -15,7 +15,7 @@ import { InstanceMetadata } from './metadata/InstanceMetadata';
 import { TypeSafeCollection } from './TypeSafeCollection';
 import OHIFError from './OHIFError.js';
 import { StudyMetadataSource } from './StudyMetadataSource';
-import { HotkeysUtil } from './HotkeysUtil.js';
+import HotkeysUtil from './HotkeysUtil.js';
 
 export {
   MetadataProvider,

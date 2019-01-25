@@ -1,9 +1,9 @@
 import log from '../log';
 import commands from '../commands';
 import actions from '../redux/actions';
-import { hotkeys } from '../hotkeys';
+import hotkeys from '../hotkeys';
 
-export class HotkeysUtil {
+export default class HotkeysUtil {
   constructor() {
     this.toolCommands = {
       wwwc: 'W/L',

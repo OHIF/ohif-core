@@ -2,7 +2,7 @@ import './lib';
 //import './schema.js';
 import studies from './studies/';
 import commands from './commands';
-import { hotkeys, hotkeysUtil } from './hotkeys.js';
+import hotkeys from './hotkeys.js';
 import ui from './ui';
 import header from './header.js';
 import utils from './utils/';
@@ -18,6 +18,8 @@ import log from './log.js';
 import external from './externalModules.js';
 import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
+
+const hotkeysUtil = new classes.HotkeysUtil();
 
 const viewer = {};
 
