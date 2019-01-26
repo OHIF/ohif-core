@@ -147,7 +147,7 @@ export default class HotkeysUtil {
         name: `W/L Preset ${i + 1}`,
         action: () => {
           console.log(`TODO: window level preset - WLPreset${i}`);
-        }, // TODO applyPreset,
+        },
         params: i
       });
     }
@@ -155,10 +155,11 @@ export default class HotkeysUtil {
     // Register viewport navigation commands
     commands.set(contextName, this.commands, true);
 
-    this.setHotkeys(
-      window.store.getState().preferences.hotKeysData,
-      contextName
-    );
+    const hotkeysData = window.store.getState().preferences[contextName]
+      ? window.store.getState().preferences[contextName].hotKeysData
+      : window.store.getState().preferences['viewer'].hotKeysData;
+
+    this.setHotkeys(hotkeysData, contextName);
 
     const { setCommandContext } = actions;
     window.store.dispatch(setCommandContext({ context: contextName }));
@@ -170,9 +171,12 @@ export default class HotkeysUtil {
    * @param {*} contextName  -- default redux value
    */
   setHotkeys(
-    hotKeysPreferences = window.store.getState().preferences.hotKeysData,
+    hotKeysPreferences,
     contextName = window.store.getState().commandContext.context
   ) {
+    hotKeysPreferences =
+      hotKeysPreferences ||
+      window.store.getState().preferences[contextName].hotKeysData;
     const hotKeys = {};
 
     Object.keys(hotKeysPreferences).forEach(key => {
