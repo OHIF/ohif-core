@@ -1,12 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 
 const defaultState = {
-  'viewer-2': {
-    hotKeysData: {
-      defaultTool: { label: 'Default Tool', command: 'ESC', column: 0 },
-      zoom: { label: 'Zoom', command: 'Y', column: 0 }
-    }
-  },
   viewer: {
     hotKeysData: {
       defaultTool: { label: 'Default Tool', command: 'ESC', column: 0 },
