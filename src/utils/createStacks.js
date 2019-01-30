@@ -52,7 +52,7 @@ const isSingleImageModality = modality => {
   return modality === 'CR' || modality === 'MG' || modality === 'DX';
 };
 
-function getDisplaySetFromSopClassPluginsIfApplicable(series, study) {
+function getSopClassUids(series) {
   const uniqueSopClassUidsInSeries = new Set();
   series.forEachInstance(instance => {
     const instanceSopClassUid = instance.getRawValue('x00080016');
@@ -61,8 +61,19 @@ function getDisplaySetFromSopClassPluginsIfApplicable(series, study) {
   });
   const sopClassUids = Array.from(uniqueSopClassUidsInSeries);
 
+  return sopClassUids;
+}
+
+function getDisplaySetFromSopClassPluginsIfApplicable(
+  series,
+  study,
+  sopClassUids
+) {
   // TODO: For now only use the plugins if all instances have the same sopClassUid
   if (sopClassUids.length !== 1) {
+    console.warn(
+      'More than one SOPClassUid in the same series is not yet supported.'
+    );
     return;
   }
 
@@ -118,10 +129,14 @@ function createStacks(study) {
       return;
     }
 
+    const sopClassUids = getSopClassUids(series);
+
     let displaySet = getDisplaySetFromSopClassPluginsIfApplicable(
       series,
-      study
+      study,
+      sopClassUids
     );
+
     if (displaySet) {
       displaySets.push(displaySet);
 
@@ -145,6 +160,7 @@ function createStacks(study) {
       if (isMultiFrame(instance)) {
         displaySet = makeDisplaySet(series, [instance]);
         displaySet.setAttributes({
+          sopClassUids,
           isClip: true,
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid for drag/drop purposes
           numImageFrames: instance.getRawValue('x00280008'), // Override the default value of instances.length
@@ -155,6 +171,7 @@ function createStacks(study) {
       } else if (isSingleImageModality(instance.modality)) {
         displaySet = makeDisplaySet(series, [instance]);
         displaySet.setAttributes({
+          sopClassUids,
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid
           instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
           acquisitionDatetime: instance.getRawValue('x0008002a') // Include the acquisition datetime
@@ -168,6 +185,9 @@ function createStacks(study) {
     if (stackableInstances.length) {
       const displaySet = makeDisplaySet(series, stackableInstances);
       displaySet.setAttribute('studyInstanceUid', study.getStudyInstanceUID());
+      displaySet.setAttributes({
+        sopClassUids
+      });
       displaySets.push(displaySet);
     }
   });

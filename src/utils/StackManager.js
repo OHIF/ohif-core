@@ -43,7 +43,6 @@ function createAndAddStack(
 
     const numberOfFrames = image.numberOfFrames;
     if (numberOfFrames > 1) {
-      OHIF.log.info('Multiframe image detected');
       for (let i = 0; i < numberOfFrames; i++) {
         metaData.frameNumber = i;
         imageId = getImageId(image, i);
