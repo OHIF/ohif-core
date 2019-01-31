@@ -59,7 +59,14 @@ export default {
       externalHelpers: false
     }),
     resolve(),
-    commonjs()
+    commonjs({
+      include: 'node_modules/**',
+      namedExports: {
+          'node_modules/dicomweb-client/build/dicomweb-client.js': [
+            'api'
+          ]
+      }
+   }),
   ],
   external: ['cornerstone-core', 'cornerstone-math', 'cornerstone-tools', 'cornerstone-wado-image-loader', 'dicom-parser', 'hammerjs']
 }

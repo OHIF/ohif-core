@@ -1,6 +1,10 @@
 import ImageSet from '../classes/ImageSet';
 import { isImage } from './isImage';
 import plugins from '../plugins';
+import { api } from 'dicomweb-client';
+import DICOMWeb from '../DICOMWeb';
+
+const dwc = api.DICOMwebClient;
 
 const isMultiFrame = instance => {
   // NumberOfFrames (0028,0008)
@@ -99,7 +103,15 @@ function getDisplaySetFromSopClassPluginsIfApplicable(
   }
 
   const plugin = applicablePlugins[0];
-  return plugin.getDisplaySetFromSeries(series, study);
+
+  const headers = DICOMWeb.getAuthorizationHeader();
+
+  const dicomWebClient = new dwc({
+    url: study.getData().wadoRoot,
+    headers
+  });
+
+  return plugin.getDisplaySetFromSeries(series, study, dicomWebClient);
 }
 
 /**
