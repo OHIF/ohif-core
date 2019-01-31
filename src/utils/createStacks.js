@@ -111,7 +111,7 @@ function getDisplaySetFromSopClassPluginsIfApplicable(
     headers
   });
 
-  return plugin.getDisplaySetFromSeries(series, study, dicomWebClient);
+  return plugin.getDisplaySetFromSeries(series, study, dicomWebClient, headers);
 }
 
 /**
