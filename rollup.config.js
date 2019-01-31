@@ -25,6 +25,21 @@ export default {
       },
     },
     {
+      file: pkg.browser,
+      format: 'umd',
+      name: 'OHIF',
+      sourcemap: true,
+      exports: 'named',
+      globals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        'cornerstone-core': 'cornerstone',
+        'cornerstone-tools': 'cornerstoneTools',
+        'cornerstone-math': 'cornerstoneMath',
+        'dicom-parser': 'dicomParser'
+      }
+    },
+    {
       file: pkg.module,
       format: 'es',
       sourcemap: true,
