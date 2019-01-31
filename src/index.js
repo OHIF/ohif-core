@@ -2,7 +2,7 @@ import './lib';
 //import './schema.js';
 import studies from './studies/';
 import commands from './commands';
-import hotkeys from './hotkeys';
+import hotkeys from './hotkeys.js';
 import ui from './ui';
 import header from './header.js';
 import utils from './utils/';
@@ -19,6 +19,8 @@ import external from './externalModules.js';
 import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
 
+const hotkeysUtil = new classes.HotkeysUtil();
+
 const viewer = {};
 
 const OHIF = {
@@ -29,6 +31,7 @@ const OHIF = {
   classes,
   metadata,
   hotkeys,
+  hotkeysUtil,
   header,
   cornerstone,
   string,

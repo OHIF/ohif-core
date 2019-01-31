@@ -24,6 +24,16 @@ export const clearStudyLoadingProgress = progressId => ({
   progressId
 });
 
+export const setUserPreferences = state => ({
+  type: 'SET_USER_PREFERENCES',
+  state
+});
+
+export const setCommandContext = state => ({
+  type: 'SET_COMMAND_CONTEXT',
+  state
+});
+
 export const setViewportSpecificData = (viewportIndex, data) => ({
   type: 'SET_VIEWPORT_SPECIFIC_DATA',
   viewportIndex,
@@ -51,6 +61,8 @@ const actions = {
   setLayout,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
+  setUserPreferences,
+  setCommandContext,
   setViewportSpecificData,
   clearViewportSpecificData,
   addPlugin,

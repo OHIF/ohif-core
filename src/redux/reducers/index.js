@@ -2,6 +2,8 @@ import tools from './tools.js';
 import viewports from './viewports.js';
 import servers from './servers.js';
 import loading from './loading.js';
+import preferences from './preferences.js';
+import commandContext from './commandContext.js';
 import plugins from './plugins.js';
 
 const reducers = {
@@ -9,6 +11,8 @@ const reducers = {
   viewports,
   servers,
   loading,
+  preferences,
+  commandContext,
   plugins
 };
 
