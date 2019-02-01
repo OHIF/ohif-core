@@ -1,61 +1,63 @@
-import { BaseCriterion } from './BaseCriterion';
+import BaseCriterion from './BaseCriterion';
 
 export const MeasurementsLengthSchema = {
-    type: 'object',
-    properties: {
-        longAxis: {
-            label: 'Minimum length of long axis',
-            type: 'number',
-            minimum: 0
-        },
-        shortAxis: {
-            label: 'Minimum length of short axis',
-            type: 'number',
-            minimum: 0
-        },
-        longAxisSliceThicknessMultiplier: {
-            label: 'Length of long axis multiplier',
-            type: 'number',
-            minimum: 0
-        },
-        shortAxisSliceThicknessMultiplier: {
-            label: 'Length of short axis multiplier',
-            type: 'number',
-            minimum: 0
-        },
-        modalityIn: {
-            label: 'Filter to evaluate only measurements with the specified modalities',
-            type: 'array',
-            items: {
-                type: 'string'
-            },
-            minItems: 1,
-            uniqueItems: true
-        },
-        modalityNotIn: {
-            label: 'Filter to evaluate only measurements without the specified modalities',
-            type: 'array',
-            items: {
-                type: 'string'
-            },
-            minItems: 1,
-            uniqueItems: true
-        },
-        isNodal: {
-            label: 'Filter to evaluate only nodal or extranodal measurements',
-            type: 'boolean'
-        },
-        message: {
-            label: 'Message to be displayed in case of nonconformity',
-            type: 'string'
-        }
+  type: 'object',
+  properties: {
+    longAxis: {
+      label: 'Minimum length of long axis',
+      type: 'number',
+      minimum: 0
     },
-    anyOf: [
-        { required: ['message', 'longAxis'] },
-        { required: ['message', 'shortAxis'] },
-        { required: ['message', 'longAxisSliceThicknessMultiplier'] },
-        { required: ['message', 'shortAxisSliceThicknessMultiplier'] }
-    ]
+    shortAxis: {
+      label: 'Minimum length of short axis',
+      type: 'number',
+      minimum: 0
+    },
+    longAxisSliceThicknessMultiplier: {
+      label: 'Length of long axis multiplier',
+      type: 'number',
+      minimum: 0
+    },
+    shortAxisSliceThicknessMultiplier: {
+      label: 'Length of short axis multiplier',
+      type: 'number',
+      minimum: 0
+    },
+    modalityIn: {
+      label:
+        'Filter to evaluate only measurements with the specified modalities',
+      type: 'array',
+      items: {
+        type: 'string'
+      },
+      minItems: 1,
+      uniqueItems: true
+    },
+    modalityNotIn: {
+      label:
+        'Filter to evaluate only measurements without the specified modalities',
+      type: 'array',
+      items: {
+        type: 'string'
+      },
+      minItems: 1,
+      uniqueItems: true
+    },
+    isNodal: {
+      label: 'Filter to evaluate only nodal or extranodal measurements',
+      type: 'boolean'
+    },
+    message: {
+      label: 'Message to be displayed in case of nonconformity',
+      type: 'string'
+    }
+  },
+  anyOf: [
+    { required: ['message', 'longAxis'] },
+    { required: ['message', 'shortAxis'] },
+    { required: ['message', 'longAxisSliceThicknessMultiplier'] },
+    { required: ['message', 'shortAxisSliceThicknessMultiplier'] }
+  ]
 };
 
 /*
@@ -73,70 +75,83 @@ export const MeasurementsLengthSchema = {
  *   message: Message to be displayed in case of nonconformity
  */
 export class MeasurementsLengthCriterion extends BaseCriterion {
+  constructor(options) {
+    super(options);
+  }
 
-    constructor(options) {
-        super(options);
+  evaluate(data) {
+    let message;
+    let measurements = [];
+    const { options } = this;
+    const longMultiplier = options.longAxisSliceThicknessMultiplier;
+    const shortMultiplier = options.shortAxisSliceThicknessMultiplier;
+
+    data.targets.forEach(item => {
+      const { metadata, measurement } = item;
+
+      // Skip this measurement if no study metadata is available.
+      // This can occur if the study is not present in the archive.
+      // This can only occur when reviewing, e.g. a followup, but
+      // running criteria validation on a baseline for which no
+      // study metadata is available.
+      if (!metadata) {
+        return;
+      }
+
+      const { isNodal } = measurement;
+      let { longestDiameter, shortestDiameter } = measurement;
+      if (measurement.childToolsCount) {
+        const child = measurement.bidirectional;
+        longestDiameter = (child && child.longestDiameter) || 0;
+        shortestDiameter = (child && child.shortestDiameter) || 0;
+      }
+
+      const { sliceThickness } = metadata;
+      const modality = (metadata.getRawValue('x00080060') || '').toUpperCase();
+
+      // Stop here if the measurement does not match the modality and location filters
+      if (
+        typeof isNodal === 'boolean' &&
+        typeof options.isNodal === 'boolean' &&
+        options.isNodal !== isNodal
+      )
+        return;
+      if (options.modalityIn && options.modalityIn.indexOf(modality) === -1)
+        return;
+      if (options.modalityNotIn && options.modalityNotIn.indexOf(modality) > -1)
+        return;
+
+      // Check the measurement length
+      const longAxisCheck =
+        options.longAxis && longestDiameter < options.longAxis;
+      const shortAxisCheck =
+        options.shortAxis && shortestDiameter < options.shortAxis;
+      const longestDiameterCheck =
+        longMultiplier &&
+        !isNaN(sliceThickness) &&
+        longestDiameter < longMultiplier * sliceThickness;
+      const shortestDiameterCheck =
+        shortMultiplier &&
+        !isNaN(sliceThickness) &&
+        shortestDiameter < shortMultiplier * sliceThickness;
+
+      const failed =
+        longAxisCheck ||
+        shortAxisCheck ||
+        longestDiameterCheck ||
+        shortestDiameterCheck;
+
+      // Mark this measurement as invalid if some of the checks have failed
+      if (failed) {
+        measurements.push(measurement);
+      }
+    });
+
+    // Use the options' message if some measurement is invalid
+    if (measurements.length) {
+      message = options.message;
     }
 
-    evaluate(data) {
-        let message;
-        let measurements = [];
-        const { options } = this;
-        const longMultiplier = options.longAxisSliceThicknessMultiplier;
-        const shortMultiplier = options.shortAxisSliceThicknessMultiplier;
-
-        data.targets.forEach(item => {
-            const { metadata, measurement } = item;
-
-            // Skip this measurement if no study metadata is available.
-            // This can occur if the study is not present in the archive.
-            // This can only occur when reviewing, e.g. a followup, but
-            // running criteria validation on a baseline for which no
-            // study metadata is available.
-            if (!metadata) {
-                return;
-            }
-
-            const { isNodal } = measurement;
-            let { longestDiameter, shortestDiameter } = measurement;
-            if (measurement.childToolsCount) {
-                const child = measurement.bidirectional;
-                longestDiameter = (child && child.longestDiameter) || 0;
-                shortestDiameter = (child && child.shortestDiameter) || 0;
-            }
-
-            const { sliceThickness } = metadata;
-            const modality = (metadata.getRawValue('x00080060') || '').toUpperCase();
-
-            // Stop here if the measurement does not match the modality and location filters
-            if (typeof isNodal === 'boolean' && typeof options.isNodal === 'boolean' && options.isNodal !== isNodal) return;
-            if (options.modalityIn && options.modalityIn.indexOf(modality) === -1) return;
-            if (options.modalityNotIn && options.modalityNotIn.indexOf(modality) > -1) return;
-
-            // Check the measurement length
-            const failed = (
-                (options.longAxis && longestDiameter < options.longAxis) ||
-                (options.shortAxis && shortestDiameter < options.shortAxis) || (
-                    longMultiplier && !isNaN(sliceThickness) &&
-                    longestDiameter < (longMultiplier * sliceThickness)
-                ) || (
-                    shortMultiplier && !isNaN(sliceThickness) &&
-                    shortestDiameter < (shortMultiplier * sliceThickness)
-                )
-            );
-
-            // Mark this measurement as invalid if some of the checks have failed
-            if (failed) {
-                measurements.push(measurement);
-            }
-        });
-
-        // Use the options' message if some measurement is invalid
-        if (measurements.length) {
-            message = options.message;
-        }
-
-        return this.generateResponse(message, measurements);
-    }
-
+    return this.generateResponse(message, measurements);
+  }
 }
