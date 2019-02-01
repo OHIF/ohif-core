@@ -15,7 +15,7 @@ const reducers = {
   preferences,
   commandContext,
   plugins,
-  extensions
+  extensions,
 };
 
 export default reducers;

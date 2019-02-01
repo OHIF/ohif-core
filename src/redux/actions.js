@@ -73,7 +73,7 @@ const actions = {
   clearViewportSpecificData,
   addPlugin,
   setAvailableButtons,
-  setExtensionData
+  setExtensionData,
 };
 
 export default actions;
