@@ -174,6 +174,7 @@ function createStacks(study) {
         displaySet.setAttributes({
           sopClassUids,
           isClip: true,
+          seriesInstanceUid: series.getSeriesInstanceUID(),
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid for drag/drop purposes
           numImageFrames: instance.getRawValue('x00280008'), // Override the default value of instances.length
           instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
@@ -185,6 +186,7 @@ function createStacks(study) {
         displaySet.setAttributes({
           sopClassUids,
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid
+          seriesInstanceUid: series.getSeriesInstanceUID(),
           instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
           acquisitionDatetime: instance.getRawValue('x0008002a') // Include the acquisition datetime
         });
