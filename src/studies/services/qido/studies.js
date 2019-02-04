@@ -116,7 +116,7 @@ export default function Studies(server, filter) {
     headers: DICOMWeb.getAuthorizationHeader(server)
   };
 
-  const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
+  const dicomWeb = new api.DICOMwebClient(config);
   const queryParams = getQIDOQueryParams(
     filter,
     server.qidoSupportsIncludeField
