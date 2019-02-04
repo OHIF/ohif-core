@@ -1,5 +1,4 @@
 import BaseCriterion from './BaseCriterion';
-import { OHIF } from 'meteor/ohif:core';
 
 export const MaxTargetsPerOrganSchema = {
   type: 'object',
@@ -56,9 +55,11 @@ export class MaxTargetsPerOrganCriterion extends BaseCriterion {
       // Retrieve a value for Organ Group if one exists, otherwise
       // just use the current location
       let organGroup = location;
-      if (typeof OHIF.measurements.getOrganGroup === 'function') {
-        organGroup = OHIF.measurements.getOrganGroup(location) || location;
-      }
+
+      // TODO: Use measurements module to get this function
+      // if (typeof OHIF.measurements.getOrganGroup === 'function') {
+      //   organGroup = OHIF.measurements.getOrganGroup(location) || location;
+      // }
 
       if (!targetsPerOrgan[organGroup]) {
         targetsPerOrgan[organGroup] = new Set();

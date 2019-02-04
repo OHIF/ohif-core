@@ -1,5 +1,12 @@
 import BaseCriterion from './BaseCriterion';
-import { OHIF } from 'meteor/ohif:core';
+
+// TODO: Wait TimepointAPI and import it here.
+// import TimepointApi from './';
+// TODO: Remove this mock timepointAPI
+timepointApi = {
+  timepoints: [],
+  isRebaseline: () => true
+};
 
 export const TargetTypeSchema = {
   type: 'object'
@@ -14,7 +21,6 @@ export class TargetTypeCriterion extends BaseCriterion {
   }
 
   evaluate(data) {
-    const { timepointApi } = OHIF.viewer;
     const items = data.targets;
     const measurements = [];
     let message;
