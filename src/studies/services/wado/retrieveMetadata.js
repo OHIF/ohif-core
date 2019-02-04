@@ -1,4 +1,4 @@
-import DICOMwebClient from 'dicomweb-client';
+import { api } from 'dicomweb-client';
 import DICOMWeb from '../../../DICOMWeb/';
 
 const WADOProxy = {
@@ -155,7 +155,7 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
     url: server.wadoRoot, //BulkDataURI is absolute, so this isn't used
     headers: DICOMWeb.getAuthorizationHeader(server)
   };
-  const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
+  const dicomWeb = new api.DICOMwebClient(config);
   const options = {
     BulkDataURI: uri
   };
@@ -453,7 +453,7 @@ async function RetrieveMetadata(server, studyInstanceUid) {
     url: server.wadoRoot,
     headers: DICOMWeb.getAuthorizationHeader(server)
   };
-  const dicomWeb = new DICOMwebClient.api.DICOMwebClient(config);
+  const dicomWeb = new api.DICOMwebClient(config);
   const options = {
     studyInstanceUID: studyInstanceUid
   };
