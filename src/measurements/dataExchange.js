@@ -1,36 +1,36 @@
-import { OHIF } from '../index';
+import log from '../log';
 
 export const retrieveMeasurements = (patientId, timepointIds) => {
-  OHIF.log.error('retrieveMeasurements');
+  log.error('retrieveMeasurements');
   return Promise.resolve();
 };
 
 export const storeMeasurements = (measurementData, timepointIds) => {
-  OHIF.log.error('storeMeasurements');
+  log.error('storeMeasurements');
   return Promise.resolve();
 };
 
 export const retrieveTimepoints = filter => {
-  OHIF.log.error('retrieveTimepoints');
+  log.error('retrieveTimepoints');
   return Promise.resolve();
 };
 
 export const storeTimepoints = timepointData => {
-  OHIF.log.error('storeTimepoints');
+  log.error('storeTimepoints');
   return Promise.resolve();
 };
 
 export const updateTimepoint = (timepointData, query) => {
-  OHIF.log.error('updateTimepoint');
+  log.error('updateTimepoint');
   return Promise.resolve();
 };
 
 export const removeTimepoint = timepointId => {
-  OHIF.log.error('removeTimepoint');
+  log.error('removeTimepoint');
   return Promise.resolve();
 };
 
 export const disassociateStudy = (timepointIds, studyInstanceUid) => {
-  OHIF.log.error('disassociateStudy');
+  log.error('disassociateStudy');
   return Promise.resolve();
 };

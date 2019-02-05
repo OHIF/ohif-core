@@ -1,4 +1,4 @@
-import { OHIF } from '../../index';
+import log from '../../log';
 
 const configuration = {};
 
@@ -9,6 +9,8 @@ const TIMEPOINT_TYPE_NAMES = {
 };
 
 export default class TimepointApi {
+  static Instance;
+
   static setConfiguration(config) {
     Object.assign(configuration, config);
   }
@@ -17,12 +19,30 @@ export default class TimepointApi {
     return configuration;
   }
 
-  constructor(store, currentTimepointId, options = {}) {
-    this.store = store;
+  constructor(currentTimepointId, options = {}) {
+    if (TimepointApi.Instance) {
+      TimepointApi.Instance.initialize(currentTimepointId, options);
+      return TimepointApi.Instance;
+    }
+
+    this.initialize(currentTimepointId, options);
+    TimepointApi.Instance = this;
+  }
+
+  initialize(currentTimepointId, options = {}) {
     this.currentTimepointId = currentTimepointId;
     this.comparisonTimepointKey = options.comparisonTimepointKey || 'baseline';
     this.options = options;
     this.timepoints = [];
+  }
+
+  onTimepointsUpdated() {
+    if (typeof this.options.onTimepointsUpdated !== 'function') {
+      log.warn('Timepoints update callback is not defined');
+      return;
+    }
+
+    this.options.onTimepointsUpdated(Object.assign([], this.timepoints));
   }
 
   calculateVisitNumber(timepoint) {
@@ -59,14 +79,14 @@ export default class TimepointApi {
   retrieveTimepoints(filter) {
     const retrievalFn = configuration.dataExchange.retrieve;
     if (typeof retrievalFn !== 'function') {
-      OHIF.log.error('Timepoint retrieval function has not been configured.');
+      log.error('Timepoint retrieval function has not been configured.');
       return;
     }
 
     return new Promise((resolve, reject) => {
       retrievalFn(filter)
         .then(timepointData => {
-          OHIF.log.info('Timepoint data retrieval');
+          log.info('Timepoint data retrieval');
 
           timepointData.forEach(timepoint => {
             const timepointIndex = this.timepoints.findIndex(
@@ -79,16 +99,13 @@ export default class TimepointApi {
             }
           });
 
-          // Update redux state
-          this.store.dispatch({
-            type: 'SET_TIMEPOINTS',
-            timepoints: this.timepoints
-          });
+          // Let others know that the timepoints are updated
+          this.onTimepointsUpdated();
 
           resolve();
         })
         .catch(reason => {
-          OHIF.log.error(`Timepoint retrieval function failed: ${reason}`);
+          log.error(`Timepoint retrieval function failed: ${reason}`);
           reject(reason);
         });
     });
@@ -97,27 +114,27 @@ export default class TimepointApi {
   storeTimepoints() {
     const storeFn = configuration.dataExchange.store;
     if (typeof storeFn !== 'function') {
-      OHIF.log.error('Timepoint store function has not been configured.');
+      log.error('Timepoint store function has not been configured.');
       return;
     }
 
-    OHIF.log.info('Preparing to store timepoints');
-    OHIF.log.info(JSON.stringify(this.timepoints, null, 2));
+    log.info('Preparing to store timepoints');
+    log.info(JSON.stringify(this.timepoints, null, 2));
 
     storeFn(this.timepoints).then(() =>
-      OHIF.log.info('Timepoint storage completed')
+      log.info('Timepoint storage completed')
     );
   }
 
   disassociateStudy(timepointIds, studyInstanceUid) {
     const disassociateFn = configuration.dataExchange.disassociate;
     if (typeof disassociateFn !== 'function') {
-      OHIF.log.error('Study disassociate function has not been configured.');
+      log.error('Study disassociate function has not been configured.');
       return;
     }
 
     disassociateFn(timepointIds, studyInstanceUid).then(() => {
-      OHIF.log.info('Disassociation completed');
+      log.info('Disassociation completed');
 
       this.timepoints = [];
       this.retrieveTimepoints({});
@@ -127,7 +144,7 @@ export default class TimepointApi {
   removeTimepoint(timepointId) {
     const removeFn = configuration.dataExchange.remove;
     if (typeof removeFn !== 'function') {
-      OHIF.log.error('Timepoint remove function has not been configured.');
+      log.error('Timepoint remove function has not been configured.');
       return;
     }
 
@@ -135,11 +152,11 @@ export default class TimepointApi {
       timepointId
     };
 
-    OHIF.log.info('Preparing to remove timepoint');
-    OHIF.log.info(JSON.stringify(timepointData, null, 2));
+    log.info('Preparing to remove timepoint');
+    log.info(JSON.stringify(timepointData, null, 2));
 
     removeFn(timepointData).then(() => {
-      OHIF.log.info('Timepoint removal completed');
+      log.info('Timepoint removal completed');
 
       const tpIndex = this.timepoints.findIndex(
         tp => tp.timepointId === timepointId
@@ -148,18 +165,15 @@ export default class TimepointApi {
         this.timepoints.splice(tpIndex, 1);
       }
 
-      // Update redux state
-      this.store.dispatch({
-        type: 'SET_TIMEPOINTS',
-        timepoints: this.timepoints
-      });
+      // Let others know that the timepoints are updated
+      this.onTimepointsUpdated();
     });
   }
 
   updateTimepoint(timepointId, query) {
     const updateFn = configuration.dataExchange.update;
     if (typeof updateFn !== 'function') {
-      OHIF.log.error('Timepoint update function has not been configured.');
+      log.error('Timepoint update function has not been configured.');
       return;
     }
 
@@ -167,12 +181,12 @@ export default class TimepointApi {
       timepointId
     };
 
-    OHIF.log.info('Preparing to update timepoint');
-    OHIF.log.info(JSON.stringify(timepointData, null, 2));
-    OHIF.log.info(JSON.stringify(query, null, 2));
+    log.info('Preparing to update timepoint');
+    log.info(JSON.stringify(timepointData, null, 2));
+    log.info(JSON.stringify(query, null, 2));
 
     updateFn(timepointData, query).then(() => {
-      OHIF.log.info('Timepoint updated completed');
+      log.info('Timepoint updated completed');
 
       const tpIndex = this.timepoints.findIndex(
         tp => tp.timepointId === timepointId
@@ -185,11 +199,8 @@ export default class TimepointApi {
         );
       }
 
-      // Update redux state
-      this.store.dispatch({
-        type: 'SET_TIMEPOINTS',
-        timepoints: this.timepoints
-      });
+      // Let others know that the timepoints are updated
+      this.onTimepointsUpdated();
     });
   }
 
