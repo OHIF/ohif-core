@@ -7,43 +7,31 @@ import url from 'rollup-plugin-url'
 import svgr from '@svgr/rollup'
 import pkg from './package.json'
 
+const globals = {
+  'react': 'React',
+  'react-dom': 'ReactDOM',
+  'cornerstone-core': 'cornerstone',
+  'cornerstone-math': 'cornerstoneMath',
+  'dicom-parser': 'dicomParser'
+};
+
 export default {
   input: 'src/index.js',
   output: [
-    {
-      file: pkg.main,
-      format: 'cjs',
-      sourcemap: true,
-      exports: 'named',
-      globals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'cornerstone-core': 'cornerstone',
-        'cornerstone-tools': 'cornerstoneTools',
-        'cornerstone-math': 'cornerstoneMath',
-        'dicom-parser': 'dicomParser'
-      },
-    },
     {
       file: pkg.browser,
       format: 'umd',
       name: 'OHIF',
       sourcemap: true,
       exports: 'named',
-      globals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'cornerstone-core': 'cornerstone',
-        'cornerstone-tools': 'cornerstoneTools',
-        'cornerstone-math': 'cornerstoneMath',
-        'dicom-parser': 'dicomParser'
-      }
+      globals
     },
     {
       file: pkg.module,
       format: 'es',
       sourcemap: true,
-      exports: 'named'
+      exports: 'named',
+      globals
     },
   ],
   plugins: [
@@ -55,8 +43,8 @@ export default {
     svgr(),
     babel({
       exclude: 'node_modules/**',
-      plugins: [ '@babel/external-helpers' ],
-      externalHelpers: false
+      externalHelpers: false,
+      runtimeHelpers: true
     }),
     resolve(),
     commonjs({
@@ -68,5 +56,5 @@ export default {
       }
    }),
   ],
-  external: ['cornerstone-core', 'cornerstone-math', 'cornerstone-tools', 'cornerstone-wado-image-loader', 'dicom-parser', 'hammerjs']
+  external: Object.keys(pkg.peerDependencies || {}),
 }
