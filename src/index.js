@@ -18,13 +18,11 @@ import log from './log.js';
 import external from './externalModules.js';
 import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
+import extensions from './classes/extensions/';
 
 const hotkeysUtil = new classes.HotkeysUtil();
 
-const viewer = {};
-
 const OHIF = {
-  viewer,
   utils,
   studies,
   redux,
@@ -42,11 +40,12 @@ const OHIF = {
   log,
   external,
   DICOMWeb,
-  plugins
+  plugins,
+  extensions,
+  viewer: {}
 };
 
 export {
-  viewer, // TODO: Remove this
   utils,
   studies,
   redux,
@@ -62,7 +61,8 @@ export {
   commands,
   log,
   DICOMWeb,
-  plugins
+  plugins,
+  extensions
 };
 
 export { OHIF };

@@ -11,7 +11,6 @@ import { StudyMetadata } from './metadata/StudyMetadata';
 import { SeriesMetadata } from './metadata/SeriesMetadata';
 import { InstanceMetadata } from './metadata/InstanceMetadata';
 //import { StudySummary } from './metadata/StudySummary';
-//import { plugins } from './plugins/';
 import { TypeSafeCollection } from './TypeSafeCollection';
 import OHIFError from './OHIFError.js';
 import { StudyMetadataSource } from './StudyMetadataSource';
