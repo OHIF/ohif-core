@@ -40,12 +40,12 @@ const MeasurementHandlers = {
 
   onModified(event) {
     const eventData = event.detail;
-    const { toolType } = eventData;
+    const { toolName } = eventData;
     const {
       toolGroupId,
       toolGroup,
       tool
-    } = MeasurementApi.getToolConfiguration(toolType);
+    } = MeasurementApi.getToolConfiguration(toolName);
     const params = {
       eventData,
       tool,

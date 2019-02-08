@@ -9,9 +9,9 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
     log.warn('Measurement API is not initialized');
   }
 
-  const { measurementData, toolType } = eventData;
+  const { measurementData, toolName } = eventData;
 
-  const collection = measurementApi.tools[toolType];
+  const collection = measurementApi.tools[toolName];
 
   // Stop here if the tool data shall not be persisted (e.g. temp tools)
   if (!collection) return;
@@ -36,6 +36,8 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
 
   //Populate Viewport with the Cornerstone Viewport
   measurement.viewport = cornerstone.getViewport(eventData.element);
+
+  measurementApi.addMeasurement(toolName, measurement);
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes
