@@ -416,7 +416,7 @@ export default class MeasurementApi {
   addMeasurement(toolType, measurement) {
     const toolGroup = this.toolsGroupsMap[toolType];
 
-    const groupCollection = this.toolGroups[toolGroup.id];
+    const groupCollection = this.toolGroups[toolGroup];
     const collection = this.tools[toolType];
 
     // Get the timepoint

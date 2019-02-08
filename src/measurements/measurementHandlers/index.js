@@ -32,9 +32,9 @@ const MeasurementHandlers = {
     if (!tool) return;
 
     if (tool.parentTool) {
-      this.handleChildMeasurementAdded(params);
+      handleChildMeasurementAdded(params);
     } else {
-      this.handleSingleMeasurementAdded(params);
+      handleSingleMeasurementAdded(params);
     }
   },
 
@@ -56,9 +56,9 @@ const MeasurementHandlers = {
     if (!tool) return;
 
     if (tool.parentTool) {
-      this.handleChildMeasurementModified(params);
+      handleChildMeasurementModified(params);
     } else {
-      this.handleSingleMeasurementModified(params);
+      handleSingleMeasurementModified(params);
     }
   },
 
@@ -80,9 +80,9 @@ const MeasurementHandlers = {
     if (!tool) return;
 
     if (tool.parentTool) {
-      MeasurementHandlers.handleChildMeasurementRemoved(params);
+      handleChildMeasurementRemoved(params);
     } else {
-      MeasurementHandlers.handleSingleMeasurementRemoved(params);
+      handleSingleMeasurementRemoved(params);
     }
   }
 };

@@ -1,6 +1,7 @@
-import cornerstone from '../../cornerstone.js';
+import external from '../../externalModules.js';
 
 export default function(element) {
+  const { cornerstone } = external;
   // Get the Cornerstone imageId
   const enabledElement = cornerstone.getEnabledElement(element);
   const imageId = enabledElement.image.imageId;
