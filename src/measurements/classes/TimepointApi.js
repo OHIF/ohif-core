@@ -421,19 +421,23 @@ export default class TimepointApi {
 
     const visitDateToCheck = timepointToCheck.visitDate;
 
-    const preBaselineTimepointIds = this.timepoints
-      .find(
+    const preBaselineTimepoint =
+      this.timepoints.find(
         tp =>
           tp.timepointType === 'prebaseline' && tp.visitDate <= visitDateToCheck
-      )
-      .map(timepoint => timepoint.timepointId);
+      ) || [];
+    const preBaselineTimepointIds = preBaselineTimepoint.map(
+      timepoint => timepoint.timepointId
+    );
 
-    const baselineTimepointIds = this.timepoints
-      .find(
+    const baselineTimepoint =
+      this.timepoints.find(
         tp =>
           tp.timepointType === 'baseline' && tp.visitDate <= visitDateToCheck
-      )
-      .map(timepoint => timepoint.timepointId);
+      ) || [];
+    const baselineTimepointIds = baselineTimepoint.map(
+      timepoint => timepoint.timepointId
+    );
 
     return preBaselineTimepointIds.concat(baselineTimepointIds);
   }

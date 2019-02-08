@@ -170,9 +170,8 @@ export default class MeasurementApi {
     );
     const toolType = toolConfig.tool.parentTool || measurementData.toolType;
     const { timepointApi } = this;
-    const currentMeasurement = this.tools[toolType].find(
-      tool => tool._id === measurementData._id
-    );
+    const currentMeasurement =
+      this.tools[toolType].find(tool => tool._id === measurementData._id) || {};
     const timepointId =
       currentMeasurement.timepointId || measurementData.timepointId;
     const lesionNamingNumber =
@@ -211,11 +210,10 @@ export default class MeasurementApi {
   }
 
   calculateLesionMaxMeasurementNumber(groupId, filter) {
-    const sortedMeasurements = this.toolGroups[groupId]
-      .filter(filter)
-      .sort((tp1, tp2) => {
-        return tp1.measurementNumber < tp2.measurementNumber ? 1 : -1;
-      });
+    const measurements = this.toolGroups[groupId] || [];
+    const sortedMeasurements = measurements.filter(filter).sort((tp1, tp2) => {
+      return tp1.measurementNumber < tp2.measurementNumber ? 1 : -1;
+    });
 
     for (let i = 0; i < sortedMeasurements.length; i++) {
       const toolGroupMeasurement = sortedMeasurements[i];
@@ -389,8 +387,8 @@ export default class MeasurementApi {
 
   updateMeasurementNumberForAllMeasurements(measurement, increment) {
     const filter = tool =>
-      tool._id !== measurementData._id &&
-      tool.measurementNumber >= measurementData.measurementNumber;
+      tool._id !== measurement._id &&
+      tool.measurementNumber >= measurement.measurementNumber;
 
     configuration.measurementTools
       .filter(toolGroup => toolGroup.id !== 'temp')
@@ -528,7 +526,7 @@ export default class MeasurementApi {
     if (!emptyItem) {
       // Reflect the entry in the tool group collection
       groupCollection.push({
-        toolId: tool.id,
+        toolId: toolType,
         toolItemId: measurement._id,
         timepointId: timepoint.timepointId,
         studyInstanceUid: measurement.studyInstanceUid,
