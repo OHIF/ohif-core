@@ -537,13 +537,66 @@ export default class MeasurementApi {
     }
 
     // Let others know that the measurements are updated
-    this.onMeasurementsUpdated();
+
+    this.onMeasurementsUpdated(this.toolGroups);
 
     // TODO: Enable reactivity
     // this.timepointChanged.set(timepoint.timepointId);
 
     return measurement;
   }
+
+  retrieveMeasurements = (patientId, timepointIds) => {
+    const retrievalFn = configuration.dataExchange.retrieve;
+    if (!retrievalFn && {}.toString.call(retrievalFn) === '[object Function]') {
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      retrievalFn(patientId, timepointIds).then(measurementData => {
+        if (measurementData) {
+          log.info('Measurement data retrieval');
+          log.info(measurementData);
+
+          const toolsGroupsMap = MeasurementApi.getToolsGroupsMap();
+          const measurementsGroups = {};
+
+          Object.keys(measurementData).forEach(measurementTypeId => {
+            const measurements = measurementData[measurementTypeId];
+
+            measurements.forEach(measurement => {
+              const { toolType } = measurement;
+              if (toolType && this.tools[toolType]) {
+                delete measurement._id;
+                const toolGroup = toolsGroupsMap[toolType];
+                if (!measurementsGroups[toolGroup]) {
+                  measurementsGroups[toolGroup] = [];
+                }
+
+                measurementsGroups[toolGroup].push(measurement);
+              }
+            });
+          });
+
+          Object.keys(measurementsGroups).forEach(groupKey => {
+            const group = measurementsGroups[groupKey];
+            group.sort((a, b) => {
+              if (a.measurementNumber > b.measurementNumber) {
+                return 1;
+              } else if (a.measurementNumber < b.measurementNumber) {
+                return -1;
+              }
+
+              return 0;
+            });
+
+            group.forEach(m => this.tools[m.toolType].insert(m));
+          });
+        }
+        resolve();
+      });
+    });
+  };
 
   // TODO: Implement all other functions
 }
