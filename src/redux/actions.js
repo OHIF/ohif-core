@@ -55,6 +55,12 @@ export const setAvailableButtons = buttons => ({
   buttons
 });
 
+export const setExtensionData = (extension, data) => ({
+  type: 'SET_EXTENSION_DATA',
+  extension,
+  data
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
@@ -66,7 +72,8 @@ const actions = {
   setViewportSpecificData,
   clearViewportSpecificData,
   addPlugin,
-  setAvailableButtons
+  setAvailableButtons,
+  setExtensionData
 };
 
 export default actions;

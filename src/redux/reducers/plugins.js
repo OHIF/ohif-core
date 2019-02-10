@@ -24,7 +24,7 @@ const plugins = (state = defaultState, action) => {
       // Not sure where else to put this. We shouldn't store functions in Redux, so I'll do this instead
       OHIFPlugins.availablePlugins.push(action.plugin);
 
-      return Object.assign({}, state, { availablePlugins: availablePlugins });
+      return Object.assign({}, state, { availablePlugins });
     default:
       return state;
   }

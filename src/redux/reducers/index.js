@@ -5,6 +5,7 @@ import loading from './loading.js';
 import preferences from './preferences.js';
 import commandContext from './commandContext.js';
 import plugins from './plugins.js';
+import extensions from './extensions.js';
 
 const reducers = {
   tools,
@@ -13,7 +14,8 @@ const reducers = {
   loading,
   preferences,
   commandContext,
-  plugins
+  plugins,
+  extensions
 };
 
 export default reducers;
