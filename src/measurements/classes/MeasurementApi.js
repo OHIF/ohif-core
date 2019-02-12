@@ -537,8 +537,7 @@ export default class MeasurementApi {
     }
 
     // Let others know that the measurements are updated
-
-    this.onMeasurementsUpdated(this.toolGroups);
+    this.onMeasurementsUpdated();
 
     // TODO: Enable reactivity
     // this.timepointChanged.set(timepoint.timepointId);
