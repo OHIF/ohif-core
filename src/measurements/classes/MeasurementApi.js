@@ -99,7 +99,7 @@ export default class MeasurementApi {
 
   onMeasurementsUpdated() {
     if (typeof this.options.onMeasurementsUpdated !== 'function') {
-      log.warn('MEasurements update callback is not defined');
+      log.warn('Measurements update callback is not defined');
       return;
     }
 
@@ -596,6 +596,18 @@ export default class MeasurementApi {
       });
     });
   };
+
+  deleteMeasurements(measurementTypeId, measurementIdInfo) {
+    const { measurementNumber, timepointId } = measurementIdInfo;
+
+    //Create delete function
+
+    this.onMeasurementsUpdated();
+  }
+
+  sortMeasurements(timepointId) {
+    // TODO: Migrate sortMeasurements function
+  }
 
   // TODO: Implement all other functions
 }

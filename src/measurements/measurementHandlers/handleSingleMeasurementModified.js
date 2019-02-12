@@ -1,7 +1,5 @@
 import { MeasurementApi } from '../classes';
 import log from '../../log';
-import user from '../../user';
-import getImageAttributes from '../lib/getImageAttributes';
 
 export default function({ eventData, tool, toolGroupId, toolGroup }) {
   const measurementApi = MeasurementApi.Instance;
@@ -17,7 +15,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   if (!collection) return;
 
   log.info('CornerstoneToolsMeasurementModified');
-
+  debugger;
   const measurement = collection.find(
     measurement => measurement._id === measurementData._id
   );
