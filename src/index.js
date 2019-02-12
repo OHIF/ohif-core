@@ -19,6 +19,7 @@ import external from './externalModules.js';
 import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
 import extensions from './classes/extensions/';
+import measurements from './measurements';
 
 const hotkeysUtil = new classes.HotkeysUtil();
 
@@ -42,7 +43,8 @@ const OHIF = {
   DICOMWeb,
   plugins,
   extensions,
-  viewer: {}
+  viewer: {},
+  measurements,
 };
 
 export {
@@ -62,7 +64,8 @@ export {
   log,
   DICOMWeb,
   plugins,
-  extensions
+  extensions,
+  measurements,
 };
 
 export { OHIF };
