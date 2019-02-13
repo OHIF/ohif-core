@@ -103,7 +103,7 @@ export default class MeasurementApi {
       return;
     }
 
-    this.options.onMeasurementsUpdated(Object.assign({}, this.toolGroups));
+    this.options.onMeasurementsUpdated(Object.assign({}, this.tools));
   }
 
   calculateLesionNamingNumber(measurements) {
@@ -521,6 +521,8 @@ export default class MeasurementApi {
         collection[tpIndex],
         updateObject
       );
+    } else {
+      collection.push(measurement);
     }
 
     if (!emptyItem) {
