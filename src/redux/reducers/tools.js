@@ -77,7 +77,6 @@ const tools = (state = { buttons: defaultButtons }, action) => {
   switch (action.type) {
     case 'SET_TOOL_ACTIVE':
       const item = state.buttons.find(button => button.command === action.tool);
-
       let buttons = [];
 
       if (item && item.type === 'tool') {
@@ -91,6 +90,7 @@ const tools = (state = { buttons: defaultButtons }, action) => {
           return button;
         });
       } else {
+        buttons = state.buttons;
         log.warn(`Tool ${action.tool} not found`);
       }
 
