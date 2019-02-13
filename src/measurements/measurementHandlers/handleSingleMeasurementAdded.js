@@ -2,8 +2,9 @@ import { MeasurementApi } from '../classes';
 import log from '../../log';
 import user from '../../user';
 import getImageAttributes from '../lib/getImageAttributes';
+import guid from '../../utils/guid.js';
 
-export default function({ eventData, tool }) {
+export default function handleSingleMeasurementAdded({ eventData, tool }) {
   const measurementApi = MeasurementApi.Instance;
   if (!measurementApi) {
     log.warn('Measurement API is not initialized');
@@ -46,7 +47,7 @@ export default function({ eventData, tool }) {
     measurement.description = relatedTimepoint.description;
   }
 
-  measurement._id = Math.random().toString(32);
+  measurement._id = guid();
   const addedMeasurement = measurementApi.addMeasurement(toolType, measurement);
 
   measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;

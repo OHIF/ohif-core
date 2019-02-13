@@ -1,7 +1,12 @@
 import { MeasurementApi, TimepointApi } from '../classes';
 import log from '../../log';
 
-export default function({ eventData, tool, toolGroupId, toolGroup }) {
+export default function handleSingleMeasurementRemoved({
+  eventData,
+  tool,
+  toolGroupId,
+  toolGroup
+}) {
   log.info('CornerstoneToolsMeasurementRemoved');
   const { measurementData, toolType } = eventData;
 

@@ -15,8 +15,6 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
     log.warn('Timepoint API is not initialized');
   }
 
-  const measurementData = measurementData;
-  const { measurementApi, timepointApi } = instance.data;
   const collection = measurementApi.tools[tool.parentTool];
 
   // Stop here if the tool data shall not be persisted (e.g. temp tools)
