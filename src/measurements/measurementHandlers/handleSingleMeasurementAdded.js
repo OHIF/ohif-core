@@ -50,6 +50,7 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
   measurement._id = guid();
   const addedMeasurement = measurementApi.addMeasurement(toolType, measurement);
 
+  measurementData._id = measurement._id;
   measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
 
   if (MeasurementApi.isToolIncluded(tool)) {

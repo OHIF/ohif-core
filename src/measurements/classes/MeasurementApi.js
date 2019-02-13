@@ -513,28 +513,30 @@ export default class MeasurementApi {
       this.updateMeasurementNumberForAllMeasurements(measurement, 1);
     }
 
-    // Set the timepoint ID, measurement number, location and description
-    const tpIndex = collection.findIndex(tool => tool._id === measurement._id);
-    if (tpIndex > -1) {
-      collection[tpIndex] = Object.assign(
-        {},
-        collection[tpIndex],
-        updateObject
-      );
+    let addedMeasurement;
+
+    // Upsert the measurement in collection
+    const toolIndex = collection.findIndex(
+      tool => tool._id === measurement._id
+    );
+    if (toolIndex > -1) {
+      addedMeasurement = Object.assign({}, collection[toolIndex], updateObject);
+      collection[toolIndex] = addedMeasurement;
     } else {
-      collection.push(measurement);
+      addedMeasurement = Object.assign({}, measurement, updateObject);
+      collection.push(addedMeasurement);
     }
 
     if (!emptyItem) {
       // Reflect the entry in the tool group collection
       groupCollection.push({
         toolId: toolType,
-        toolItemId: measurement._id,
+        toolItemId: addedMeasurement._id,
         timepointId: timepoint.timepointId,
-        studyInstanceUid: measurement.studyInstanceUid,
-        createdAt: measurement.createdAt,
-        lesionNamingNumber: measurement.lesionNamingNumber,
-        measurementNumber: measurement.measurementNumber
+        studyInstanceUid: addedMeasurement.studyInstanceUid,
+        createdAt: addedMeasurement.createdAt,
+        lesionNamingNumber: addedMeasurement.lesionNamingNumber,
+        measurementNumber: addedMeasurement.measurementNumber
       });
     }
 
@@ -544,7 +546,29 @@ export default class MeasurementApi {
     // TODO: Enable reactivity
     // this.timepointChanged.set(timepoint.timepointId);
 
-    return measurement;
+    return addedMeasurement;
+  }
+
+  updateMeasurement(toolType, measurement) {
+    const collection = this.tools[toolType];
+
+    const toolIndex = collection.findIndex(
+      tool => tool._id === measurement._id
+    );
+    if (toolIndex < 0) {
+      return;
+    }
+
+    const updatedMeasurement = Object.assign({}, measurement);
+    collection[toolIndex] = updatedMeasurement;
+
+    // Let others know that the measurements are updated
+    this.onMeasurementsUpdated();
+
+    // TODO: Enable reactivity
+    // this.timepointChanged.set(timepoint.timepointId);
+
+    return updatedMeasurement;
   }
 
   retrieveMeasurements = (patientId, timepointIds) => {
