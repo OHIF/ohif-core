@@ -44,9 +44,7 @@ export class HotkeysContext {
         if (!this.enabled) {
           return;
         }
-
         commands.run(command);
-        event.preventDefault();
       });
 
     if (hotkey instanceof Array) {
