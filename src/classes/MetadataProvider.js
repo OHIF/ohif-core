@@ -1,4 +1,4 @@
-import external from '../externalModules';
+import cornerstoneMath from 'cornerstone-math';
 import { parsingUtils } from '../lib/parsingUtils';
 
 const FUNCTION = 'function';
@@ -289,8 +289,6 @@ class MetadataProvider {
       rowPixelSpacing = parseFloat(split[0]);
       columnPixelSpacing = parseFloat(split[1]);
     }
-
-    const { cornerstoneMath } = external;
 
     return {
       frameOfReferenceUID: instance.frameOfReferenceUID,

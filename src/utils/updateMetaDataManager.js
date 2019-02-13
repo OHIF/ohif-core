@@ -1,6 +1,6 @@
+import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import { WadoRsMetaDataBuilder } from '../classes/metadata/WadoRsMetaDataBuilder';
 import getWADORSImageId from './getWADORSImageId';
-import external from '../externalModules.js';
 
 function getRadiopharmaceuticalInfoMetaData(instance) {
   const radiopharmaceuticalInfo = instance.radiopharmaceuticalInfo;
@@ -22,15 +22,22 @@ const getWadoRsInstanceMetaData = (study, series, instance) => {
     .addTag('00080018', instance.sopInstanceUid)
     .addTag('00080021', series.seriesDate)
     .addTag('00080031', series.seriesTime)
-    .addTag('00080060', instance.modality)
+    .addTag('0008103e', series.seriesDescription)
+    .addTag('00080060', series.modality)
     .addTag('00101010', study.patientAge)
     .addTag('00101020', study.patientSize)
     .addTag('00101030', study.patientWeight)
+    .addTag('0020000d', study.studyInstanceUid)
+    .addTag('00081030', study.studyDescription)
+    .addTag('00100010', study.patientName)
+    .addTag('00100020', study.patientId)
+    .addTag('00080020', study.studyDate)
+    .addTag('00080030', study.studyTime)
+    .addTag('00080050', study.accessionNumber)
+    .addTag('00200013', instance.instanceNumber)
     .addTag('00180050', instance.sliceThickness)
     .addTag('0020000e', series.seriesInstanceUid)
     .addTag('00200011', series.seriesNumber)
-    .addTag('0020000d', study.studyInstanceUid)
-    .addTag('00200013', instance.instanceNumber)
     .addTag('00200032', instance.imagePositionPatient, true)
     .addTag('00200037', instance.imageOrientationPatient, true)
     .addTag('00200052', instance.frameOfReferenceUID)
@@ -84,7 +91,7 @@ export function updateMetaDataManager(study) {
         const imageId = getWADORSImageId(instance, frameNumber);
 
         // TODO Drop dependency on this
-        external.cornerstoneWADOImageLoader.wadors.metaDataManager.add(
+        cornerstoneWADOImageLoader.wadors.metaDataManager.add(
           imageId,
           metaData
         );

@@ -1,9 +1,9 @@
+import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import {
   clearStudyLoadingProgress,
   setStudyLoadingProgress
 } from '../redux/actions';
 import StackManager from '../utils/StackManager';
-import external from '../externalModules.js';
 
 class BaseLoadingListener {
   constructor(stack, options = {}) {
@@ -103,7 +103,7 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
   }
 
   _checkCachedData() {
-    const dataSet = external.cornerstoneWADOImageLoader.wadouri.dataSetCacheManager.get(
+    const dataSet = cornerstoneWADOImageLoader.wadouri.dataSetCacheManager.get(
       this._dataSetUrl
     );
 
@@ -132,7 +132,7 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
 
     this.stopListening();
 
-    external.cornerstone.events.addEventListener(
+    cornerstone.events.addEventListener(
       imageLoadProgressEventName,
       this.imageLoadProgressEventHandle
     );
@@ -140,7 +140,7 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
 
   stopListening() {
     const imageLoadProgressEventName = this._getImageLoadProgressEventName();
-    external.cornerstone.events.removeEventListener(
+    cornerstone.events.removeEventListener(
       imageLoadProgressEventName,
       this.imageLoadProgressEventHandle
     );
@@ -252,13 +252,11 @@ class StackLoadingListener extends BaseLoadingListener {
   }
 
   _getImageLoadedEventName() {
-    return `${external.cornerstone.EVENTS.IMAGE_LOADED}.${this.id}`;
+    return `${cornerstone.EVENTS.IMAGE_LOADED}.${this.id}`;
   }
 
   _getImageCachePromiseRemoveEventName() {
-    return `${external.cornerstone.EVENTS.IMAGE_CACHE_PROMISE_REMOVED}.${
-      this.id
-    }`;
+    return `${cornerstone.EVENTS.IMAGE_CACHE_PROMISE_REMOVED}.${this.id}`;
   }
 
   _imageLoadedEventHandler(e) {
@@ -280,11 +278,11 @@ class StackLoadingListener extends BaseLoadingListener {
 
     this.stopListening();
 
-    external.cornerstone.events.addEventListener(
+    cornerstone.events.addEventListener(
       imageLoadedEventName,
       this.imageLoadedEventHandler
     );
-    external.cornerstone.events.addEventListener(
+    cornerstone.events.addEventListener(
       imageCachePromiseRemovedEventName,
       this.imageCachePromiseRemovedEventHandler
     );
@@ -294,11 +292,11 @@ class StackLoadingListener extends BaseLoadingListener {
     const imageLoadedEventName = this._getImageLoadedEventName();
     const imageCachePromiseRemovedEventName = this._getImageCachePromiseRemoveEventName();
 
-    external.cornerstone.events.removeEventListener(
+    cornerstone.events.removeEventListener(
       imageLoadedEventName,
       this.imageLoadedEventHandler
     );
-    external.cornerstone.events.removeEventListener(
+    cornerstone.events.removeEventListener(
       imageCachePromiseRemovedEventName,
       this.imageCachePromiseRemovedEventHandler
     );

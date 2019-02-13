@@ -32,6 +32,7 @@ export default function createDisplaySets(studies) {
     //OHIF.viewer.data.studyInstanceUids.push(study.studyInstanceUid);
 
     // Updates WADO-RS metaDataManager
+    debugger;
     updateMetaDataManager(study);
 
     return study;

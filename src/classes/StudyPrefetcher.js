@@ -1,7 +1,8 @@
 import log from '../log.js';
 import OHIFError from './OHIFError';
+import cornerstone from 'cornerstone-core';
+import cornerstoneTools from 'cornerstone-tools';
 import getImageId from '../utils/getImageId.js';
-import external from '../externalModules.js';
 
 export class StudyPrefetcher {
   constructor(studies) {
@@ -9,7 +10,7 @@ export class StudyPrefetcher {
     this.prefetchDisplaySetsTimeout = 300;
     this.lastActiveViewportElement = null;
 
-    external.cornerstone.events.addEventListener(
+    cornerstone.events.addEventListener(
       'cornerstoneimagecachefull.StudyPrefetcher',
       this.cacheFullHandler
     );
@@ -17,7 +18,7 @@ export class StudyPrefetcher {
 
   destroy() {
     this.stopPrefetching();
-    external.cornerstone.events.removeEventListener(
+    cornerstone.events.removeEventListener(
       'cornerstoneimagecachefull.StudyPrefetcher',
       this.cacheFullHandler
     );
@@ -46,7 +47,7 @@ export class StudyPrefetcher {
   }
 
   stopPrefetching() {
-    external.cornerstoneTools.requestPoolManager.clearRequestStack('prefetch');
+    cornerstoneTools.requestPoolManager.clearRequestStack('prefetch');
   }
 
   prefetchDisplaySetsAsync(timeout) {
@@ -73,7 +74,7 @@ export class StudyPrefetcher {
 
   prefetchImageIds(imageIds) {
     const nonCachedImageIds = this.filterCachedImageIds(imageIds);
-    const requestPoolManager = external.cornerstoneTools.requestPoolManager;
+    const requestPoolManager = cornerstoneTools.requestPoolManager;
     const requestType = 'prefetch';
     const preventCache = false;
     const noop = () => {};
@@ -93,27 +94,21 @@ export class StudyPrefetcher {
   }
 
   getStudy(image) {
-    const studyMetadata = external.cornerstone.metaData.get(
-      'study',
-      image.imageId
-    );
+    const studyMetadata = cornerstone.metaData.get('study', image.imageId);
     return OHIF.viewer.Studies.find(
       study => study.studyInstanceUid === studyMetadata.studyInstanceUid
     );
   }
 
   getSeries(study, image) {
-    const seriesMetadata = external.cornerstone.metaData.get(
-      'series',
-      image.imageId
-    );
+    const seriesMetadata = cornerstone.metaData.get('series', image.imageId);
     const studyMetadata = OHIF.viewerbase.getStudyMetadata(study);
 
     return studyMetadata.getSeriesByUID(seriesMetadata.seriesInstanceUid);
   }
 
   getInstance(series, image) {
-    const instanceMetadata = external.cornerstone.metaData.get(
+    const instanceMetadata = cornerstone.metaData.get(
       'instance',
       image.imageId
     );
@@ -249,7 +244,7 @@ export class StudyPrefetcher {
   }
 
   isImageCached(imageId) {
-    const image = external.cornerstone.imageCache.imageCache[imageId];
+    const image = cornerstone.imageCache.imageCache[imageId];
     return image && image.sizeInBytes;
   }
 

@@ -15,7 +15,6 @@ import user from './user.js';
 import object from './object.js';
 import DICOMWeb from './DICOMWeb';
 import log from './log.js';
-import external from './externalModules.js';
 import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
 import extensions from './classes/extensions/';
@@ -39,12 +38,11 @@ const OHIF = {
   object,
   commands,
   log,
-  external,
   DICOMWeb,
   plugins,
   extensions,
   viewer: {},
-  measurements,
+  measurements
 };
 
 export {
@@ -65,7 +63,7 @@ export {
   DICOMWeb,
   plugins,
   extensions,
-  measurements,
+  measurements
 };
 
 export { OHIF };
