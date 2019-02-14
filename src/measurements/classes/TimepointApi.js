@@ -205,8 +205,15 @@ export default class TimepointApi {
   }
 
   // Return all timepoints
-  all() {
-    return this.timepoints.sort((tp1, tp2) => {
+  all(filter) {
+    let timepointsToReturn;
+    if (filter) {
+      timepointsToReturn = this.timepoints.filter(filter);
+    } else {
+      timepointsToReturn = this.timepoints;
+    }
+
+    return timepointsToReturn.sort((tp1, tp2) => {
       return tp1.visitDate < tp2.visitDate ? 1 : -1;
     });
   }

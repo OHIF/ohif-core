@@ -1,4 +1,4 @@
-import { MeasurementApi, TimepointApi } from '../classes';
+import { MeasurementApi } from '../classes';
 import log from '../../log';
 
 export default function handleSingleMeasurementRemoved({
@@ -15,11 +15,6 @@ export default function handleSingleMeasurementRemoved({
     log.warn('Measurement API is not initialized');
   }
 
-  const timepointApi = TimepointApi.Instance;
-  if (!timepointApi) {
-    log.warn('Timepoint API is not initialized');
-  }
-
   const collection = measurementApi.tools[toolType];
 
   // Stop here if the tool data shall not be persisted (e.g. temp tools)
@@ -34,13 +29,16 @@ export default function handleSingleMeasurementRemoved({
   if (!measurement) return;
 
   // Remove all the measurements with the given type and number
-  const { measurementNumber, timepointId } = measurement;
-  measurementApi.deleteMeasurements(measurementTypeId, {
-    measurementNumber,
+  const { lesionNamingNumber, timepointId } = measurement;
+  measurementApi.deleteMeasurements(toolType, measurementTypeId, {
+    lesionNamingNumber,
     timepointId
   });
 
-  // Sync the new measurement data with cornerstone tools
-  const baseline = timepointApi.baseline();
-  measurementApi.sortMeasurements(baseline.timepointId);
+  // TODO: Repaint the images on all viewports without the removed measurements
+  //_.each($('.imageViewerViewport:not(.empty)'), element => cornerstone.updateImage(element));
+
+  if (MeasurementApi.isToolIncluded(tool)) {
+    // TODO: Notify that viewer suffered changes
+  }
 }

@@ -1,5 +1,9 @@
-import getDescription from '../lib/getDescription';
+import cornerstoneTools from 'cornerstone-tools';
 import log from '../../log';
+import getDescription from '../lib/getDescription';
+import syncMeasurementAndToolData from '../lib/syncMeasurementAndToolData';
+import getImageIdForImagePath from '../lib/getImageIdForImagePath';
+import guid from '../../utils/guid';
 
 const configuration = {};
 
@@ -106,6 +110,106 @@ export default class MeasurementApi {
     this.options.onMeasurementsUpdated(Object.assign({}, this.tools));
   }
 
+  retrieveMeasurements(patientId, timepointIds) {
+    const retrievalFn = configuration.dataExchange.retrieve;
+    if (typeof retrievalFn !== 'function') {
+      log.error('Measurement retrieval function has not been configured.');
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      retrievalFn(patientId, timepointIds).then(measurementData => {
+        if (measurementData) {
+          log.info('Measurement data retrieval');
+          log.info(measurementData);
+
+          const toolsGroupsMap = MeasurementApi.getToolsGroupsMap();
+          const measurementsGroups = {};
+
+          Object.keys(measurementData).forEach(measurementTypeId => {
+            const measurements = measurementData[measurementTypeId];
+
+            measurements.forEach(measurement => {
+              const { toolType } = measurement;
+              if (toolType && this.tools[toolType]) {
+                measurement._id = measurement._id || guid();
+                const toolGroup = toolsGroupsMap[toolType];
+                if (!measurementsGroups[toolGroup]) {
+                  measurementsGroups[toolGroup] = [];
+                }
+
+                measurementsGroups[toolGroup].push(measurement);
+              }
+            });
+          });
+
+          Object.keys(measurementsGroups).forEach(groupKey => {
+            const group = measurementsGroups[groupKey];
+            group.sort((a, b) => {
+              if (a.measurementNumber > b.measurementNumber) {
+                return 1;
+              } else if (a.measurementNumber < b.measurementNumber) {
+                return -1;
+              }
+
+              return 0;
+            });
+
+            group.forEach(m => this.tools[m.toolType].push(m));
+          });
+        }
+        resolve();
+      }, reject);
+    });
+  }
+
+  storeMeasurements(timepointId) {
+    const storeFn = configuration.dataExchange.store;
+    if (typeof storeFn !== 'function') {
+      log.error('Measurement store function has not been configured.');
+      return;
+    }
+
+    let measurementData = {};
+    configuration.measurementTools.forEach(toolGroup => {
+      // Skip the tool groups excluded from case progress
+      if (!MeasurementApi.isToolIncluded(toolGroup)) {
+        return;
+      }
+
+      toolGroup.childTools.forEach(tool => {
+        // Skip the tools excluded from case progress
+        if (!MeasurementApi.isToolIncluded(tool)) {
+          return;
+        }
+
+        if (!measurementData[toolGroup.id]) {
+          measurementData[toolGroup.id] = [];
+        }
+
+        measurementData[toolGroup.id] = measurementData[toolGroup.id].concat(
+          this.tools[tool.id]
+        );
+      });
+    });
+
+    const timepointFilter = timepointId
+      ? tp => tp.timepointId === timepointId
+      : null;
+    const timepoints = this.timepointApi.all(timepointFilter);
+    const timepointIds = timepoints.map(t => t.timepointId);
+    const patientId = timepoints[0].patientId;
+    const filter = {
+      patientId,
+      timepointIds
+    };
+
+    log.info('Saving Measurements for timepoints:', timepoints);
+    return storeFn(measurementData, filter).then(() => {
+      log.info('Measurement storage completed');
+    });
+  }
+
   calculateLesionNamingNumber(measurements) {
     const sortedMeasurements = measurements.sort((a, b) => {
       if (a.lesionNamingNumber > b.lesionNamingNumber) {
@@ -210,7 +314,18 @@ export default class MeasurementApi {
   }
 
   calculateLesionMaxMeasurementNumber(groupId, filter) {
-    const measurements = this.toolGroups[groupId] || [];
+    let measurements = [];
+    if (groupId) {
+      // Get the measurements of the group
+      measurements = this.toolGroups[groupId] || [];
+    } else {
+      // Get all measurements of all groups
+      measurements = Object.keys(this.toolGroups).reduce((acc, val) => {
+        acc.push(...this.toolGroups[val]);
+        return acc;
+      }, []);
+    }
+
     const sortedMeasurements = measurements.filter(filter).sort((tp1, tp2) => {
       return tp1.measurementNumber < tp2.measurementNumber ? 1 : -1;
     });
@@ -304,6 +419,8 @@ export default class MeasurementApi {
           maxTargetMeasurementNumber,
           maxNonTargetMeasurementNumber
         );
+      } else {
+        return this.calculateLesionMaxMeasurementNumber(null, filter);
       }
     }
 
@@ -559,81 +676,191 @@ export default class MeasurementApi {
       return;
     }
 
-    const updatedMeasurement = Object.assign({}, measurement);
-    collection[toolIndex] = updatedMeasurement;
+    collection[toolIndex] = Object.assign({}, measurement);
 
     // Let others know that the measurements are updated
     this.onMeasurementsUpdated();
 
     // TODO: Enable reactivity
     // this.timepointChanged.set(timepoint.timepointId);
-
-    return updatedMeasurement;
   }
 
-  retrieveMeasurements = (patientId, timepointIds) => {
-    const retrievalFn = configuration.dataExchange.retrieve;
-    if (!retrievalFn && {}.toString.call(retrievalFn) === '[object Function]') {
+  removeMeasurement(toolType, measurement) {
+    const { lesionNamingNumber, measurementNumber } = measurement;
+
+    const toolGroup = this.toolsGroupsMap[toolType];
+    const groupCollection = this.toolGroups[toolGroup];
+
+    const toolGroupIndex = groupCollection.findIndex(
+      toolGroup => toolGroup.toolItemId === measurement._id
+    );
+    if (toolGroupIndex < 0) {
       return;
     }
 
-    return new Promise((resolve, reject) => {
-      retrievalFn(patientId, timepointIds).then(measurementData => {
-        if (measurementData) {
-          log.info('Measurement data retrieval');
-          log.info(measurementData);
+    //  Remove the deleted measurement only in its timepoint from the collection
+    groupCollection.splice(toolGroupIndex, 1);
 
-          const toolsGroupsMap = MeasurementApi.getToolsGroupsMap();
-          const measurementsGroups = {};
+    //  Check which timepoints have the deleted measurement
+    const timepointsWithDeletedMeasurement = groupCollection
+      .filter(tool => tool.measurementNumber === measurementNumber)
+      .map(tool => tool.timepointId);
 
-          Object.keys(measurementData).forEach(measurementTypeId => {
-            const measurements = measurementData[measurementTypeId];
+    //  Update lesionNamingNumber and measurementNumber only if there is no timepoint with that measurement
+    if (timepointsWithDeletedMeasurement.length < 1) {
+      //  Decrease lesionNamingNumber of all measurements with lesionNamingNumber greater than lesionNamingNumber of the deleted measurement by 1
+      const lesionNamingNumberFilter = tool =>
+        tool.lesionNamingNumber >= lesionNamingNumber;
+      this.updateNumbering(
+        groupCollection,
+        lesionNamingNumberFilter,
+        'lesionNamingNumber',
+        -1
+      );
+      configuration.measurementTools.forEach(toolGroup => {
+        toolGroup.childTools.forEach(childTool => {
+          const collection = this.tools[childTool.id];
+          this.updateNumbering(
+            collection,
+            lesionNamingNumberFilter,
+            'lesionNamingNumber',
+            -1
+          );
+        });
+      });
 
-            measurements.forEach(measurement => {
-              const { toolType } = measurement;
-              if (toolType && this.tools[toolType]) {
-                delete measurement._id;
-                const toolGroup = toolsGroupsMap[toolType];
-                if (!measurementsGroups[toolGroup]) {
-                  measurementsGroups[toolGroup] = [];
-                }
+      //  Decrease measurementNumber of all measurements with measurementNumber greater than measurementNumber of the deleted measurement by 1
+      this.updateMeasurementNumberForAllMeasurements(measurement, -1);
+    }
 
-                measurementsGroups[toolGroup].push(measurement);
-              }
-            });
-          });
+    // Synchronize the new tool data
+    this.syncMeasurementsAndToolData();
 
-          Object.keys(measurementsGroups).forEach(groupKey => {
-            const group = measurementsGroups[groupKey];
-            group.sort((a, b) => {
-              if (a.measurementNumber > b.measurementNumber) {
-                return 1;
-              } else if (a.measurementNumber < b.measurementNumber) {
-                return -1;
-              }
+    // Let others know that the measurements are updated
+    this.onMeasurementsUpdated();
 
-              return 0;
-            });
+    // TODO: Enable reactivity
+    // this.timepointChanged.set(timepoint.timepointId);
+  }
 
-            group.forEach(m => this.tools[m.toolType].insert(m));
-          });
+  syncMeasurementsAndToolData() {
+    configuration.measurementTools.forEach(toolGroup => {
+      // Skip the tool groups excluded from case progress
+      if (!MeasurementApi.isToolIncluded(toolGroup)) {
+        return;
+      }
+      toolGroup.childTools.forEach(tool => {
+        // Skip the tools excluded from case progress
+        if (!MeasurementApi.isToolIncluded(tool)) {
+          return;
         }
-        resolve();
+        const measurements = this.tools[tool.id];
+        measurements.forEach(measurement => {
+          syncMeasurementAndToolData(measurement);
+        });
       });
     });
-  };
-
-  deleteMeasurements(measurementTypeId, measurementIdInfo) {
-    const { measurementNumber, timepointId } = measurementIdInfo;
-
-    //Create delete function
-
-    this.onMeasurementsUpdated();
   }
 
-  sortMeasurements(timepointId) {
-    // TODO: Migrate sortMeasurements function
-  }
+  deleteMeasurements(toolType, measurementTypeId, filter) {
+    const filterKeys = Object.keys(filter);
+    const groupCollection = this.toolGroups[measurementTypeId];
 
-  // TODO: Implement all other functions
+    // Stop here if it is a temporary toolGroups
+    if (!groupCollection) return;
+
+    // Get the entries information before removing them
+    const groupItems = groupCollection.filter(toolGroup => {
+      return filterKeys.every(
+        filterKey => toolGroup[filterKey] === filter[filterKey]
+      );
+    });
+    const entries = [];
+    groupItems.forEach(groupItem => {
+      if (!groupItem.toolId) {
+        return;
+      }
+
+      const collection = this.tools[groupItem.toolId];
+      const toolIndex = collection.findIndex(
+        tool => tool._id === groupItem.toolItemId
+      );
+      if (toolIndex > -1) {
+        entries.push(collection[toolIndex]);
+        collection.splice(toolIndex, 1);
+      }
+    });
+
+    // Stop here if no entries were found
+    if (!entries.length) {
+      return;
+    }
+
+    // If the filter doesn't have the measurement number, get it from the first entry
+    const lesionNamingNumber =
+      filter.lesionNamingNumber || entries[0].lesionNamingNumber;
+
+    // Synchronize the new data with cornerstone tools
+    const toolState = cornerstoneTools.globalImageIdSpecificToolStateManager.saveToolState();
+
+    entries.forEach(entry => {
+      const measurementsData = [];
+      const { tool } = MeasurementApi.getToolConfiguration(entry.toolType);
+      if (Array.isArray(tool.childTools)) {
+        tool.childTools.forEach(key => {
+          const childMeasurement = entry[key];
+          if (!childMeasurement) return;
+          measurementsData.push(childMeasurement);
+        });
+      } else {
+        measurementsData.push(entry);
+      }
+
+      measurementsData.forEach(measurementData => {
+        const { imagePath, toolType } = measurementData;
+        const imageId = getImageIdForImagePath(imagePath);
+        if (imageId && toolState[imageId]) {
+          const toolData = toolState[imageId][toolType];
+          const measurementEntries = toolData && toolData.data;
+          const measurementEntry = measurementEntries.find(
+            mEntry => mEntry._id === entry._id
+          );
+          if (measurementEntry) {
+            const index = measurementEntries.indexOf(measurementEntry);
+            measurementEntries.splice(index, 1);
+          }
+        }
+      });
+
+      this.removeMeasurement(toolType, entry);
+    });
+
+    cornerstoneTools.globalImageIdSpecificToolStateManager.restoreToolState(
+      toolState
+    );
+
+    // Synchronize the updated measurements with Cornerstone Tools
+    // toolData to make sure the displayed measurements show 'Target X' correctly
+    const syncFilter = Object.assign({}, filter);
+    delete syncFilter.timepointId;
+
+    const syncFilterKeys = Object.keys(syncFilter);
+
+    const toolTypes = [...new Set(entries.map(entry => entry.toolType))];
+    toolTypes.forEach(toolType => {
+      const collection = this.tools[toolType];
+      collection
+        .filter(tool => {
+          return (
+            tool.lesionNamingNumber > lesionNamingNumber - 1 &&
+            syncFilterKeys.every(
+              syncFilterKey => tool[syncFilterKey] === filter[syncFilterKey]
+            )
+          );
+        })
+        .forEach(measurement => {
+          syncMeasurementAndToolData(measurement);
+        });
+    });
+  }
 }
