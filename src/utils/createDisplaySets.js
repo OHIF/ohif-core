@@ -1,6 +1,7 @@
 import { OHIFStudyMetadata } from '../classes/metadata/OHIFStudyMetadata';
 import { sortingManager } from './sortingManager.js';
 import { updateMetaDataManager } from './updateMetaDataManager.js';
+import studyMetadataManager from './studyMetadataManager';
 
 export default function createDisplaySets(studies) {
   // Define the OHIF.viewer.data global object
@@ -17,6 +18,9 @@ export default function createDisplaySets(studies) {
 
   //OHIF.viewer.data.studyInstanceUids = [];
 
+  // TODO: Need to purge studyMetadataManager somewhere else
+  studyMetadataManager.purge();
+
   const updatedStudies = studies.map(study => {
     const studyMetadata = new OHIFStudyMetadata(study, study.studyInstanceUid);
     let displaySets = study.displaySets;
@@ -32,8 +36,9 @@ export default function createDisplaySets(studies) {
     //OHIF.viewer.data.studyInstanceUids.push(study.studyInstanceUid);
 
     // Updates WADO-RS metaDataManager
-    debugger;
     updateMetaDataManager(study);
+
+    studyMetadataManager.add(studyMetadata);
 
     return study;
   });

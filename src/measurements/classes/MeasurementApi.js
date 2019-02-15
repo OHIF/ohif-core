@@ -159,6 +159,12 @@ export default class MeasurementApi {
           });
         }
         resolve();
+
+        // Synchronize the new tool data
+        this.syncMeasurementsAndToolData();
+
+        // Let others know that the measurements are updated
+        this.onMeasurementsUpdated();
       }, reject);
     });
   }
@@ -843,6 +849,7 @@ export default class MeasurementApi {
     // toolData to make sure the displayed measurements show 'Target X' correctly
     const syncFilter = Object.assign({}, filter);
     delete syncFilter.timepointId;
+    delete syncFilter.lesionNamingNumber;
 
     const syncFilterKeys = Object.keys(syncFilter);
 

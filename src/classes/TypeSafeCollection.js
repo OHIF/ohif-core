@@ -1,3 +1,5 @@
+import guid from '../utils/guid';
+
 /**
  * Constants
  */
@@ -124,7 +126,7 @@ export class TypeSafeCollection {
     let id = null,
       found = this._elementWithPayload(payload, true);
     if (!found) {
-      id = OHIF.utils.guid();
+      id = guid();
       this._elements(true).push({ id, payload });
       this._invalidate();
       this._trigger('insert', { id, data: payload });

@@ -7,6 +7,7 @@ import writeScript from './writeScript.js';
 import StackManager from './StackManager.js';
 import createStacks from './createStacks.js';
 import createDisplaySets from './createDisplaySets.js';
+import studyMetadataManager from './studyMetadataManager';
 
 const utils = {
   guid,
@@ -17,7 +18,8 @@ const utils = {
   writeScript,
   StackManager,
   createStacks,
-  createDisplaySets
+  createDisplaySets,
+  studyMetadataManager
 };
 
 export default utils;
