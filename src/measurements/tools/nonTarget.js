@@ -1,7 +1,7 @@
 export const nonTarget = {
   id: 'nonTarget',
   name: 'Non-Target',
-  toolGroup: 'nonTargets',
+  toolGroup: 'allTools',
   cornerstoneToolType: 'nonTarget',
   options: {
     measurementTable: {

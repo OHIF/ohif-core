@@ -1,7 +1,7 @@
 export const targetCR = {
   id: 'targetCR',
   name: 'CR Target',
-  toolGroup: 'targets',
+  toolGroup: 'allTools',
   cornerstoneToolType: 'targetCR',
   options: {
     measurementTable: {

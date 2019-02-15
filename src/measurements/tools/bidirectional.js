@@ -10,7 +10,7 @@ const displayFunction = data => {
 export const bidirectional = {
   id: 'bidirectional',
   name: 'Target',
-  toolGroup: 'targets',
+  toolGroup: 'allTools',
   cornerstoneToolType: 'bidirectional',
   options: {
     measurementTable: {

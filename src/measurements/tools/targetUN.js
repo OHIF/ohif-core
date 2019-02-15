@@ -1,7 +1,7 @@
 export const targetUN = {
   id: 'targetUN',
   name: 'UN Target',
-  toolGroup: 'targets',
+  toolGroup: 'allTools',
   cornerstoneToolType: 'targetUN',
   options: {
     measurementTable: {

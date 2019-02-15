@@ -1,6 +1,19 @@
+const displayFunction = data => {
+  let lengthValue = '';
+  if (data.length) {
+    lengthValue = data.length.toFixed(2) + ' mm';
+  }
+  return lengthValue;
+};
+
 export const length = {
-  id: 'length',
+  id: 'Length',
   name: 'Length',
-  toolGroup: 'temp',
-  cornerstoneToolType: 'length'
+  toolGroup: 'allTools',
+  cornerstoneToolType: 'Length',
+  options: {
+    measurementTable: {
+      displayFunction
+    }
+  }
 };
