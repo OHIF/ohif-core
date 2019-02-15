@@ -6,6 +6,7 @@ import { nonTarget } from './nonTarget';
 import { rectangleRoi } from './rectangleRoi';
 import { simpleAngle } from './simpleAngle';
 import { targetCR } from './targetCR';
+import { targetNE } from './targetNE';
 import { targetUN } from './targetUN';
 
 export {
@@ -17,5 +18,6 @@ export {
   rectangleRoi,
   simpleAngle,
   targetCR,
+  targetNE,
   targetUN
 };
