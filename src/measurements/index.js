@@ -5,7 +5,7 @@ import getImageAttributes from './lib/getImageAttributes';
 import getImageIdForImagePath from './lib/getImageIdForImagePath';
 import syncMeasurementAndToolData from './lib/syncMeasurementAndToolData';
 import ltTools from './ltTools';
-import ohifTools from './ohifTools';
+import * as tools from './tools';
 import './configuration';
 
 const measurements = {
@@ -13,7 +13,7 @@ const measurements = {
   MeasurementApi,
   MeasurementHandlers,
   ltTools,
-  ohifTools,
+  tools,
   getDescription,
   getImageAttributes,
   getImageIdForImagePath,
