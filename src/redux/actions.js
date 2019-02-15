@@ -61,6 +61,16 @@ export const setExtensionData = (extension, data) => ({
   data
 });
 
+export const setTimepoints = state => ({
+  type: 'SET_TIMEPOINTS',
+  state
+});
+
+export const setMeasurements = state => ({
+  type: 'SET_MEASUREMENTS',
+  state
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
@@ -73,7 +83,9 @@ const actions = {
   clearViewportSpecificData,
   addPlugin,
   setAvailableButtons,
-  setExtensionData
+  setExtensionData,
+  setTimepoints,
+  setMeasurements
 };
 
 export default actions;

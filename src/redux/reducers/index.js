@@ -1,21 +1,23 @@
-import tools from './tools.js';
-import viewports from './viewports.js';
-import servers from './servers.js';
-import loading from './loading.js';
-import preferences from './preferences.js';
-import commandContext from './commandContext.js';
-import plugins from './plugins.js';
-import extensions from './extensions.js';
+import commandContext from './commandContext';
+import extensions from './extensions';
+import loading from './loading';
+import plugins from './plugins';
+import preferences from './preferences';
+import servers from './servers';
+import timepointManager from './timepointManager';
+import tools from './tools';
+import viewports from './viewports';
 
 const reducers = {
-  tools,
-  viewports,
-  servers,
-  loading,
-  preferences,
   commandContext,
+  extensions,
+  loading,
   plugins,
-  extensions
+  preferences,
+  servers,
+  timepointManager,
+  tools,
+  viewports
 };
 
 export default reducers;
