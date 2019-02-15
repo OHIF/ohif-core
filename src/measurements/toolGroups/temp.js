@@ -1,10 +1,9 @@
-import { length } from '../tools/length';
-import { ellipse } from '../tools/ellipse';
+import { length, ellipticalRoi } from '../tools';
 
 export const temp = {
   id: 'temp',
   name: 'Temporary',
-  childTools: [length, ellipse],
+  childTools: [length, ellipticalRoi],
   options: {
     caseProgress: {
       include: false,

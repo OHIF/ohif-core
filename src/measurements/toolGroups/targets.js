@@ -1,6 +1,4 @@
-import { bidirectional } from '../tools/bidirectional';
-import { targetCR } from '../tools/targetCR';
-import { targetUN } from '../tools/targetUN';
+import { bidirectional, targetCR, targetUN } from '../tools';
 
 export const targets = {
   id: 'targets',

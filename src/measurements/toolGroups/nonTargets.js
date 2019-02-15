@@ -1,4 +1,4 @@
-import { nonTarget } from '../tools/nonTarget';
+import { nonTarget } from '../tools';
 
 export const nonTargets = {
   id: 'nonTargets',

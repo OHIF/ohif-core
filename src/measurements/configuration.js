@@ -1,5 +1,5 @@
 import { TimepointApi, MeasurementApi } from './classes';
-import { measurementTools } from './measurementTools';
+import ohifTools from './ohifTools';
 import {
   retrieveMeasurements,
   storeMeasurements,
@@ -11,7 +11,7 @@ import {
 } from './dataExchange';
 
 MeasurementApi.setConfiguration({
-  measurementTools,
+  measurementTools: ohifTools,
   newLesions: [
     {
       id: 'newTargets',
