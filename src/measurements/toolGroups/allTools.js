@@ -5,7 +5,7 @@ Object.keys(tools).forEach(key => childTools.push(tools[key]));
 
 export const allTools = {
   id: 'allTools',
-  name: 'Mesurements',
+  name: 'Measurements',
   childTools: childTools,
   options: {
     caseProgress: {
