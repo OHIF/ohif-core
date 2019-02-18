@@ -29,22 +29,22 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
     toolType
   });
 
-  // Get the related timepoint by the measurement number and use its location if defined
-  const relatedTimepoint = collection.find(
-    tool =>
-      tool.lesionNamingNumber === measurement.lesionNamingNumber &&
-      tool.toolType === measurementData.toolType &&
-      tool.patientId === imageAttributes.patientId
+  // Get the related measurement by the measurement number and use its location if defined
+  const relatedMeasurement = collection.find(
+    t =>
+      t.lesionNamingNumber === measurement.lesionNamingNumber &&
+      t.toolType === measurementData.toolType &&
+      t.patientId === imageAttributes.patientId
   );
 
-  // Use the related timepoint location if found and defined
-  if (relatedTimepoint && relatedTimepoint.location) {
-    measurement.location = relatedTimepoint.location;
+  // Use the related measurement location if found and defined
+  if (relatedMeasurement && relatedMeasurement.location) {
+    measurement.location = relatedMeasurement.location;
   }
 
-  // Use the related timepoint description if found and defined
-  if (relatedTimepoint && relatedTimepoint.description) {
-    measurement.description = relatedTimepoint.description;
+  // Use the related measurement description if found and defined
+  if (relatedMeasurement && relatedMeasurement.description) {
+    measurement.description = relatedMeasurement.description;
   }
 
   measurement._id = guid();
@@ -52,6 +52,11 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
 
   measurementData._id = measurement._id;
   measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
+
+  // TODO: Repaint the image on the active viewport
+  //cornerstone.updateImage(OHIF.viewerbase.viewportUtils.getActiveViewportElement());
+
+  // TODO: Notify about the last activated measurement
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes

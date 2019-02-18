@@ -21,9 +21,7 @@ export default function handleSingleMeasurementRemoved({
   if (!collection) return;
 
   const measurementTypeId = measurementApi.toolsGroupsMap[toolType];
-  const measurement = collection.find(
-    measurement => measurement._id === measurementData._id
-  );
+  const measurement = collection.find(t => t._id === measurementData._id);
 
   // Stop here if the measurement is already gone or never existed
   if (!measurement) return;
