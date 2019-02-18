@@ -33,7 +33,8 @@ export default function handleSingleMeasurementRemoved({
     timepointId
   });
 
-  // TODO: This is very hacky, but will work for now
+  // TODO: This is very hacky, but not needed when cornerstone tools support for invalidated flag
+  //  since it is set in syncMeasurementAndToolData
   cornerstone.getEnabledElements().forEach(enabledElement => {
     cornerstone.updateImage(enabledElement.element);
   });

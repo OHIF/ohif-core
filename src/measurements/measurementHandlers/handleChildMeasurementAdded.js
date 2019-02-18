@@ -99,7 +99,10 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
     measurementData._id = measurement._id;
     measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
 
-    // TODO: This is very hacky, but will work for now
+    // Force to repaint the measurement on image
+    measurementData.invalidated = true;
+
+    // TODO: This is very hacky, but not needed when cornerstone tools support for invalidated flag
     cornerstone.getEnabledElements().forEach(enabledElement => {
       cornerstone.updateImage(enabledElement.element);
     });

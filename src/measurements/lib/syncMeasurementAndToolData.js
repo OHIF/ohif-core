@@ -61,6 +61,10 @@ export default function syncMeasurementAndToolData(measurement) {
 
       // Update the toolData from the Measurement data
       Object.assign(tool, measurement);
+
+      // Force to repaint the measurement on image
+      tool.invalidated = true;
+
       return false;
     });
 
