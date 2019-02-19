@@ -691,7 +691,7 @@ export default class MeasurementApi {
     // this.timepointChanged.set(timepoint.timepointId);
   }
 
-  removeMeasurement(toolType, measurement) {
+  onMeasurementRemoved(toolType, measurement) {
     const { lesionNamingNumber, measurementNumber } = measurement;
 
     const toolGroup = this.toolsGroupsMap[toolType];
@@ -706,18 +706,6 @@ export default class MeasurementApi {
 
     //  Remove the deleted measurement only in its timepoint from the collection
     groupCollection.splice(toolGroupIndex, 1);
-
-    // Remove the deleted measurement from the tools collection
-    const collection = this.tools[toolType];
-
-    const toolIndex = collection.findIndex(
-      tool => tool._id === measurement._id
-    );
-    if (toolIndex < 0) {
-      return;
-    }
-
-    collection.splice(toolIndex, 1);
 
     //  Check which timepoints have the deleted measurement
     const timepointsWithDeletedMeasurement = groupCollection
@@ -850,7 +838,7 @@ export default class MeasurementApi {
         }
       });
 
-      this.removeMeasurement(toolType, entry);
+      this.onMeasurementRemoved(toolType, entry);
     });
 
     cornerstoneTools.globalImageIdSpecificToolStateManager.restoreToolState(
