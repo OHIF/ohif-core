@@ -30,8 +30,10 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
     measurementApi.updateMeasurement(tool.parentTool, measurement);
   }
 
-  // TODO: Repaint the images on all viewports without the removed measurements
-  //_.each($('.imageViewerViewport:not(.empty)'), element => cornerstone.updateImage(element));
+  // TODO: This is very hacky, but will work for now
+  cornerstone.getEnabledElements().forEach(enabledElement => {
+    cornerstone.updateImage(enabledElement.element);
+  });
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes

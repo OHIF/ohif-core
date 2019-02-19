@@ -31,7 +31,10 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
 
   measurementApi.updateMeasurement(toolName, measurement);
 
-  // TODO: Notify about the last activated measurement
+  // TODO: This is very hacky, but will work for now
+  cornerstone.getEnabledElements().forEach(enabledElement => {
+    cornerstone.updateImage(enabledElement.element);
+  });
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes

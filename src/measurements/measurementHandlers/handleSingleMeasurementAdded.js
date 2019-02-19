@@ -53,8 +53,10 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
   measurementData._id = measurement._id;
   measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
 
-  // TODO: Repaint the image on the active viewport
-  //cornerstone.updateImage(OHIF.viewerbase.viewportUtils.getActiveViewportElement());
+  // TODO: This is very hacky, but will work for now
+  cornerstone.getEnabledElements().forEach(enabledElement => {
+    cornerstone.updateImage(enabledElement.element);
+  });
 
   // TODO: Notify about the last activated measurement
 

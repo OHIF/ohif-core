@@ -707,6 +707,18 @@ export default class MeasurementApi {
     //  Remove the deleted measurement only in its timepoint from the collection
     groupCollection.splice(toolGroupIndex, 1);
 
+    // Remove the deleted measurement from the tools collection
+    const collection = this.tools[toolType];
+
+    const toolIndex = collection.findIndex(
+      tool => tool._id === measurement._id
+    );
+    if (toolIndex < 0) {
+      return;
+    }
+
+    collection.splice(toolIndex, 1);
+
     //  Check which timepoints have the deleted measurement
     const timepointsWithDeletedMeasurement = groupCollection
       .filter(tool => tool.measurementNumber === measurementNumber)
