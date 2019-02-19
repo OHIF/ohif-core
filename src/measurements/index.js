@@ -3,7 +3,6 @@ import MeasurementHandlers from './measurementHandlers';
 import getDescription from './lib/getDescription';
 import getImageAttributes from './lib/getImageAttributes';
 import getImageIdForImagePath from './lib/getImageIdForImagePath';
-import syncMeasurementAndToolData from './lib/syncMeasurementAndToolData';
 import ltTools from './ltTools';
 import * as tools from './tools';
 import './configuration';
@@ -16,8 +15,7 @@ const measurements = {
   tools,
   getDescription,
   getImageAttributes,
-  getImageIdForImagePath,
-  syncMeasurementAndToolData
+  getImageIdForImagePath
 };
 
 export default measurements;
