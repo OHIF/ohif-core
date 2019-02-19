@@ -36,10 +36,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   measurement[tool.attribute] = childMeasurement;
   measurementApi.updateMeasurement(tool.parentTool, measurement);
 
-  // TODO: This is very hacky, but will work for now
-  cornerstone.getEnabledElements().forEach(enabledElement => {
-    cornerstone.updateImage(enabledElement.element);
-  });
+  // TODO: Notify about the last activated measurement
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes
