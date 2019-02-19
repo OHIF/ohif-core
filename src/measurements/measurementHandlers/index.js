@@ -6,6 +6,15 @@ import handleChildMeasurementModified from './handleChildMeasurementModified';
 import handleSingleMeasurementRemoved from './handleSingleMeasurementRemoved';
 import handleChildMeasurementRemoved from './handleChildMeasurementRemoved';
 
+const getEventData = event => {
+  const eventData = event.detail;
+  if (eventData.toolName) {
+    eventData.toolType = eventData.toolName;
+  }
+
+  return eventData;
+};
+
 const MeasurementHandlers = {
   handleSingleMeasurementAdded,
   handleChildMeasurementAdded,
@@ -15,7 +24,7 @@ const MeasurementHandlers = {
   handleChildMeasurementRemoved,
 
   onAdded(event) {
-    const eventData = event.detail;
+    const eventData = getEventData(event);
     const { toolType } = eventData;
     const {
       toolGroupId,
@@ -39,13 +48,13 @@ const MeasurementHandlers = {
   },
 
   onModified(event) {
-    const eventData = event.detail;
-    const { toolName } = eventData;
+    const eventData = getEventData(event);
+    const { toolType } = eventData;
     const {
       toolGroupId,
       toolGroup,
       tool
-    } = MeasurementApi.getToolConfiguration(toolName);
+    } = MeasurementApi.getToolConfiguration(toolType);
     const params = {
       eventData,
       tool,
@@ -63,7 +72,7 @@ const MeasurementHandlers = {
   },
 
   onRemoved(event) {
-    const eventData = event.detail;
+    const eventData = getEventData(event);
     const { toolType } = eventData;
     const {
       toolGroupId,

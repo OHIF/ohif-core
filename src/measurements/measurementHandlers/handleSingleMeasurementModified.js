@@ -7,9 +7,9 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
     log.warn('Measurement API is not initialized');
   }
 
-  const { measurementData, toolName } = eventData;
+  const { measurementData, toolType } = eventData;
 
-  const collection = measurementApi.tools[toolName];
+  const collection = measurementApi.tools[toolType];
 
   // Stop here if the tool data shall not be persisted (e.g. temp tools)
   if (!collection) return;
@@ -29,7 +29,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   // Populate Viewport with the Cornerstone Viewport
   measurement.viewport = cornerstone.getViewport(eventData.element);
 
-  measurementApi.updateMeasurement(toolName, measurement);
+  measurementApi.updateMeasurement(toolType, measurement);
 
   // TODO: This is very hacky, but will work for now
   cornerstone.getEnabledElements().forEach(enabledElement => {
