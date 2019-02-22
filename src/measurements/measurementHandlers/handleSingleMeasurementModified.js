@@ -15,19 +15,12 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   if (!collection) return;
 
   log.info('CornerstoneToolsMeasurementModified');
-  const measurement = collection.find(t => t._id === measurementData._id);
+  let measurement = collection.find(t => t._id === measurementData._id);
 
   // Stop here if the measurement is already deleted
   if (!measurement) return;
 
-  const ignoredKeys = ['location', 'description', 'response'];
-  Object.keys(measurementData).forEach(key => {
-    if (ignoredKeys.includes(key)) return;
-    measurement[key] = measurementData[key];
-  });
-
-  // Populate Viewport with the Cornerstone Viewport
-  measurement.viewport = cornerstone.getViewport(eventData.element);
+  measurement = Object.assign(measurement, measurementData);
 
   measurementApi.updateMeasurement(toolType, measurement);
 
