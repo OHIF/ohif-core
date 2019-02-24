@@ -1,4 +1,3 @@
-import cornerstoneMath from 'cornerstone-math';
 import { parsingUtils } from '../lib/parsingUtils';
 
 const FUNCTION = 'function';
@@ -294,21 +293,21 @@ class MetadataProvider {
       frameOfReferenceUID: instance.frameOfReferenceUID,
       rows: instance.rows,
       columns: instance.columns,
-      rowCosines: new cornerstoneMath.Vector3(
+      rowCosines: [
         parseFloat(imageOrientation[0]),
         parseFloat(imageOrientation[1]),
         parseFloat(imageOrientation[2])
-      ),
-      columnCosines: new cornerstoneMath.Vector3(
+      ],
+      columnCosines: [
         parseFloat(imageOrientation[3]),
         parseFloat(imageOrientation[4]),
         parseFloat(imageOrientation[5])
-      ),
-      imagePositionPatient: new cornerstoneMath.Vector3(
+      ],
+      imagePositionPatient: [
         parseFloat(imagePosition[0]),
         parseFloat(imagePosition[1]),
         parseFloat(imagePosition[2])
-      ),
+      ],
       rowPixelSpacing,
       columnPixelSpacing
     };
@@ -391,7 +390,7 @@ class MetadataProvider {
 
   /**
    * Looks up metadata for Cornerstone Tools given a specified type and imageId
-   * A type may be, e.g. 'study', or 'patient', or 'imagePlane'. These types
+   * A type may be, e.g. 'study', or 'patient', or 'imagePlaneModule'. These types
    * are keys in the stored metadata objects.
    *
    * @param type
@@ -399,11 +398,6 @@ class MetadataProvider {
    * @returns {Object} Relevant metadata of the specified type
    */
   provider(type, imageId) {
-    // TODO: Cornerstone Tools use 'imagePlaneModule', but OHIF use 'imagePlane'. It must be consistent.
-    if (type === 'imagePlaneModule') {
-      type = 'imagePlane';
-    }
-
     const imageMetadata = this.metadataLookup.get(imageId);
     if (!imageMetadata) {
       return;
