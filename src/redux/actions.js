@@ -45,6 +45,11 @@ export const clearViewportSpecificData = viewportIndex => ({
   viewportIndex
 });
 
+export const onViewportInteraction = state => ({
+  type: 'HANDLE_VIEWPORT_INTERACTION',
+  state
+});
+
 export const addPlugin = plugin => ({
   type: 'ADD_PLUGIN',
   plugin
@@ -85,7 +90,8 @@ const actions = {
   setAvailableButtons,
   setExtensionData,
   setTimepoints,
-  setMeasurements
+  setMeasurements,
+  onViewportInteraction
 };
 
 export default actions;
