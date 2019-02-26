@@ -776,18 +776,18 @@ export default class MeasurementApi {
   onMeasurementRemoved(toolType, measurement) {
     const { lesionNamingNumber, measurementNumber } = measurement;
 
-    const toolGroup = this.toolsGroupsMap[toolType];
-    const groupCollection = this.toolGroups[toolGroup];
+    const toolGroupId = this.toolsGroupsMap[toolType];
+    const groupCollection = this.toolGroups[toolGroupId];
 
-    const toolGroupIndex = groupCollection.findIndex(
-      toolGroup => toolGroup.toolItemId === measurement._id
+    const groupIndex = groupCollection.findIndex(
+      group => group.toolItemId === measurement._id
     );
-    if (toolGroupIndex < 0) {
+    if (groupIndex < 0) {
       return;
     }
 
     //  Remove the deleted measurement only in its timepoint from the collection
-    groupCollection.splice(toolGroupIndex, 1);
+    groupCollection.splice(groupIndex, 1);
 
     //  Check which timepoints have the deleted measurement
     const timepointsWithDeletedMeasurement = groupCollection
@@ -805,7 +805,11 @@ export default class MeasurementApi {
         'lesionNamingNumber',
         -1
       );
-      configuration.measurementTools.forEach(toolGroup => {
+
+      const toolGroup = configuration.measurementTools.find(
+        tGroup => tGroup.id === toolGroupId
+      );
+      if (toolGroup && toolGroup.childTools) {
         toolGroup.childTools.forEach(childTool => {
           const collection = this.tools[childTool.id];
           this.updateNumbering(
@@ -815,7 +819,7 @@ export default class MeasurementApi {
             -1
           );
         });
-      });
+      }
 
       //  Decrease measurementNumber of all measurements with measurementNumber greater than measurementNumber of the deleted measurement by 1
       this.updateMeasurementNumberForAllMeasurements(measurement, -1);
