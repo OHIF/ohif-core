@@ -45,8 +45,8 @@ export const clearViewportSpecificData = viewportIndex => ({
   viewportIndex
 });
 
-export const onViewportInteraction = state => ({
-  type: 'HANDLE_VIEWPORT_INTERACTION',
+export const resetLabellingAndContextMenu = state => ({
+  type: 'RESET_LABELLING_AND_CONTEXT_MENU',
   state
 });
 
@@ -91,7 +91,7 @@ const actions = {
   setExtensionData,
   setTimepoints,
   setMeasurements,
-  onViewportInteraction
+  resetLabellingAndContextMenu
 };
 
 export default actions;
