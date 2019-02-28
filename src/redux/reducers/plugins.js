@@ -8,9 +8,11 @@ const plugins = (state = defaultState, action) => {
   switch (action.type) {
     case 'ADD_PLUGIN':
       const { availablePlugins } = state;
-      const alreadyExists = availablePlugins.find(
-        plugin => plugin.id === action.plugin.id
-      );
+      const alreadyExists = availablePlugins.find(plugin => {
+        return (
+          plugin.id === action.plugin.id && plugin.type === action.plugin.type
+        );
+      });
 
       if (alreadyExists) {
         return state;
