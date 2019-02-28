@@ -1,5 +1,6 @@
 import cornerstoneTools from 'cornerstone-tools';
 import log from '../../log';
+import getLabel from '../lib/getLabel';
 import getDescription from '../lib/getDescription';
 import getImageIdForImagePath from '../lib/getImageIdForImagePath';
 import guid from '../../utils/guid';
@@ -66,6 +67,11 @@ export default class MeasurementApi {
 
   static syncMeasurementAndToolData(measurement) {
     log.info('syncMeasurementAndToolData');
+
+    const measurementLabel = getLabel(measurement);
+    if (measurementLabel) {
+      measurement.labels = [measurementLabel];
+    }
 
     const toolState = cornerstoneTools.globalImageIdSpecificToolStateManager.saveToolState();
 

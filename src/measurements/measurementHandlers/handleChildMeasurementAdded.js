@@ -3,6 +3,7 @@ import log from '../../log';
 import user from '../../user';
 import getImageAttributes from '../lib/getImageAttributes';
 import guid from '../../utils/guid.js';
+import getLabel from '../lib/getLabel';
 
 export default function({ eventData, tool, toolGroupId, toolGroup }) {
   const measurementApi = MeasurementApi.Instance;
@@ -98,14 +99,19 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
 
     measurementData._id = measurement._id;
     measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
-
-    // TODO: This is very hacky, but will work for now
-    cornerstone.getEnabledElements().forEach(enabledElement => {
-      cornerstone.updateImage(enabledElement.element);
-    });
-
-    // TODO: Notify about the last activated measurement
   }
+
+  const measurementLabel = getLabel(measurementData);
+  if (measurementLabel) {
+    measurementData.labels = [measurementLabel];
+  }
+
+  // TODO: This is very hacky, but will work for now
+  cornerstone.getEnabledElements().forEach(enabledElement => {
+    cornerstone.updateImage(enabledElement.element);
+  });
+
+  // TODO: Notify about the last activated measurement
 
   if (MeasurementApi.isToolIncluded(tool)) {
     // TODO: Notify that viewer suffered changes

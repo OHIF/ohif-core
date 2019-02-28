@@ -1,8 +1,9 @@
 import { MeasurementApi } from '../classes';
 import log from '../../log';
 import user from '../../user';
-import getImageAttributes from '../lib/getImageAttributes';
 import guid from '../../utils/guid.js';
+import getImageAttributes from '../lib/getImageAttributes';
+import getLabel from '../lib/getLabel';
 
 export default function handleSingleMeasurementAdded({ eventData, tool }) {
   const measurementApi = MeasurementApi.Instance;
@@ -52,6 +53,11 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
 
   measurementData._id = measurement._id;
   measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
+
+  const measurementLabel = getLabel(measurementData);
+  if (measurementLabel) {
+    measurementData.labels = [measurementLabel];
+  }
 
   // TODO: This is very hacky, but will work for now
   cornerstone.getEnabledElements().forEach(enabledElement => {

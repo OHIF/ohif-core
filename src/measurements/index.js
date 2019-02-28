@@ -1,5 +1,6 @@
 import { TimepointApi, MeasurementApi } from './classes';
 import MeasurementHandlers from './measurementHandlers';
+import getLabel from './lib/getLabel';
 import getDescription from './lib/getDescription';
 import getImageAttributes from './lib/getImageAttributes';
 import getImageIdForImagePath from './lib/getImageIdForImagePath';
@@ -13,6 +14,7 @@ const measurements = {
   MeasurementHandlers,
   ltTools,
   tools,
+  getLabel,
   getDescription,
   getImageAttributes,
   getImageIdForImagePath
