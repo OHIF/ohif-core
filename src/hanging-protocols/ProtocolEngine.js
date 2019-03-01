@@ -4,54 +4,32 @@ import { StudyMetadataSource } from '../classes/StudyMetadataSource.js';
 import { isImage } from '../utils/isImage.js';
 import { HPMatcher } from './HPMatcher.js';
 import { sortByScore } from './lib/sortByScore';
-//import './customViewportSettings';
 import log from '../log.js';
 import sortBy from '../utils/sortBy.js';
+import { CustomViewportSettings } from './customViewportSettings';
+import Protocol from './classes/Protocol';
+import { ProtocolStore } from './protocolStore/classes';
 
 /**
  * Import Constants
  */
-const {
-  StudyMetadata,
-  SeriesMetadata,
-  InstanceMetadata,
-  StudySummary
-} = metadata;
-
-function largestKeyByValue(obj) {
-  return Object.keys(obj).reduce((a, b) => (obj[a] > obj[b] ? a : b));
-}
+const { StudyMetadata, InstanceMetadata, StudySummary } = metadata;
 
 // Useful constants
 const ABSTRACT_PRIOR_VALUE = 'abstractPriorValue';
 
-/*Meteor.startup(() => {
-    HP.addCustomViewportSetting('wlPreset', 'Window/Level Preset', Object.create(null), (element, optionValue) => {
-        if (_.findWhere(OHIF.viewer.wlPresets, { id: optionValue })) {
-            OHIF.viewerbase.wlPresets.applyWLPreset(optionValue, element);
-        }
-    });
-});*/
-
-// TODO:
-// Should have ProtocolStore as an input to constructor
-// Something to update current HP and current stage 'globally'
-//
-//
-// Should allow user to provide:
-// functions for adding /
-
-class ProtocolEngine {
+export default class ProtocolEngine {
   matchedProtocols = new Set();
   matchedProtocolScores = new Map();
 
   /**
    * Constructor
-   * @param  {Array} studies        Array of study metadata
+   * @param  {ProtocolStore} protocolStore Protocol Store used to keep track of all hanging protocols
+   * @param  {Array} studies Array of study metadata
    * @param  {Map} priorStudies Map of prior studies
    * @param  {Object} studyMetadataSource Instance of StudyMetadataSource (ohif-viewerbase) Object to get study metadata
    */
-  constructor(studies, priorStudies, studyMetadataSource) {
+  constructor(protocolStore, studies, priorStudies, studyMetadataSource) {
     // -----------
     // Type Validations
     if (!(studyMetadataSource instanceof StudyMetadataSource)) {
@@ -71,6 +49,7 @@ class ProtocolEngine {
 
     // --------------
     // Initialization
+    this.protocolStore = protocolStore;
     this.studies = studies;
     this.priorStudies = priorStudies instanceof Map ? priorStudies : new Map();
     this.studyMetadataSource = studyMetadataSource;
@@ -120,7 +99,7 @@ class ProtocolEngine {
       study.getObjectID()
     );
 
-    HP.ProtocolStore.getProtocol().forEach(protocol => {
+    this.protocolStore.getProtocol().forEach(protocol => {
       // Clone the protocol's protocolMatchingRules array
       // We clone it so that we don't accidentally add the
       // numberOfPriorsReferenced rule to the Protocol itself.
@@ -150,7 +129,7 @@ class ProtocolEngine {
 
     // If no matches were found, select the default protocol
     if (!matched.length) {
-      const defaultProtocol = HP.ProtocolStore.getProtocol('defaultProtocol');
+      const defaultProtocol = this.protocolStore.getProtocol('defaultProtocol');
 
       return [
         {
@@ -595,7 +574,7 @@ class ProtocolEngine {
 
       const customSettings = [];
       viewportSettingsKeys.forEach(id => {
-        const setting = HP.CustomViewportSettings[id];
+        const setting = CustomViewportSettings[id];
         if (!setting) {
           return;
         }
@@ -620,7 +599,7 @@ class ProtocolEngine {
             }`
           );
 
-          const setting = HP.CustomViewportSettings[customSetting.id];
+          const setting = CustomViewportSettings[customSetting.id];
           setting.callback(element, customSetting.value);
         });
       };
@@ -685,10 +664,10 @@ class ProtocolEngine {
     // Reset the array of newStageIds
     this.newStageIds = [];
 
-    if (HP.Protocol.prototype.isPrototypeOf(newProtocol)) {
+    if (Protocol.prototype.isPrototypeOf(newProtocol)) {
       this.protocol = newProtocol;
     } else {
-      this.protocol = new HP.Protocol();
+      this.protocol = new Protocol();
       this.protocol.fromObject(newProtocol);
     }
 
@@ -791,5 +770,3 @@ class ProtocolEngine {
     }
   }
 }
-
-export default ProtocolEngine;

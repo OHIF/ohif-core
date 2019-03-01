@@ -1,4 +1,6 @@
 import { OHIF } from 'ohif-core';
+import ViewportStructure from './ViewportStructure';
+import Viewport from './Viewport';
 
 /**
  * A Stage is one step in the Display Set Sequence for a Hanging Protocol
@@ -7,7 +9,7 @@ import { OHIF } from 'ohif-core';
  *
  * @type {Stage}
  */
-HP.Stage = class Stage {
+export default class Stage {
   constructor(ViewportStructure, name) {
     // Create a new UUID for this Stage
     this.id = OHIF.utils.guid();
@@ -26,10 +28,6 @@ HP.Stage = class Stage {
   /**
    * Creates a clone of the current Stage with a new name
    *
-   * Note! This method absolutely cannot be renamed 'clone', because
-   * Minimongo's insert method uses 'clone' internally and this
-   * somehow causes very bizarre behaviour
-   *
    * @param name
    * @returns {Stage|*}
    */
@@ -38,7 +36,7 @@ HP.Stage = class Stage {
     var currentStage = Object.assign({}, this);
 
     // Create a new Stage to return
-    var clonedStage = new HP.Stage();
+    var clonedStage = new Stage();
 
     // Assign the desired properties
     currentStage.id = clonedStage.id;
@@ -57,7 +55,7 @@ HP.Stage = class Stage {
    * Occasionally the Stage class needs to be instantiated from a JavaScript Object.
    * This function fills in a Protocol with the Object data.
    *
-   * @param input A Stage as a JavaScript Object, e.g. retrieved from MongoDB or JSON
+   * @param input A Stage as a JavaScript Object, e.g. retrieved from JSON
    */
   fromObject(input) {
     // Check if the input already has an ID
@@ -69,14 +67,14 @@ HP.Stage = class Stage {
 
     // If a ViewportStructure is present in the input, add it from the
     // input data
-    this.viewportStructure = new HP.ViewportStructure();
+    this.viewportStructure = new ViewportStructure();
     this.viewportStructure.fromObject(input.viewportStructure);
 
     // If any viewports are present in the input object
     if (input.viewports) {
       input.viewports.forEach(viewportObject => {
         // Create a new Viewport with their data
-        var viewport = new HP.Viewport();
+        var viewport = new Viewport();
         viewport.fromObject(viewportObject);
 
         // Add it to the viewports array
@@ -84,4 +82,4 @@ HP.Stage = class Stage {
       });
     }
   }
-};
+}

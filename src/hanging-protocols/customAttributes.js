@@ -10,7 +10,7 @@
 // is the set of attributes that contains the specified attribute. In our example, timepointType is
 // linked to the study attributes, and so the inputs to the callback is an object containing
 // the study attributes.
-HP.CustomAttributeRetrievalCallbacks = {};
+const CustomAttributeRetrievalCallbacks = {};
 
 /**
  * Adds a custom attribute to be used in the HangingProtocol UI and matching rules, including a
@@ -20,9 +20,11 @@ HP.CustomAttributeRetrievalCallbacks = {};
  * @param attributeName The name of the attribute to be displayed (e.g. 'Timepoint Type')
  * @param callback The function used to calculate the attribute value from the other attributes at its level (e.g. study/series/image)
  */
-addCustomAttribute = (attributeId, attributeName, callback) => {
-  HP.CustomAttributeRetrievalCallbacks[attributeId] = {
+function addCustomAttribute(attributeId, attributeName, callback) {
+  CustomAttributeRetrievalCallbacks[attributeId] = {
     name: attributeName,
     callback: callback
   };
-};
+}
+
+export { CustomAttributeRetrievalCallbacks, addCustomAttribute };

@@ -5,7 +5,7 @@
  *
  * @type {ViewportStructure}
  */
-HP.ViewportStructure = class ViewportStructure {
+export default class ViewportStructure {
   constructor(type, properties) {
     this.type = type;
     this.properties = properties;
@@ -15,7 +15,7 @@ HP.ViewportStructure = class ViewportStructure {
    * Occasionally the ViewportStructure class needs to be instantiated from a JavaScript Object.
    * This function fills in a ViewportStructure with the Object data.
    *
-   * @param input The ViewportStructure as a JavaScript Object, e.g. retrieved from MongoDB or JSON
+   * @param input The ViewportStructure as a JavaScript Object, e.g. retrieved from JSON
    */
   fromObject(input) {
     this.type = input.type;
@@ -50,4 +50,4 @@ HP.ViewportStructure = class ViewportStructure {
         return this.properties.rows * this.properties.columns;
     }
   }
-};
+}

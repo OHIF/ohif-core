@@ -1,6 +1,6 @@
 // Define an empty object to store callbacks that are used to apply custom viewport settings
 // after a viewport is rendered.
-HP.CustomViewportSettings = {};
+const CustomViewportSettings = {};
 
 /**
  * Adds a custom setting that can be chosen in the HangingProtocol UI and applied to a Viewport
@@ -10,11 +10,13 @@ HP.CustomViewportSettings = {};
  * @param options
  * @param callback A function to be run after a viewport is rendered with a series
  */
-HP.addCustomViewportSetting = (settingId, settingName, options, callback) => {
-  HP.CustomViewportSettings[settingId] = {
+function addCustomViewportSetting(settingId, settingName, options, callback) {
+  CustomViewportSettings[settingId] = {
     id: settingId,
     text: settingName,
     options: options,
     callback: callback
   };
-};
+}
+
+export { CustomViewportSettings, addCustomViewportSetting };

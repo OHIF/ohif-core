@@ -1,4 +1,4 @@
-import { Rule } from '../Rule';
+import Rule from './Rule';
 
 /**
  * The ProtocolMatchingRule Class extends the Rule Class.

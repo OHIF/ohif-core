@@ -1,4 +1,8 @@
-// Local imports
+import {
+  StudyMatchingRule,
+  SeriesMatchingRule,
+  ImageMatchingRule
+} from './rules';
 import { removeFromArray } from '../lib/removeFromArray';
 
 /**
@@ -8,7 +12,7 @@ import { removeFromArray } from '../lib/removeFromArray';
  *
  * @type {Viewport}
  */
-HP.Viewport = class Viewport {
+export default class Viewport {
   constructor() {
     this.viewportSettings = {};
     this.imageMatchingRules = [];
@@ -20,14 +24,14 @@ HP.Viewport = class Viewport {
    * Occasionally the Viewport class needs to be instantiated from a JavaScript Object.
    * This function fills in a Viewport with the Object data.
    *
-   * @param input The Viewport as a JavaScript Object, e.g. retrieved from MongoDB or JSON
+   * @param input The Viewport as a JavaScript Object, e.g. retrieved from JSON
    */
   fromObject(input) {
     // If ImageMatchingRules exist, create them from the Object data
     // and add them to the Viewport's imageMatchingRules array
     if (input.imageMatchingRules) {
       input.imageMatchingRules.forEach(ruleObject => {
-        var rule = new HP.ImageMatchingRule();
+        var rule = new ImageMatchingRule();
         rule.fromObject(ruleObject);
         this.imageMatchingRules.push(rule);
       });
@@ -37,7 +41,7 @@ HP.Viewport = class Viewport {
     // and add them to the Viewport's seriesMatchingRules array
     if (input.seriesMatchingRules) {
       input.seriesMatchingRules.forEach(ruleObject => {
-        var rule = new HP.SeriesMatchingRule();
+        var rule = new SeriesMatchingRule();
         rule.fromObject(ruleObject);
         this.seriesMatchingRules.push(rule);
       });
@@ -47,7 +51,7 @@ HP.Viewport = class Viewport {
     // and add them to the Viewport's studyMatchingRules array
     if (input.studyMatchingRules) {
       input.studyMatchingRules.forEach(ruleObject => {
-        var rule = new HP.StudyMatchingRule();
+        var rule = new StudyMatchingRule();
         rule.fromObject(ruleObject);
         this.studyMatchingRules.push(rule);
       });
@@ -68,14 +72,14 @@ HP.Viewport = class Viewport {
    */
   removeRule(rule) {
     var array;
-    if (rule instanceof HP.StudyMatchingRule) {
+    if (rule instanceof StudyMatchingRule) {
       array = this.studyMatchingRules;
-    } else if (rule instanceof HP.SeriesMatchingRule) {
+    } else if (rule instanceof SeriesMatchingRule) {
       array = this.seriesMatchingRules;
-    } else if (rule instanceof HP.ImageMatchingRule) {
+    } else if (rule instanceof ImageMatchingRule) {
       array = this.imageMatchingRules;
     }
 
     removeFromArray(array, rule);
   }
-};
+}

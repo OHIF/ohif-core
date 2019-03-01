@@ -1,30 +1,20 @@
-function getDefaultProtocol() {
-  var protocol = new HP.Protocol('Default');
-  protocol.id = 'defaultProtocol';
-  protocol.locked = true;
-
-  var oneByOne = new HP.ViewportStructure('grid', {
-    rows: 1,
-    columns: 1
-  });
-
-  var viewport = new HP.Viewport();
-  var first = new HP.Stage(oneByOne, 'oneByOne');
-  first.viewports.push(viewport);
-
-  protocol.stages.push(first);
-
-  HP.defaultProtocol = protocol;
-  return HP.defaultProtocol;
-}
+import Protocol from '../classes/Protocol';
+import ViewportStructure from '../classes/ViewportStructure';
+import Viewport from '../classes/Viewport';
+import Stage from '../classes/Stage';
+import {
+  ImageMatchingRule,
+  ProtocolMatchingRule,
+  SeriesMatchingRule
+} from '../classes';
 
 function getMRTwoByTwoTest() {
-  var proto = new HP.Protocol('MR_TwoByTwo');
+  var proto = new Protocol('MR_TwoByTwo');
   proto.id = 'MR_TwoByTwo';
   proto.locked = true;
   // Use http://localhost:3000/viewer/1.2.840.113619.2.5.1762583153.215519.978957063.78
 
-  var studyInstanceUid = new HP.ProtocolMatchingRule(
+  var studyInstanceUid = new ProtocolMatchingRule(
     'studyInstanceUid',
     {
       equals: {
@@ -36,28 +26,28 @@ function getMRTwoByTwoTest() {
 
   proto.addProtocolMatchingRule(studyInstanceUid);
 
-  var oneByTwo = new HP.ViewportStructure('grid', {
+  var oneByTwo = new ViewportStructure('grid', {
     rows: 1,
     columns: 2
   });
 
   // Stage 1
-  var left = new HP.Viewport();
-  var right = new HP.Viewport();
+  var left = new Viewport();
+  var right = new Viewport();
 
-  var firstSeries = new HP.SeriesMatchingRule('seriesNumber', {
+  var firstSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
       value: 1
     }
   });
 
-  var secondSeries = new HP.SeriesMatchingRule('seriesNumber', {
+  var secondSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
       value: 2
     }
   });
 
-  var thirdImage = new HP.ImageMatchingRule('instanceNumber', {
+  var thirdImage = new ImageMatchingRule('instanceNumber', {
     equals: {
       value: 3
     }
@@ -69,27 +59,27 @@ function getMRTwoByTwoTest() {
   right.seriesMatchingRules.push(secondSeries);
   right.imageMatchingRules.push(thirdImage);
 
-  var first = new HP.Stage(oneByTwo, 'oneByTwo');
+  var first = new Stage(oneByTwo, 'oneByTwo');
   first.viewports.push(left);
   first.viewports.push(right);
 
   proto.stages.push(first);
 
   // Stage 2
-  var twoByOne = new HP.ViewportStructure('grid', {
+  var twoByOne = new ViewportStructure('grid', {
     rows: 2,
     columns: 1
   });
-  var left2 = new HP.Viewport();
-  var right2 = new HP.Viewport();
+  var left2 = new Viewport();
+  var right2 = new Viewport();
 
-  var fourthSeries = new HP.SeriesMatchingRule('seriesNumber', {
+  var fourthSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
       value: 4
     }
   });
 
-  var fifthSeries = new HP.SeriesMatchingRule('seriesNumber', {
+  var fifthSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
       value: 5
     }
@@ -100,23 +90,22 @@ function getMRTwoByTwoTest() {
   right2.seriesMatchingRules.push(fifthSeries);
   right2.imageMatchingRules.push(thirdImage);
 
-  var second = new HP.Stage(twoByOne, 'twoByOne');
+  var second = new Stage(twoByOne, 'twoByOne');
   second.viewports.push(left2);
   second.viewports.push(right2);
 
   proto.stages.push(second);
 
-  HP.testProtocol = proto;
-  return HP.testProtocol;
+  return proto;
 }
 
 function getDemoProtocols() {
-  HP.demoProtocols = [];
+  const demoProtocols = [];
 
   /**
    * Demo #1
    */
-  HP.demoProtocols.push({
+  demoProtocols.push({
     id: 'demoProtocol1',
     locked: false,
     name: 'DFCI-CT-CHEST-COMPARE',
@@ -385,7 +374,7 @@ function getDemoProtocols() {
    * Demo #2
    */
 
-  HP.demoProtocols.push({
+  demoProtocols.push({
     id: 'demoProtocol2',
     locked: false,
     name: 'DFCI-CT-CHEST-COMPARE-2',
@@ -720,7 +709,7 @@ function getDemoProtocols() {
    * Demo: screenCT
    */
 
-  HP.demoProtocols.push({
+  demoProtocols.push({
     id: 'screenCT',
     locked: false,
     name: 'DFCI-CT-CHEST-SCREEN',
@@ -914,7 +903,7 @@ function getDemoProtocols() {
    * Demo: PETCTSCREEN
    */
 
-  HP.demoProtocols.push({
+  demoProtocols.push({
     id: 'PETCTSCREEN',
     locked: false,
     name: 'PETCT-SCREEN',
@@ -1110,7 +1099,7 @@ function getDemoProtocols() {
    * Demo: PETCTCOMPARE
    */
 
-  HP.demoProtocols.push({
+  demoProtocols.push({
     id: 'PETCTCOMPARE',
     locked: false,
     name: 'PETCT-COMPARE',
@@ -1509,8 +1498,13 @@ function getDemoProtocols() {
     ],
     numberOfPriorsReferenced: 1
   });
+
+  return demoProtocols;
 }
 
-getDefaultProtocol();
-//getMRTwoByTwoTest();
-//getDemoProtocols();
+const testProtocols = {
+  getMRTwoByTwoTest,
+  getDemoProtocols
+};
+
+export default testProtocols;

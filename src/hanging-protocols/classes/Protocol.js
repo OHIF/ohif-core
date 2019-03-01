@@ -1,14 +1,14 @@
 import { OHIF } from 'ohif-core';
-
-// Local imports
+import { ProtocolMatchingRule } from './rules';
 import { removeFromArray } from '../lib/removeFromArray';
+import Stage from './Stage';
 
 /**
  * This class represents a Hanging Protocol at the highest level
  *
  * @type {Protocol}
  */
-HP.Protocol = class Protocol {
+export default class Protocol {
   /**
    * The Constructor for the Class to create a Protocol with the bare
    * minimum information
@@ -127,7 +127,7 @@ HP.Protocol = class Protocol {
    * containing the Protocol data. This function fills in a Protocol with the Object
    * data.
    *
-   * @param input A Protocol as a JavaScript Object, e.g. retrieved from MongoDB or JSON
+   * @param input A Protocol as a JavaScript Object, e.g. retrieved from JSON
    */
   fromObject(input) {
     // Check if the input already has an ID
@@ -149,7 +149,7 @@ HP.Protocol = class Protocol {
     if (input.protocolMatchingRules) {
       input.protocolMatchingRules.forEach(ruleObject => {
         // Create new Rules from the stored data
-        var rule = new HP.ProtocolMatchingRule();
+        var rule = new ProtocolMatchingRule();
         rule.fromObject(ruleObject);
 
         // Add them to the Protocol
@@ -162,7 +162,7 @@ HP.Protocol = class Protocol {
     if (input.stages) {
       input.stages.forEach(stageObject => {
         // Create Stages from the stored data
-        var stage = new HP.Stage();
+        var stage = new Stage();
         stage.fromObject(stageObject);
 
         // Add them to the Protocol
@@ -182,7 +182,7 @@ HP.Protocol = class Protocol {
     var currentProtocol = Object.assign({}, this);
 
     // Create a new Protocol to return
-    var clonedProtocol = new HP.Protocol();
+    var clonedProtocol = new Protocol();
 
     // Apply the desired properties
     currentProtocol.id = clonedProtocol.id;
@@ -240,4 +240,4 @@ HP.Protocol = class Protocol {
       this.protocolWasModified();
     }
   }
-};
+}

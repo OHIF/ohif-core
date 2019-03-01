@@ -20,7 +20,7 @@ const EQUALS_REGEXP = /^equals$/;
  * - A value for whether or not they are Required to be matched (default: False)
  * - A value for their relative weighting during Protocol or Image matching (default: 1)
  */
-export class Rule {
+export default class Rule {
   /**
    * The Constructor for the Class to create a Rule with the bare
    * minimum information
@@ -63,7 +63,7 @@ export class Rule {
    * Occasionally the Rule class needs to be instantiated from a JavaScript Object.
    * This function fills in a Protocol with the Object data.
    *
-   * @param input A Rule as a JavaScript Object, e.g. retrieved from MongoDB or JSON
+   * @param input A Rule as a JavaScript Object, e.g. retrieved from JSON
    */
   fromObject(input) {
     // Check if the input already has an ID

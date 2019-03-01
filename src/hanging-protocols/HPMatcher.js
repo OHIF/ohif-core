@@ -1,9 +1,7 @@
 import OHIFError from '../classes/OHIFError.js';
 import metadata from '../classes/metadata/';
-
-// Local imports
 import { validate } from './lib/validate.js';
-//import './customAttributes';
+import { CustomAttributeRetrievalCallbacks } from './customAttributes';
 
 /**
  * Import Constants
@@ -52,9 +50,9 @@ const match = (metadataInstance, rules) => {
     // defined in the CustomAttributeRetrievalCallbacks Object.
     if (
       !customAttributeExists &&
-      HP.CustomAttributeRetrievalCallbacks.hasOwnProperty(attribute)
+      CustomAttributeRetrievalCallbacks.hasOwnProperty(attribute)
     ) {
-      const customAttribute = HP.CustomAttributeRetrievalCallbacks[attribute];
+      const customAttribute = CustomAttributeRetrievalCallbacks[attribute];
       metadataInstance.setCustomAttribute(
         attribute,
         customAttribute.callback(metadataInstance)
