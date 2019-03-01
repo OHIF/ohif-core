@@ -1,5 +1,4 @@
 import log from '../log.js';
-import $ from 'jquery';
 import commands from '../commands';
 
 export class HotkeysContext {
