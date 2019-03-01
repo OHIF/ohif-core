@@ -1,6 +1,6 @@
-import { OHIF } from 'ohif-core';
 import ViewportStructure from './ViewportStructure';
 import Viewport from './Viewport';
+import guid from '../../utils/guid';
 
 /**
  * A Stage is one step in the Display Set Sequence for a Hanging Protocol
@@ -12,7 +12,7 @@ import Viewport from './Viewport';
 export default class Stage {
   constructor(ViewportStructure, name) {
     // Create a new UUID for this Stage
-    this.id = OHIF.utils.guid();
+    this.id = guid();
 
     // Assign the name and ViewportStructure provided
     this.name = name;
@@ -60,7 +60,7 @@ export default class Stage {
   fromObject(input) {
     // Check if the input already has an ID
     // If so, keep it. It not, create a new UUID
-    this.id = input.id || OHIF.utils.guid();
+    this.id = input.id || guid();
 
     // Assign the input name to the Stage
     this.name = input.name;

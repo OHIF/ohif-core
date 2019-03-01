@@ -1,7 +1,8 @@
-import { OHIF } from 'ohif-core';
 import { ProtocolMatchingRule } from './rules';
 import { removeFromArray } from '../lib/removeFromArray';
 import Stage from './Stage';
+import guid from '../../utils/guid';
+import user from '../../user';
 
 /**
  * This class represents a Hanging Protocol at the highest level
@@ -17,7 +18,7 @@ export default class Protocol {
    */
   constructor(name) {
     // Create a new UUID for this Protocol
-    this.id = OHIF.utils.guid();
+    this.id = guid();
 
     // Store a value which determines whether or not a Protocol is locked
     // This is probably temporary, since we will eventually have role / user
@@ -38,9 +39,9 @@ export default class Protocol {
 
     // If we are logged in while creating this Protocol,
     // store this information as well
-    if (OHIF.user && OHIF.user.userLoggedIn && OHIF.user.userLoggedIn()) {
-      this.createdBy = OHIF.user.getUserId();
-      this.modifiedBy = OHIF.user.getUserId();
+    if (user.userLoggedIn && user.userLoggedIn()) {
+      this.createdBy = user.getUserId();
+      this.modifiedBy = user.getUserId();
     }
 
     // Create two empty Sets specifying which roles
@@ -107,8 +108,8 @@ export default class Protocol {
   protocolWasModified() {
     // If we are logged in while modifying this Protocol,
     // store this information as well
-    if (OHIF.user && OHIF.user.userLoggedIn && OHIF.user.userLoggedIn()) {
-      this.modifiedBy = OHIF.user.getUserId();
+    if (user.userLoggedIn && user.userLoggedIn()) {
+      this.modifiedBy = user.getUserId();
     }
 
     // Protocol has been modified, so mark priors information
@@ -132,7 +133,7 @@ export default class Protocol {
   fromObject(input) {
     // Check if the input already has an ID
     // If so, keep it. It not, create a new UUID
-    this.id = input.id || OHIF.utils.guid();
+    this.id = input.id || guid();
 
     // Assign the input name to the Protocol
     this.name = input.name;

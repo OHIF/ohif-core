@@ -15,10 +15,10 @@ import user from './user.js';
 import object from './object.js';
 import DICOMWeb from './DICOMWeb';
 import log from './log.js';
-import hangingProtocols from './hanging-protocols/';
 import plugins from './plugins.js';
 import extensions from './classes/extensions/';
 import measurements from './measurements';
+import hangingProtocols from './hanging-protocols';
 
 const hotkeysUtil = new classes.HotkeysUtil();
 
@@ -42,7 +42,8 @@ const OHIF = {
   plugins,
   extensions,
   viewer: {},
-  measurements
+  measurements,
+  hangingProtocols
 };
 
 export {
@@ -63,7 +64,8 @@ export {
   DICOMWeb,
   plugins,
   extensions,
-  measurements
+  measurements,
+  hangingProtocols
 };
 
 export { OHIF };

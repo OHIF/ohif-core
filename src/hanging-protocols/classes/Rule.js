@@ -1,5 +1,5 @@
-import { OHIF } from 'ohif-core';
 import { comparators } from '../lib/comparators';
+import guid from '../../utils/guid';
 
 const EQUALS_REGEXP = /^equals$/;
 
@@ -29,7 +29,7 @@ export default class Rule {
    */
   constructor(attribute, constraint, required, weight) {
     // Create a new UUID for this Rule
-    this.id = OHIF.utils.guid();
+    this.id = guid();
 
     // Set the Rule's weight (defaults to 1)
     this.weight = weight || 1;
@@ -68,7 +68,7 @@ export default class Rule {
   fromObject(input) {
     // Check if the input already has an ID
     // If so, keep it. It not, create a new UUID
-    this.id = input.id || OHIF.utils.guid();
+    this.id = input.id || guid();
 
     // Assign the specified input data to the Rule
     this.required = input.required;
