@@ -15,8 +15,11 @@ import { TypeSafeCollection } from './TypeSafeCollection';
 import OHIFError from './OHIFError.js';
 import { StudyMetadataSource } from './StudyMetadataSource';
 import HotkeysUtil from './HotkeysUtil.js';
+import { OHIFStudyMetadataSource } from './OHIFStudyMetadataSource';
+import { StudySummary } from './metadata/StudySummary';
 
 export {
+  OHIFStudyMetadataSource,
   MetadataProvider,
   CommandsManager,
   HotkeysContext,
@@ -29,7 +32,7 @@ export {
   StudyMetadata,
   SeriesMetadata,
   InstanceMetadata,
-  //StudySummary,
+  StudySummary,
   TypeSafeCollection,
   OHIFError,
   StudyMetadataSource,
@@ -37,6 +40,7 @@ export {
 };
 
 const classes = {
+  OHIFStudyMetadataSource,
   MetadataProvider,
   CommandsManager,
   HotkeysContext,
@@ -50,7 +54,7 @@ const classes = {
   StudyMetadata,
   SeriesMetadata,
   InstanceMetadata,
-  //StudySummary,
+  StudySummary,
   TypeSafeCollection,
   OHIFError,
   StudyMetadataSource

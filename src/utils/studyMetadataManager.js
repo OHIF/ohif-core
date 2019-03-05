@@ -1,4 +1,4 @@
-import { TypeSafeCollection } from '../classes';
+import { TypeSafeCollection } from '../classes/TypeSafeCollection';
 
 const studyMetadataList = new TypeSafeCollection();
 
@@ -25,6 +25,7 @@ function purge() {
 export default {
   add,
   get,
+  all,
   remove,
   purge
 };

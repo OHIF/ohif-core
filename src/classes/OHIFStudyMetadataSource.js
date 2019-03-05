@@ -1,13 +1,16 @@
-import OHIFError from '../OHIFError';
+import OHIFError from './OHIFError';
 import { retrieveStudyMetadata } from '../studies/retrieveStudyMetadata.js';
-import { StudyMetadata } from './StudyMetadata';
-import { StudySummary } from './StudySummary';
-import { StudyMetadataSource } from '../StudyMetadataSource.js';
+import { StudyMetadata } from './metadata/StudyMetadata';
+import { StudySummary } from './metadata/StudySummary';
+import { StudyMetadataSource } from './StudyMetadataSource.js';
 import { sortingManager } from '../utils/sortingManager.js';
+import { updateMetaDataManager } from '../utils/updateMetaDataManager';
+import studyMetadataManager from '../utils/studyMetadataManager';
 
 export class OHIFStudyMetadataSource extends StudyMetadataSource {
   /**
    * Get study metadata for a study with given study InstanceUID
+   * @param server
    * @param  {String} studyInstanceUID Study InstanceUID
    * @return {Promise} A Promise object
    */
@@ -71,10 +74,9 @@ export class OHIFStudyMetadataSource extends StudyMetadataSource {
     studyInfo.selected = true;
     studyInfo.displaySets = studyMetadata.getDisplaySets();
 
-    // Insert new study info object in Studies TypeSafeCollection
-    OHIF.viewer.Studies.insert(studyInfo);
+    // Updates WADO-RS metaDataManager
+    updateMetaDataManager(studyInfo);
 
-    // Insert new study metadata in StudyMetadataList TypeSafeCollection
-    OHIF.viewer.StudyMetadataList.insert(studyMetadata);
+    studyMetadataManager.add(studyMetadata);
   }
 }

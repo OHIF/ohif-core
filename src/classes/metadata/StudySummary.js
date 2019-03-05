@@ -1,6 +1,5 @@
 import { Metadata } from './Metadata';
-import OHIFError from '../OHIFError';
-import { DICOMTagDescriptions } from '../../DICOMTagDescriptions';
+import { DICOMTagDescriptions } from '../../lib/DICOMTagDescriptions';
 
 /**
  * Constants
