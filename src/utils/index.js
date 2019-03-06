@@ -8,6 +8,7 @@ import StackManager from './StackManager.js';
 import createStacks from './createStacks.js';
 import createDisplaySets from './createDisplaySets.js';
 import studyMetadataManager from './studyMetadataManager';
+import { DICOMTagDescriptions } from './DICOMTagDescriptions';
 
 const utils = {
   guid,
@@ -19,7 +20,8 @@ const utils = {
   StackManager,
   createStacks,
   createDisplaySets,
-  studyMetadataManager
+  studyMetadataManager,
+  DICOMTagDescriptions
 };
 
 export default utils;

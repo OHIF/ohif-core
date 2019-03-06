@@ -22,12 +22,16 @@ export default class ProtocolStore {
       result.forEach((protocol, index) => {
         // Check if protocol is an instance of Protocol
         if (!(protocol instanceof Protocol)) {
-          result[index] = new Protocol().fromObject(protocol);
+          const protocolInstance = new Protocol();
+          protocolInstance.fromObject(protocol);
+          result[index] = protocolInstance;
         }
       });
     } else if (result !== void 0 && !(result instanceof Protocol)) {
       // Check if result exists and is not an instance of Protocol
-      result = new Protocol().fromObject(result);
+      const protocolInstance = new Protocol();
+      protocolInstance.fromObject(result);
+      result = protocolInstance;
     }
 
     return result;

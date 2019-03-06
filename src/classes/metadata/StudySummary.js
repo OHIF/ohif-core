@@ -1,5 +1,5 @@
 import { Metadata } from './Metadata';
-import { DICOMTagDescriptions } from '../../lib/DICOMTagDescriptions';
+import { DICOMTagDescriptions } from '../../utils/DICOMTagDescriptions';
 
 /**
  * Constants

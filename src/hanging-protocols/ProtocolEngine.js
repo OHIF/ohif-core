@@ -19,8 +19,8 @@ const { StudyMetadata, InstanceMetadata, StudySummary } = metadata;
 const ABSTRACT_PRIOR_VALUE = 'abstractPriorValue';
 
 export default class ProtocolEngine {
-  matchedProtocols = new Set();
-  matchedProtocolScores = new Map();
+  matchedProtocols = new Map();
+  matchedProtocolScores = {};
 
   /**
    * Constructor
@@ -157,7 +157,7 @@ export default class ProtocolEngine {
 
   _clearMatchedProtocols() {
     this.matchedProtocols.clear();
-    this.matchedProtocolScores.clear();
+    this.matchedProtocolScores = {};
   }
   /**
    * Populates the MatchedProtocols Collection by running the matching procedure
@@ -180,12 +180,12 @@ export default class ProtocolEngine {
         }
 
         // If it is not already in the MatchedProtocols Collection, insert it with its score
-        if (!this.matchedProtocols.has(protocol)) {
+        if (!this.matchedProtocols.has(protocol.id)) {
           log.trace(
             'ProtocolEngine::updateProtocolMatches inserting protocol match',
             matchedDetail
           );
-          this.matchedProtocols.add(protocol);
+          this.matchedProtocols.set(protocol.id, protocol);
           this.matchedProtocolScores[protocol.id] = matchedDetail.score;
         }
       });
@@ -197,13 +197,13 @@ export default class ProtocolEngine {
   }
 
   _getHighestScoringProtocol() {
-    if (!this.matchedProtocolScores.size) {
+    if (!Object.keys(this.matchedProtocolScores).length) {
       return this.protocolStore.getProtocol('defaultProtocol');
     }
     const highestScoringProtocolId = this._largestKeyByValue(
       this.matchedProtocolScores
     );
-    return this.matchedProtocols[highestScoringProtocolId];
+    return this.matchedProtocols.get(highestScoringProtocolId);
   }
 
   /**

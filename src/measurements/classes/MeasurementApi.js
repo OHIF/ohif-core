@@ -346,6 +346,37 @@ export default class MeasurementApi {
     });
   }
 
+  getFirstMeasurement(timepointId) {
+    // Get child tools from all included tool groups
+    let childTools = [];
+    configuration.measurementTools.forEach(toolGroup => {
+      // Skip the tool groups excluded from case progress
+      if (!MeasurementApi.isToolIncluded(toolGroup)) {
+        return false;
+      }
+
+      childTools = childTools.concat(toolGroup.childTools);
+    });
+
+    // Get all included child tools
+    const includedChildTools = childTools.filter(tool =>
+      MeasurementApi.isToolIncluded(tool)
+    );
+
+    // Get the first measurement for the given timepoint
+    let measurement = undefined;
+    includedChildTools.every(tool => {
+      measurement = this.tools[tool.id].find(
+        t => t.timepointId === timepointId && t.measurementNumber === 1
+      );
+
+      return !measurement;
+    });
+
+    // Return the found measurement object or undefined if not found
+    return measurement;
+  }
+
   lesionExistsAtTimepoints(lesionNamingNumber, toolGroupId, timepointIds) {
     // Retrieve all the data for the given tool group (e.g. 'targets')
     const measurementsAtTimepoint = this.fetch(toolGroupId, tool =>

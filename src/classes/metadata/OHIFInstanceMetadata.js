@@ -1,5 +1,5 @@
 import { InstanceMetadata } from './InstanceMetadata';
-import { DICOMTagDescriptions } from '../../lib/DICOMTagDescriptions.js';
+import { DICOMTagDescriptions } from '../../utils/DICOMTagDescriptions.js';
 import getImageId from '../../utils/getImageId.js';
 
 export class OHIFInstanceMetadata extends InstanceMetadata {
