@@ -32,11 +32,11 @@ export default class ProtocolStrategy {
   getProtocol(protocolId) {
     // Return the hanging protocol by protocolId if defined
     if (protocolId) {
-      return this.hangingProtocols[protocolId];
+      return this.hangingProtocols.get(protocolId);
     }
 
     // Otherwise, return all protocols
-    return Array.from(this.hangingProtocols);
+    return Array.from(this.hangingProtocols.values());
   }
 
   /**

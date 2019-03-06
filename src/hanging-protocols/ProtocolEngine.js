@@ -28,8 +28,15 @@ export default class ProtocolEngine {
    * @param  {Array} studies Array of study metadata
    * @param  {Map} priorStudies Map of prior studies
    * @param  {Object} studyMetadataSource Instance of StudyMetadataSource (ohif-viewerbase) Object to get study metadata
+   * @param  {Object} options
    */
-  constructor(protocolStore, studies, priorStudies, studyMetadataSource) {
+  constructor(
+    protocolStore,
+    studies,
+    priorStudies,
+    studyMetadataSource,
+    options = {}
+  ) {
     // -----------
     // Type Validations
     if (!(studyMetadataSource instanceof StudyMetadataSource)) {
@@ -53,6 +60,7 @@ export default class ProtocolEngine {
     this.studies = studies;
     this.priorStudies = priorStudies instanceof Map ? priorStudies : new Map();
     this.studyMetadataSource = studyMetadataSource;
+    this.options = options;
 
     // Put protocol engine in a known state
     this.reset();
@@ -184,8 +192,15 @@ export default class ProtocolEngine {
     });
   }
 
+  _largestKeyByValue(obj) {
+    return Object.keys(obj).reduce((a, b) => (obj[a] > obj[b] ? a : b));
+  }
+
   _getHighestScoringProtocol() {
-    const highestScoringProtocolId = ProtocolEngine._largestKeyByValue(
+    if (!this.matchedProtocolScores.size) {
+      return this.protocolStore.getProtocol('defaultProtocol');
+    }
+    const highestScoringProtocolId = this._largestKeyByValue(
       this.matchedProtocolScores
     );
     return this.matchedProtocols[highestScoringProtocolId];
@@ -487,7 +502,37 @@ export default class ProtocolEngine {
   }
 
   /**
-   * Rerenders viewports that are part of the current ProtocolEngine's LayoutManager
+   * Sets the current layout
+   *
+   * @param rows
+   * @param columns
+   */
+  setLayout(rows, columns) {
+    if (rows < 1 && columns < 1) {
+      log.error(`Invalid layout ${rows} x ${columns}`);
+      return;
+    }
+
+    if (typeof this.options.setLayout !== 'function') {
+      log.error('Hanging Protocol Engine setLayout callback is not defined');
+      return;
+    }
+
+    let viewports = [];
+    const numViewports = rows * columns;
+
+    for (let i = 0; i < numViewports; i++) {
+      viewports.push({
+        height: `${100 / rows}%`,
+        width: `${100 / columns}%`
+      });
+    }
+
+    this.options.setLayout({ viewports });
+  }
+
+  /**
+   * Rerenders viewports that are part of the current layout manager
    * using the matching rules internal to each viewport.
    *
    * If this function is provided the index of a viewport, only the specified viewport
@@ -634,18 +679,28 @@ export default class ProtocolEngine {
       viewportData.push(currentViewportData);
     });
 
-    this.LayoutManager.layoutTemplateName = layoutTemplateName;
-    this.LayoutManager.layoutProps = layoutProps;
-    this.LayoutManager.viewportData = viewportData;
+    this.setLayout(layoutProps.rows, layoutProps.columns);
 
+    if (typeof this.options.setViewportSpecificData !== 'function') {
+      log.error(
+        'Hanging Protocol Engine setViewportSpecificData callback is not defined'
+      );
+      return;
+    }
+
+    // If viewportIndex is defined, then update only that viewport
     if (viewportIndex !== undefined && viewportData[viewportIndex]) {
-      this.LayoutManager.rerenderViewportWithNewDisplaySet(
+      this.options.setViewportSpecificData(
         viewportIndex,
         viewportData[viewportIndex]
       );
-    } else {
-      this.LayoutManager.updateViewports();
+      return;
     }
+
+    // Update all viewports
+    viewportData.forEach((viewportDataItem, viewportDataIndex) => {
+      this.options.setViewportSpecificData(viewportDataIndex, viewportDataItem);
+    });
   }
 
   /**
