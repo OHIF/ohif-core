@@ -211,41 +211,17 @@ export default class MeasurementApi {
           log.info('Measurement data retrieval');
           log.info(measurementData);
 
-          const toolsGroupsMap = MeasurementApi.getToolsGroupsMap();
-          const measurementsGroups = {};
-
           Object.keys(measurementData).forEach(measurementTypeId => {
             const measurements = measurementData[measurementTypeId];
 
             measurements.forEach(measurement => {
               const { toolType } = measurement;
-              if (toolType && this.tools[toolType]) {
-                measurement._id = measurement._id || guid();
-                const toolGroup = toolsGroupsMap[toolType];
-                if (!measurementsGroups[toolGroup]) {
-                  measurementsGroups[toolGroup] = [];
-                }
 
-                measurementsGroups[toolGroup].push(measurement);
-              }
+              this.addMeasurement(toolType, measurement);
             });
-          });
-
-          Object.keys(measurementsGroups).forEach(groupKey => {
-            const group = measurementsGroups[groupKey];
-            group.sort((a, b) => {
-              if (a.measurementNumber > b.measurementNumber) {
-                return 1;
-              } else if (a.measurementNumber < b.measurementNumber) {
-                return -1;
-              }
-
-              return 0;
-            });
-
-            group.forEach(m => this.tools[m.toolType].push(m));
           });
         }
+
         resolve();
 
         // Synchronize the new tool data
@@ -655,9 +631,27 @@ export default class MeasurementApi {
 
   addMeasurement(toolType, measurement) {
     const toolGroup = this.toolsGroupsMap[toolType];
-
     const groupCollection = this.toolGroups[toolGroup];
     const collection = this.tools[toolType];
+
+    // Get the related measurement by the measurement number and use its location if defined
+    const relatedMeasurement = collection.find(
+      t =>
+        t.lesionNamingNumber === measurement.lesionNamingNumber &&
+        t.toolType === measurement.toolType
+    );
+
+    // Use the related measurement location if found and defined
+    if (relatedMeasurement && relatedMeasurement.location) {
+      measurement.location = relatedMeasurement.location;
+    }
+
+    // Use the related measurement description if found and defined
+    if (relatedMeasurement && relatedMeasurement.description) {
+      measurement.description = relatedMeasurement.description;
+    }
+
+    measurement._id = guid();
 
     // Get the timepoint
     let timepoint;
@@ -665,7 +659,9 @@ export default class MeasurementApi {
       timepoint = this.timepointApi.study(measurement.studyInstanceUid)[0];
     } else {
       const { timepointId } = measurement;
-      timepoint = this.timepointApi.timepoints.find({ timepointId }).fetch()[0];
+      timepoint = this.timepointApi.timepoints.find(
+        t => t.timepointId === timepointId
+      );
     }
 
     // Preventing errors thrown when non-associated (standalone) study is opened...
