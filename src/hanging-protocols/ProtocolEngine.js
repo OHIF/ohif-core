@@ -698,8 +698,11 @@ export default class ProtocolEngine {
     }
 
     // Update all viewports
-    viewportData.forEach((viewportDataItem, viewportDataIndex) => {
-      this.options.setViewportSpecificData(viewportDataIndex, viewportDataItem);
+    viewportData.forEach(viewportSpecificData => {
+      this.options.setViewportSpecificData(
+        viewportSpecificData.viewportIndex,
+        viewportSpecificData
+      );
     });
   }
 
