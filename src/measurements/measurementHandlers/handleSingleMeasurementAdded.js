@@ -30,9 +30,7 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
   });
 
   const addedMeasurement = measurementApi.addMeasurement(toolType, measurement);
-
-  measurementData._id = addedMeasurement._id;
-  measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
+  Object.assign(measurementData, addedMeasurement);
 
   const measurementLabel = getLabel(measurementData);
   if (measurementLabel) {

@@ -76,9 +76,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
       tool.parentTool,
       measurement
     );
-
-    measurementData._id = addedMeasurement._id;
-    measurementData.lesionNamingNumber = addedMeasurement.lesionNamingNumber;
+    Object.assign(measurementData, addedMeasurement);
   }
 
   const measurementLabel = getLabel(measurementData);
