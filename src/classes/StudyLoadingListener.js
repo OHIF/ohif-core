@@ -1,3 +1,4 @@
+import cornerstone from 'cornerstone-core';
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import {
   clearStudyLoadingProgress,

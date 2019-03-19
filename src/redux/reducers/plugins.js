@@ -6,7 +6,7 @@ const defaultState = {
 
 const plugins = (state = defaultState, action) => {
   switch (action.type) {
-    case 'ADD_PLUGIN':
+    case 'ADD_PLUGIN': {
       const { availablePlugins } = state;
       const alreadyExists = availablePlugins.find(plugin => {
         return (
@@ -27,8 +27,10 @@ const plugins = (state = defaultState, action) => {
       OHIFPlugins.availablePlugins.push(action.plugin);
 
       return Object.assign({}, state, { availablePlugins });
-    default:
+    }
+    default: {
       return state;
+    }
   }
 };
 

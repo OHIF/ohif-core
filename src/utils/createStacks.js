@@ -13,7 +13,6 @@ const isMultiFrame = instance => {
 
 const makeDisplaySet = (series, instances) => {
   const instance = instances[0];
-
   const imageSet = new ImageSet(instances);
   const seriesData = series.getData();
 

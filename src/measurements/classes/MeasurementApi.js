@@ -310,7 +310,13 @@ export default class MeasurementApi {
       );
     }
 
-    const items = this.toolGroups[toolGroupId].filter(filter);
+    let items;
+    if (filter) {
+      items = this.toolGroups[toolGroupId].filter(filter);
+    } else {
+      items = this.toolGroups[toolGroupId];
+    }
+
     return items.map(item => {
       if (item.toolId) {
         return this.tools[item.toolId].find(

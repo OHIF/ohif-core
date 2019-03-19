@@ -7,10 +7,12 @@ import getImageIdForImagePath from './lib/getImageIdForImagePath';
 import ltTools from './ltTools';
 import * as tools from './tools';
 import './configuration';
+import { ConformanceCriteria } from './conformance';
 
 const measurements = {
   TimepointApi,
   MeasurementApi,
+  ConformanceCriteria,
   MeasurementHandlers,
   ltTools,
   tools,

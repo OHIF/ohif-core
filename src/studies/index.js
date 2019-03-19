@@ -1,5 +1,5 @@
 import { QIDO, WADO } from './services/';
-import loadStudy from './loadStudy.js';
+import { loadStudy } from './loadStudy.js';
 import {
   retrieveStudyMetadata,
   deleteStudyMetadataPromise
@@ -7,8 +7,8 @@ import {
 import retrieveStudiesMetadata from './retrieveStudiesMetadata.js';
 import getStudyBoxData from './getStudyBoxData';
 import searchStudies from './searchStudies';
+import sortStudy from './sortStudy';
 
-// Create a studies loaded state dictionary to enable reactivity. Values: loading|loaded|failed
 const studies = {
   services: {
     QIDO,
@@ -19,7 +19,9 @@ const studies = {
   deleteStudyMetadataPromise,
   retrieveStudiesMetadata,
   getStudyBoxData,
-  searchStudies
+  searchStudies,
+  loadStudy,
+  sortStudy
 };
 
 export default studies;

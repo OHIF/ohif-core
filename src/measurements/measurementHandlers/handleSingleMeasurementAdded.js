@@ -1,3 +1,4 @@
+import cornerstone from 'cornerstone-core';
 import { MeasurementApi } from '../classes';
 import log from '../../log';
 import user from '../../user';

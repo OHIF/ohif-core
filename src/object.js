@@ -21,7 +21,7 @@ function getNestedObject(shallowObject) {
   }
 
   return nestedObject;
-};
+}
 
 // Transforms a nested object into a shallowObject merging its keys with "." character
 function getShallowObject(nestedObject) {
@@ -45,7 +45,7 @@ function getShallowObject(nestedObject) {
 
   putValues('', nestedObject, shallowObject);
   return shallowObject;
-};
+}
 
 const object = {
   getNestedObject,

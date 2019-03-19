@@ -735,9 +735,6 @@ export default class ProtocolEngine {
     if (updateViewports) {
       this.updateViewports();
     }
-
-    //Session.set('HangingProtocolName', this.protocol.name);
-    //Session.set('HangingProtocolStage', this.stage);
   }
 
   /**
@@ -778,9 +775,6 @@ export default class ProtocolEngine {
 
     // Log the new stage
     log.trace(`ProtocolEngine::setCurrentProtocolStage stage = ${this.stage}`);
-
-    // Set stage Session variable for reactivity
-    //Session.set('HangingProtocolStage', this.stage);
 
     // Since stage has changed, we need to update the viewports
     // and redo matchings

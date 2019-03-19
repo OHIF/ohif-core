@@ -71,6 +71,12 @@ export const setMeasurements = state => ({
   state
 });
 
+export const setStudyData = (studyInstanceUid, data) => ({
+  type: 'SET_STUDY_DATA',
+  studyInstanceUid,
+  data
+});
+
 const actions = {
   setToolActive,
   setViewportActive,
@@ -85,7 +91,8 @@ const actions = {
   setAvailableButtons,
   setExtensionData,
   setTimepoints,
-  setMeasurements
+  setMeasurements,
+  setStudyData
 };
 
 export default actions;

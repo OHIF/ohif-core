@@ -4,7 +4,7 @@ export default function sortBy() {
     n_fields = fields.length;
 
   return function(A, B) {
-    var a, b, field, key, primer, reverse, result, i;
+    var a, b, field, key, reverse, result, i;
 
     for (i = 0; i < n_fields; i++) {
       result = 0;

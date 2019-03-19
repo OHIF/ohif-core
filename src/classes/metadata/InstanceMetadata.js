@@ -7,7 +7,6 @@ import OHIFError from '../OHIFError.js';
  */
 
 const UNDEFINED = 'undefined';
-const NUMBER = 'number';
 const STRING = 'string';
 const STUDY_INSTANCE_UID = 'x0020000d';
 const SERIES_INSTANCE_UID = 'x0020000e';

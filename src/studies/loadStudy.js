@@ -1,9 +1,10 @@
 import { retrieveStudyMetadata } from './retrieveStudyMetadata';
 import { StudyMetadata } from '../classes/metadata/StudyMetadata';
+import { OHIFStudyMetadata } from '../classes/metadata/OHIFStudyMetadata';
+import { sortingManager } from '../utils/sortingManager.js';
 import { updateMetaDataManager } from '../utils/updateMetaDataManager';
-
-// TODO: Use callbacks or redux?
-const loadingDict = {};
+import studyMetadataManager from '../utils/studyMetadataManager';
+import sortStudy from './sortStudy';
 
 /**
  * Load the study metadata and store its information locally
@@ -11,60 +12,32 @@ const loadingDict = {};
  * @param {String} studyInstanceUid The UID of the Study to be loaded
  * @returns {Promise} that will be resolved with the study metadata or rejected with an error
  */
-export default function loadStudy(server, studyInstanceUid) {
-  return new Promise((resolve, reject) => {
-    let currentLoadingState = loadingDict[studyInstanceUid] || '';
+async function loadStudy(server, studyInstanceUid) {
+  const study = await retrieveStudyMetadata(server, studyInstanceUid);
 
-    // Set the loading state as the study is not yet loaded
-    if (currentLoadingState !== 'loading') {
-      loadingDict[studyInstanceUid] = 'loading';
-    }
+  // Once the data was retrieved, the series are sorted by series and instance number
+  sortStudy(study);
 
-    /*const studyLoaded = OHIF.viewer.Studies.findBy({
-      studyInstanceUid: studyInstanceUid
-    });
-    if (studyLoaded) {
-      loadingDict[studyInstanceUid] = 'loaded';
-      resolve(studyLoaded);
-      return;
-    }*/
+  // Transform the study into a StudyMetadata object
+  const studyMetadata = new OHIFStudyMetadata(study, study.studyInstanceUid);
 
-    return retrieveStudyMetadata(server, studyInstanceUid)
-      .then(study => {
-        // Once the data was retrieved, the series are sorted by series and instance number
-        OHIF.viewerbase.sortStudy(study);
+  // Add the display sets to the study
+  const displaySets = sortingManager.getDisplaySets(studyMetadata);
 
-        // Updates WADO-RS metaDataManager
-        updateMetaDataManager(study);
+  studyMetadata.setDisplaySets(displaySets);
 
-        // Transform the study in a StudyMetadata object
-        const studyMetadata = new StudyMetadata(study);
+  // Updates WADO-RS metaDataManager
+  updateMetaDataManager(study);
 
-        // Add the display sets to the study
-        study.displaySets = OHIF.viewerbase.sortingManager.getDisplaySets(
-          studyMetadata
-        );
-        study.displaySets.forEach(displaySet => {
-          OHIF.viewerbase.stackManager.makeAndAddStack(study, displaySet);
-          studyMetadata.addDisplaySet(displaySet);
-        });
+  studyMetadataManager.add(studyMetadata);
 
-        // Persist study data into OHIF.viewer
-        OHIF.viewer.Studies.insert(study);
-        OHIF.viewer.StudyMetadataList.insert(study);
+  // Add the study to the loading listener to allow loading progress handling
+  //const studyLoadingListener = OHIF.viewerbase.StudyLoadingListener.getInstance();
+  //studyLoadingListener.addStudy(study);
 
-        // Add the study to the loading listener to allow loading progress handling
-        const studyLoadingListener = OHIF.viewerbase.StudyLoadingListener.getInstance();
-        studyLoadingListener.addStudy(study);
-
-        // Add the studyInstanceUid to the loaded state dictionary
-        loadingDict[studyInstanceUid] = 'loaded';
-
-        resolve(study);
-      })
-      .catch((...args) => {
-        loadingDict[studyInstanceUid] = 'failed';
-        reject(args);
-      });
-  });
+  return studyMetadata;
 }
+
+export default loadStudy;
+
+export { loadStudy };
