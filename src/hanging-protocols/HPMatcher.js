@@ -41,23 +41,14 @@ const match = (metadataInstance, rules) => {
 
   rules.forEach(rule => {
     const attribute = rule.attribute;
-    let customAttributeExists = metadataInstance.customAttributeExists(
-      attribute
-    );
 
-    // If the metadataInstance we are testing (e.g. study, series, or instance MetadataInstance) do
-    // not contain the attribute specified in the rule, check whether or not they have been
-    // defined in the CustomAttributeRetrievalCallbacks Object.
-    if (
-      !customAttributeExists &&
-      CustomAttributeRetrievalCallbacks.hasOwnProperty(attribute)
-    ) {
+    // Do not use the custom attribute from the metadataInstance since it is subject to change
+    if (CustomAttributeRetrievalCallbacks.hasOwnProperty(attribute)) {
       const customAttribute = CustomAttributeRetrievalCallbacks[attribute];
       metadataInstance.setCustomAttribute(
         attribute,
         customAttribute.callback(metadataInstance)
       );
-      customAttributeExists = true;
     }
 
     // Format the constraint as required by Validate.js
@@ -67,7 +58,7 @@ const match = (metadataInstance, rules) => {
 
     // Create a single attribute object to be validated, since metadataInstance is an
     // instance of Metadata (StudyMetadata, SeriesMetadata or InstanceMetadata)
-    const attributeValue = customAttributeExists
+    const attributeValue = metadataInstance.customAttributeExists(attribute)
       ? metadataInstance.getCustomAttribute(attribute)
       : metadataInstance.getTagValue(attribute);
     const attributeMap = {
