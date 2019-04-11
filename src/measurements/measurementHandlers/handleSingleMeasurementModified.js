@@ -1,3 +1,4 @@
+import cornerstone from 'cornerstone-core';
 import { MeasurementApi } from '../classes';
 import log from '../../log';
 
@@ -21,6 +22,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   if (!measurement) return;
 
   measurement = Object.assign(measurement, measurementData);
+  measurement.viewport = cornerstone.getViewport(eventData.element);
 
   measurementApi.updateMeasurement(toolType, measurement);
 

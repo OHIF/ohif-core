@@ -1,3 +1,4 @@
+import cornerstone from 'cornerstone-core';
 import { MeasurementApi } from '../classes';
 import log from '../../log';
 
@@ -23,6 +24,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   if (!childMeasurement) return;
 
   childMeasurement = Object.assign(childMeasurement, measurementData);
+  childMeasurement.viewport = cornerstone.getViewport(eventData.element);
 
   // Update the parent measurement
   measurement[tool.attribute] = childMeasurement;
