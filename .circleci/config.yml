@@ -39,7 +39,7 @@ jobs:
 
       # Build & Test
       - run: yarn build
-      - run: yarn test
+      # - run: yarn test
 
       # Persist :+1:
       - persist_to_workspace:
