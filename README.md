@@ -1,42 +1,20 @@
-# react-viewerbase
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<div align="center">
+  <h1>ohif-core</h1>
 
-> A set of React components for Medical Imaging Viewers.
+  <p><strong>ohif-cre</strong> is a collection of useful functions and classes for building web-based medical imaging applications. This library helps power OHIF's <a href="https://github.com/OHIF/Viewers">zero-footprint DICOM viewer</a>.</p>
+</div>
 
-*Status: Under development*
+<div align="center">
+  <a href="https://react.ohif.org/"><strong>Read The Docs</strong></a> |
+  <a href="https://react.ohif.org/contributing">Edit the docs</a>
+</div>
 
-[![NPM](https://img.shields.io/npm/v/react-viewerbase.svg)](https://www.npmjs.com/package/react-viewerbase)
+<hr />
 
-## Install
-
-```bash
-npm install --save react-viewerbase
-```
-
-## Usage
-
-```jsx
-import React, { Component } from 'react'
-
-import CornerstoneViewport from 'react-viewerbase'
-
-class Example extends Component {
-  render () {
-    return (
-      <CornerstoneViewport />
-    )
-  }
-}
-```
-
-## To run locally
-1. Clone this repository
-1. `cd react-viewerbase`
-1. `yarn i`
-1. `yarn start`
-1. in new termainal
-1. `cd example`
-1. `yarn i`
-1. `yarn start`
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 
 ## License
 
