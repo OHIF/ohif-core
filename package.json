@@ -13,6 +13,7 @@
     "npm": ">=5"
   },
   "scripts": {
+    "cm": "npx git-cz",
     "build": "rollup -c",
     "start": "rollup -c -w",
     "lint": "eslint -c .eslintrc --fix src && prettier --single-quote --write src/**/*.{js,jsx,json,css}",
@@ -44,7 +45,9 @@
     "@babel/preset-react": "^7.0.0",
     "@svgr/rollup": "^4.1.0",
     "babel-eslint": "10.0.1",
+    "commitizen": "3.1.x",
     "cross-env": "^5.2.0",
+    "cz-conventional-changelog": "2.1.x",
     "eslint": "5.13.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^8.0.0",
@@ -60,6 +63,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-url": "^2.1.0",
+    "semantic-release": "15.13.x",
     "stylelint": "^9.9.0",
     "stylelint-config-recommended": "^2.1.0",
     "stylus": "^0.54.5"
@@ -83,5 +87,10 @@
   ],
   "files": [
     "dist"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
