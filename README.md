@@ -13,9 +13,19 @@
 
 <hr />
 
+[![CircleCI][circleci-image]][circleci-url]
+
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 
 ## License
 
 MIT © [OHIF](https://github.com/OHIF)
+
+<!--
+Links:
+-->
+
+<!-- prettier-ignore-start -->
+[circleci-image]: https://circleci.com/gh/OHIF/ohif-core.svg?style=svg
+[circleci-url]: https://circleci.com/gh/OHIF/ohif-core
