@@ -17,7 +17,7 @@
     "build": "rollup -c",
     "start": "rollup -c -w",
     "test": "jest",
-    "test:ci": "jest --ci --collectCoverage --testResultsProcessor='jest-junit' && codecov",
+    "test:ci": "jest --ci --runInBand --collectCoverage --testResultsProcessor='jest-junit' && codecov",
     "lint": "eslint -c .eslintrc --fix src && prettier --single-quote --write src/**/*.{js,jsx,json,css}",
     "prepublishOnly": "npm run build"
   },
