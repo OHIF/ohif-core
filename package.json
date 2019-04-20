@@ -17,7 +17,7 @@
     "build": "rollup -c",
     "start": "rollup -c -w",
     "test": "jest",
-    "test:ci": "jest --collectCoverage && codecov",
+    "test:ci": "jest --ci --runInBand --collectCoverage --reporters=default --reporters=jest-junit && codecov",
     "lint": "eslint -c .eslintrc --fix src && prettier --single-quote --write src/**/*.{js,jsx,json,css}",
     "prepublishOnly": "npm run build"
   },
@@ -58,6 +58,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "husky": "^1.2.1",
     "jest": "^24.7.1",
+    "jest-junit": "^6.3.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
     "rollup": "^1.1.2",

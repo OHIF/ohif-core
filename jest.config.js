@@ -4,5 +4,10 @@ module.exports = {
   testMatch: ["<rootDir>/src/**/*.test.js"],
   //
   collectCoverage: false,
-  collectCoverageFrom: ["**/*.{js,jsx}", "!**/node_modules/**"]
+  collectCoverageFrom: [
+    "**/*.{js,jsx}",
+    "!**/node_modules/**",
+    "!<rootDir>/dist/**"
+  ],
+  reporters: ["default", "jest-junit"]
 };
