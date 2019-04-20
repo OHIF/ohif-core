@@ -13,6 +13,7 @@
 <hr />
 
 [![CircleCI][circleci-image]][circleci-url]
+[![codecov][codecov-image]][codecov-url]
 [![All Contributors][all-contributors-image]][contributing-url]
 [![code style: prettier][prettier-image]][prettier-url]
 [![semantic-release][semantic-image]][semantic-url]
@@ -37,6 +38,8 @@ Links:
 [contributing-url]: https://github.com/OHIF/ohif-core/blob/master/CONTRIBUTING.md
 [circleci-image]: https://circleci.com/gh/OHIF/ohif-core.svg?style=svg
 [circleci-url]: https://circleci.com/gh/OHIF/ohif-core
+[codecov-image]: https://codecov.io/gh/OHIF/ohif-core/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/OHIF/ohif-core
 [prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
 [prettier-url]: https://github.com/prettier/prettier
 [semantic-image]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
