@@ -8,5 +8,6 @@ module.exports = {
     "**/*.{js,jsx}",
     "!**/node_modules/**",
     "!<rootDir>/dist/**"
-  ]
+  ],
+  reporters: ["default", "jest-junit"]
 };
