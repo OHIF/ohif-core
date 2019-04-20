@@ -39,7 +39,17 @@ jobs:
 
       # Build & Test
       - run: yarn build
-      # - run: yarn test
+      - run: yarn test:ci
+
+      # Store result
+      - store_artifacts:
+          path: ./coverage/
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_test_results:
+          path: ./coverage/
 
       # Persist :+1:
       - persist_to_workspace:
