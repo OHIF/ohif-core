@@ -16,6 +16,7 @@
     "cm": "npx git-cz",
     "build": "rollup -c",
     "start": "rollup -c -w",
+    "test": "jest",
     "lint": "eslint -c .eslintrc --fix src && prettier --single-quote --write src/**/*.{js,jsx,json,css}",
     "prepublishOnly": "npm run build"
   },
