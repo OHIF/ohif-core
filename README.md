@@ -24,6 +24,27 @@
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 
+## Why?
+
+This library offers pre-packaged solutions for features common to Web-based
+medical imaging viewers. For example:
+
+- Hotkeys
+- DICOM Web
+- Hanging Protocols
+- Managing a study's measurements
+- Managing a study's DICOM metadata
+- A flexible pattern for extensions
+- And many others
+
+It does this while remaining decoupled from any particular view library or
+rendering logic. While we use it to power our [React Viewer](#todo), it can be
+used with Vue, React, Vanilla JS, or any number of other frameworks.
+
+## Getting Started
+
+
+
 ## License
 
 MIT © [OHIF](https://github.com/OHIF)
