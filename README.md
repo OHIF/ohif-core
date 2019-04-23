@@ -5,11 +5,6 @@
   <p><strong>ohif-core</strong> is a collection of useful functions and classes for building web-based medical imaging applications. This library helps power OHIF's <a href="https://github.com/OHIF/Viewers">zero-footprint DICOM viewer</a>.</p>
 </div>
 
-<div align="center">
-  <a href="https://react.ohif.org/"><strong>Read The Docs</strong></a> |
-  <a href="https://react.ohif.org/contributing">Edit the docs</a>
-</div>
-
 <hr />
 
 [![CircleCI][circleci-image]][circleci-url]
