@@ -38,10 +38,53 @@ medical imaging viewers. For example:
 - And many others
 
 It does this while remaining decoupled from any particular view library or
-rendering logic. While we use it to power our [React Viewer](#todo), it can be
+rendering logic. While we use it to power our [React Viewer][react-viewer], it can be
 used with Vue, React, Vanilla JS, or any number of other frameworks.
 
 ## Getting Started
+
+> This library is pre- v1.0. All realeases until a v1.0 have the possibility of introducing breaking changes. Please depend on an "exact" version in your projects to prevent issues caused by loose versioning.
+
+```
+// with npm
+npm i ohif-core --save-exact
+
+// with yarn
+yarn add ohif-core --exact
+```
+
+### Usage
+
+...
+
+### Contributing
+
+...
+
+## Issues
+
+_Looking to contribute? Look for the [Good First Issue][good-first-issue]
+label._
+
+### 🐛 Bugs
+
+Please file an issue for bugs, missing documentation, or unexpected behavior.
+
+[**See Bugs**][bugs]
+
+### 💡 Feature Requests
+
+Please file an issue to suggest new features. Vote on feature requests by adding
+a 👍. This helps maintainers prioritize what to work on.
+
+[**See Feature Requests**][requests-feature]
+
+### ❓ Questions
+
+For questions related to using the library, please visit our support community,
+or file an issue on GitHub.
+
+[Google Group][google-group]
 
 
 
@@ -71,4 +114,11 @@ Links:
 [npm-version-image]: https://img.shields.io/npm/v/ohif-core.svg?style=flat-square
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: LICENSE
+<!-- Misc. -->
+[react-viewer]: https://github.com/OHIF/Viewers/tree/react
+<!-- Issue Boilerplate -->
+[bugs]: https://github.com/OHIF/ohif-core/labels/bug
+[requests-feature]: https://github.com/OHIF/ohif-core/labels/enhancement
+[good-first-issue]: https://github.com/OHIF/ohif-core/labels/good%20first%20issue
+[google-group]: https://groups.google.com/forum/#!forum/cornerstone-platform
 <!-- prettier-ignore-end -->
