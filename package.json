@@ -15,6 +15,7 @@
   "scripts": {
     "cm": "npx git-cz",
     "build": "rollup -c",
+    "dev": "jest --watch",
     "start": "rollup -c -w",
     "test": "jest",
     "test:ci": "jest --ci --runInBand --collectCoverage --reporters=default --reporters=jest-junit && codecov",
