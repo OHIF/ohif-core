@@ -8,6 +8,7 @@ build
 dist
 .rpt2_cache
 coverage/
+junit.xml
 
 # misc
 .DS_Store
