@@ -38,16 +38,23 @@ medical imaging viewers. For example:
 - And many others
 
 It does this while remaining decoupled from any particular view library or
-rendering logic. While we use it to power our [React Viewer][react-viewer], it can be
-used with Vue, React, Vanilla JS, or any number of other frameworks.
+rendering logic. While we use it to power our [React Viewer][react-viewer], it
+can be used with Vue, React, Vanilla JS, or any number of other frameworks.
 
 ## Getting Started
 
-The documentation for this library is sparse. The best way to get started is to look at its [top level exports](https://github.com/OHIF/ohif-core/blob/master/src/index.js), and explore the source code of features that interest you. If you want to see how we use this library, you can check out [our viewer implementation][react-viewer].
+The documentation for this library is sparse. The best way to get started is to
+look at its
+[top level exports](https://github.com/OHIF/ohif-core/blob/master/src/index.js),
+and explore the source code of features that interest you. If you want to see
+how we use this library, you can check out [our viewer
+implementation][react-viewer].
 
 ### Install
 
-> This library is pre- v1.0. All realeases until a v1.0 have the possibility of introducing breaking changes. Please depend on an "exact" version in your projects to prevent issues caused by loose versioning.
+> This library is pre- v1.0. All realeases until a v1.0 have the possibility of
+> introducing breaking changes. Please depend on an "exact" version in your
+> projects to prevent issues caused by loose versioning.
 
 ```
 // with npm
@@ -59,30 +66,49 @@ yarn add ohif-core --exact
 
 ### Usage
 
-Usage is dependent on the feature(s) you want to leverage. The bulk of `ohif-core`'s features are "pure" and can be imported and used in place.
+Usage is dependent on the feature(s) you want to leverage. The bulk of
+`ohif-core`'s features are "pure" and can be imported and used in place.
 
 _Example: retrieving study metadata from a server_
 
 ```js
-import { studies } from "ohif-core";
+import { studies } from 'ohif-core'
 
 const studiesMetadata = await studies.retrieveStudiesMetadata(
   server, // Object
   studyInstanceUids, // Array
   seriesInstanceUids // Array (optional)
-);
+)
 ```
 
 ### Contributing
 
-It is notoriously difficult to setup multiple dependent repositories for end-to-end testing and development. That's why we recommend writing and running unit tests when adding and modifying features for this library. This allows us to program in isolation without a complex setup, and has the added benefit of producing well-tested business logic.
+It is notoriously difficult to setup multiple dependent repositories for
+end-to-end testing and development. That's why we recommend writing and running
+unit tests when adding and modifying features for this library. This allows us
+to program in isolation without a complex setup, and has the added benefit of
+producing well-tested business logic.
 
 1. Clone this repository
 2. Navigate to the project directory, and `yarn install`
 3. To begin making changes, `yarn run dev`
 4. To commit changes, run `yarn run cm`
 
-As you add and modify code, `jest` will watch for uncommitted changes and run your tests, reporting the results to your terminal. Make a pull request with your changes to `master`, and a core team member will review your work. If you have any questions, please don't hesitate to reach out via a GitHub issue.
+When creating tests, place the test file "next to" the file you're testing.
+[For example](https://github.com/OHIF/ohif-core/blob/master/src/index.test.js):
+
+```js
+// File
+index.js
+
+// Test for file
+index.test.js
+```
+
+As you add and modify code, `jest` will watch for uncommitted changes and run
+your tests, reporting the results to your terminal. Make a pull request with
+your changes to `master`, and a core team member will review your work. If you
+have any questions, please don't hesitate to reach out via a GitHub issue.
 
 ## Issues
 
