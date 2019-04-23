@@ -64,18 +64,25 @@ Usage is dependent on the feature(s) you want to leverage. The bulk of `ohif-cor
 _Example: retrieving study metadata from a server_
 
 ```js
-import { studies } from 'ohif-core';
+import { studies } from "ohif-core";
 
 const studiesMetadata = await studies.retrieveStudiesMetadata(
-    server,             // Object
-    studyInstanceUids,  // Array
-    seriesInstanceUids  // Array (optional)
-  );
+  server, // Object
+  studyInstanceUids, // Array
+  seriesInstanceUids // Array (optional)
+);
 ```
 
 ### Contributing
 
-...
+It is notoriously difficult to setup multiple dependent repositories for end-to-end testing and development. That's why we recommend writing and running unit tests when adding and modifying features for this library. This allows us to program in isolation without a complex setup, and has the added benefit of producing well-tested business logic.
+
+1. Clone this repository
+2. Navigate to the project directory, and `yarn install`
+3. To begin making changes, `yarn run dev`
+4. To commit changes, run `yarn run cm`
+
+As you add and modify code, `jest` will watch for uncommitted changes and run your tests, reporting the results to your terminal. Make a pull request with your changes to `master`, and a core team member will review your work. If you have any questions, please don't hesitate to reach out via a GitHub issue.
 
 ## Issues
 
@@ -101,8 +108,6 @@ For questions related to using the library, please visit our support community,
 or file an issue on GitHub.
 
 [Google Group][google-group]
-
-
 
 ## License
 
