@@ -1,4 +1,4 @@
-import * as OHIF from './index.js';
+import * as OHIF from './index.js'
 
 describe('Top level exports', () => {
   test('have not changed', () => {
@@ -23,11 +23,11 @@ describe('Top level exports', () => {
       'plugins',
       'extensions',
       'measurements',
-      'hangingProtocols'
-    ].sort();
+      'hangingProtocols',
+    ].sort()
 
-    const exports = Object.keys(OHIF).sort();
+    const exports = Object.keys(OHIF).sort()
 
-    expect(exports).toEqual(expectedExports);
-  });
-});
+    expect(exports).toEqual(expectedExports)
+  })
+})
