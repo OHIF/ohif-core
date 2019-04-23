@@ -43,6 +43,10 @@ used with Vue, React, Vanilla JS, or any number of other frameworks.
 
 ## Getting Started
 
+The documentation for this library is sparse. The best way to get started is to look at its [top level exports](https://github.com/OHIF/ohif-core/blob/master/src/index.js), and explore the source code of features that interest you. If you want to see how we use this library, you can check out [our viewer implementation][react-viewer].
+
+### Install
+
 > This library is pre- v1.0. All realeases until a v1.0 have the possibility of introducing breaking changes. Please depend on an "exact" version in your projects to prevent issues caused by loose versioning.
 
 ```
@@ -55,7 +59,19 @@ yarn add ohif-core --exact
 
 ### Usage
 
-...
+Usage is dependent on the feature(s) you want to leverage. The bulk of `ohif-core`'s features are "pure" and can be imported and used in place.
+
+_Example: retrieving study metadata from a server_
+
+```js
+import { studies } from 'ohif-core';
+
+const studiesMetadata = await studies.retrieveStudiesMetadata(
+    server,             // Object
+    studyInstanceUids,  // Array
+    seriesInstanceUids  // Array (optional)
+  );
+```
 
 ### Contributing
 
