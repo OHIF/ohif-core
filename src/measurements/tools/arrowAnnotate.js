@@ -1,6 +1,6 @@
 const displayFunction = data => {
-  return data.text || '';
-};
+  return data.text || ''
+}
 
 export const arrowAnnotate = {
   id: 'ArrowAnnotate',
@@ -9,7 +9,11 @@ export const arrowAnnotate = {
   cornerstoneToolType: 'ArrowAnnotate',
   options: {
     measurementTable: {
-      displayFunction
-    }
-  }
-};
+      displayFunction,
+    },
+    caseProgress: {
+      include: true,
+      evaluate: true,
+    },
+  },
+}

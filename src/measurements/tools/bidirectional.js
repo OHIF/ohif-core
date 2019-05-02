@@ -1,24 +1,24 @@
 const displayFunction = data => {
   if (data.shortestDiameter) {
     // TODO: Make this check criteria again to see if we should display shortest x longest
-    return data.longestDiameter + ' x ' + data.shortestDiameter;
+    return data.longestDiameter + ' x ' + data.shortestDiameter
   }
 
-  return data.longestDiameter;
-};
+  return data.longestDiameter
+}
 
 export const bidirectional = {
-  id: 'bidirectional',
+  id: 'Bidirectional',
   name: 'Target',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'bidirectional',
+  cornerstoneToolType: 'Bidirectional',
   options: {
     measurementTable: {
-      displayFunction
+      displayFunction,
     },
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
-};
+      evaluate: true,
+    },
+  },
+}

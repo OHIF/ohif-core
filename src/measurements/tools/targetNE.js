@@ -1,15 +1,15 @@
 export const targetNE = {
-  id: 'targetNE',
+  id: 'TargetNE',
   name: 'NE Target',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'targetNE',
+  cornerstoneToolType: 'TargetNE',
   options: {
     measurementTable: {
-      displayFunction: data => data.response
+      displayFunction: data => data.response,
     },
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
-};
+      evaluate: true,
+    },
+  },
+}

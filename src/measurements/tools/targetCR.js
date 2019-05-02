@@ -1,15 +1,15 @@
 export const targetCR = {
-  id: 'targetCR',
+  id: 'TargetCR',
   name: 'CR Target',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'targetCR',
+  cornerstoneToolType: 'TargetCR',
   options: {
     measurementTable: {
-      displayFunction: data => data.response
+      displayFunction: data => data.response,
     },
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
-};
+      evaluate: true,
+    },
+  },
+}
