@@ -24,8 +24,8 @@ export const MaxTargetsPerOrganSchema = {
  *   newTarget: Flag to evaluate only new targets (must be evaluated on both)
  */
 export class MaxTargetsPerOrganCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options)
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {

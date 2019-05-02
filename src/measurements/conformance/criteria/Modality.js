@@ -39,8 +39,8 @@ export const ModalitySchema = {
  *   modalities (string[]): List of allowed/denied modalities
  */
 export class ModalityCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options)
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {

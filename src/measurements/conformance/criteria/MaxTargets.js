@@ -46,8 +46,8 @@ export const MaxTargetsSchema = {
  *   message: Message to be displayed in case of nonconformity
  */
 export class MaxTargetsCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options)
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {

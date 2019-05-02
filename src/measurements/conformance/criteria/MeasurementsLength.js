@@ -92,8 +92,8 @@ export const MeasurementsLengthSchema = {
  *   message: Message to be displayed in case of nonconformity
  */
 export class MeasurementsLengthCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options)
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {

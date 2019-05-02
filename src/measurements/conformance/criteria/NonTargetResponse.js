@@ -8,8 +8,8 @@ export const NonTargetResponseSchema = {
  *   Check if the there are non-target measurements with response different than "present" on baseline
  */
 export class NonTargetResponseCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options)
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {

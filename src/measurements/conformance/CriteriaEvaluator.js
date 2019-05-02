@@ -23,7 +23,7 @@ export class CriteriaEvaluator {
       const optionsArray =
         optionsObject instanceof Array ? optionsObject : [optionsObject]
       optionsArray.forEach(options =>
-        this.criteria.push(new Criterion(options))
+        this.criteria.push(new Criterion(options, criterionkey))
       )
     })
   }

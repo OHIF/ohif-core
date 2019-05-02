@@ -136,6 +136,13 @@ class ConformanceCriteria {
       }
 
       const result = evaluator.evaluate(data)
+
+      if (result.length > 0) {
+        result.forEach(resultItem => {
+          resultItem.timepointType = timepointId
+        })
+      }
+
       nonconformities = nonconformities.concat(result)
     })
 

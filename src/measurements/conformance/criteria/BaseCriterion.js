@@ -1,6 +1,7 @@
 export class BaseCriterion {
-  constructor(options) {
+  constructor(options, criterionName) {
     this.options = options
+    this.criterionName = criterionName
   }
 
   generateResponse(message, measurements) {
@@ -12,6 +13,7 @@ export class BaseCriterion {
       isGlobal,
       message,
       measurements,
+      criterionName: this.criterionName,
     }
   }
 
