@@ -1,4 +1,4 @@
-import { BaseCriterion } from './BaseCriterion';
+import { BaseCriterion } from './BaseCriterion'
 
 export const MaxTargetsSchema = {
   type: 'object',
@@ -6,35 +6,35 @@ export const MaxTargetsSchema = {
     limit: {
       label: 'Max targets allowed in study',
       type: 'integer',
-      minimum: 0
+      minimum: 0,
     },
     newTarget: {
       label: 'Flag to evaluate only new targets',
-      type: 'boolean'
+      type: 'boolean',
     },
     locationIn: {
       label:
         'Filter to evaluate only measurements with the specified locations',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
+      uniqueItems: true,
     },
     locationNotIn: {
       label:
         'Filter to evaluate only measurements without the specified locations',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
-    }
+      uniqueItems: true,
+    },
   },
-  required: ['limit']
-};
+  required: ['limit'],
+}
 
 /* MaxTargetsCriterion
  *   Check if the number of target measurements exceeded the limit allowed
@@ -47,35 +47,35 @@ export const MaxTargetsSchema = {
  */
 export class MaxTargetsCriterion extends BaseCriterion {
   constructor(options) {
-    super(options);
+    super(options)
   }
 
   evaluate(data) {
-    const { options } = this;
+    const { options } = this
 
-    const newTargetNumbers = this.getNewTargetNumbers(data);
-    const measurementNumbers = [];
+    const newTargetNumbers = this.getNewTargetNumbers(data)
+    const measurementNumbers = []
     data.targets.forEach(target => {
-      const { location, measurementNumber, isSplitLesion } = target.measurement;
-      if (isSplitLesion) return;
-      if (options.newTarget && !newTargetNumbers.has(measurementNumber)) return;
+      const { location, measurementNumber, isSplitLesion } = target.measurement
+      if (isSplitLesion) return
+      if (options.newTarget && !newTargetNumbers.has(measurementNumber)) return
       if (options.locationIn && options.locationIn.indexOf(location) === -1)
-        return;
+        return
       if (options.locationNotIn && options.locationNotIn.indexOf(location) > -1)
-        return;
-      measurementNumbers.push(measurementNumber);
-    });
+        return
+      measurementNumbers.push(measurementNumber)
+    })
 
-    let message;
+    let message
     if (measurementNumbers.length > options.limit) {
-      const increment = options.newTarget ? 'new ' : '';
-      const plural = options.limit === 1 ? '' : 's';
-      const amount = options.limit === 0 ? '' : `more than ${options.limit}`;
+      const increment = options.newTarget ? 'new ' : ''
+      const plural = options.limit === 1 ? '' : 's'
+      const amount = options.limit === 0 ? '' : `more than ${options.limit}`
       message =
         options.message ||
-        `The study should not have ${amount} ${increment}target${plural}.`;
+        `The study should not have ${amount} ${increment}target${plural}.`
     }
 
-    return this.generateResponse(message);
+    return this.generateResponse(message)
   }
 }
