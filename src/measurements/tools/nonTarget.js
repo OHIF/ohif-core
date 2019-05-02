@@ -1,15 +1,15 @@
 export const nonTarget = {
-  id: 'nonTarget',
+  id: 'NonTarget',
   name: 'Non-Target',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'nonTarget',
+  cornerstoneToolType: 'NonTarget',
   options: {
     measurementTable: {
-      displayFunction: data => data.response
+      displayFunction: data => data.response,
     },
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
-};
+      evaluate: true,
+    },
+  },
+}
