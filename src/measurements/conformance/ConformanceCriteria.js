@@ -120,8 +120,8 @@ class ConformanceCriteria {
     return groups
   }
 
-  validateTimepoint(timepointId, trialCriteriaType, data) {
-    const evaluators = this.getEvaluators(timepointId, trialCriteriaType)
+  validateTimepoint(timepointType, trialCriteriaType, data) {
+    const evaluators = this.getEvaluators(timepointType, trialCriteriaType)
     let nonconformities = []
 
     evaluators.forEach(evaluator => {
@@ -139,7 +139,7 @@ class ConformanceCriteria {
 
       if (result.length > 0) {
         result.forEach(resultItem => {
-          resultItem.timepointType = timepointId
+          resultItem.timepointType = timepointType
         })
       }
 
@@ -149,14 +149,14 @@ class ConformanceCriteria {
     return nonconformities
   }
 
-  getEvaluators(timepointId, trialCriteriaType) {
+  getEvaluators(timepointType, trialCriteriaType) {
     const evaluators = []
     console.warn(evaluations)
     const trialCriteriaTypeId = trialCriteriaType.id.toLowerCase()
     const evaluation = evaluations[trialCriteriaTypeId]
 
     if (evaluation) {
-      const evaluationTimepoint = evaluation[timepointId]
+      const evaluationTimepoint = evaluation[timepointType]
 
       if (evaluationTimepoint) {
         evaluators.push(new CriteriaEvaluator(evaluationTimepoint))
