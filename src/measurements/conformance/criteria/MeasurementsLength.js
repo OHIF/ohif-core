@@ -1,4 +1,4 @@
-import { BaseCriterion } from './BaseCriterion';
+import { BaseCriterion } from './BaseCriterion'
 
 export const MeasurementsLengthSchema = {
   type: 'object',
@@ -6,75 +6,75 @@ export const MeasurementsLengthSchema = {
     longAxis: {
       label: 'Minimum length of long axis',
       type: 'number',
-      minimum: 0
+      minimum: 0,
     },
     shortAxis: {
       label: 'Minimum length of short axis',
       type: 'number',
-      minimum: 0
+      minimum: 0,
     },
     longAxisSliceThicknessMultiplier: {
       label: 'Length of long axis multiplier',
       type: 'number',
-      minimum: 0
+      minimum: 0,
     },
     shortAxisSliceThicknessMultiplier: {
       label: 'Length of short axis multiplier',
       type: 'number',
-      minimum: 0
+      minimum: 0,
     },
     modalityIn: {
       label:
         'Filter to evaluate only measurements with the specified modalities',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
+      uniqueItems: true,
     },
     modalityNotIn: {
       label:
         'Filter to evaluate only measurements without the specified modalities',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
+      uniqueItems: true,
     },
     locationIn: {
       label:
         'Filter to evaluate only measurements with the specified locations',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
+      uniqueItems: true,
     },
     locationNotIn: {
       label:
         'Filter to evaluate only measurements without the specified locations',
       type: 'array',
       items: {
-        type: 'string'
+        type: 'string',
       },
       minItems: 1,
-      uniqueItems: true
+      uniqueItems: true,
     },
     message: {
       label: 'Message to be displayed in case of nonconformity',
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   anyOf: [
     { required: ['message', 'longAxis'] },
     { required: ['message', 'shortAxis'] },
     { required: ['message', 'longAxisSliceThicknessMultiplier'] },
-    { required: ['message', 'shortAxisSliceThicknessMultiplier'] }
-  ]
-};
+    { required: ['message', 'shortAxisSliceThicknessMultiplier'] },
+  ],
+}
 
 /*
  * MeasurementsLengthCriterion
@@ -92,40 +92,40 @@ export const MeasurementsLengthSchema = {
  *   message: Message to be displayed in case of nonconformity
  */
 export class MeasurementsLengthCriterion extends BaseCriterion {
-  constructor(options) {
-    super(options);
+  constructor(...props) {
+    super(...props)
   }
 
   evaluate(data) {
-    let message;
-    let measurements = [];
-    const { options } = this;
-    const longMultiplier = options.longAxisSliceThicknessMultiplier;
-    const shortMultiplier = options.shortAxisSliceThicknessMultiplier;
+    let message
+    let measurements = []
+    const { options } = this
+    const longMultiplier = options.longAxisSliceThicknessMultiplier
+    const shortMultiplier = options.shortAxisSliceThicknessMultiplier
 
     data.targets.forEach(item => {
-      const { metadata, measurement } = item;
-      const { location } = measurement;
+      const { metadata, measurement } = item
+      const { location } = measurement
 
-      let { longestDiameter, shortestDiameter } = measurement;
+      let { longestDiameter, shortestDiameter } = measurement
       if (measurement.childToolsCount) {
-        const child = measurement.bidirectional;
-        longestDiameter = (child && child.longestDiameter) || 0;
-        shortestDiameter = (child && child.shortestDiameter) || 0;
+        const child = measurement.bidirectional
+        longestDiameter = (child && child.longestDiameter) || 0
+        shortestDiameter = (child && child.shortestDiameter) || 0
       }
 
-      const { sliceThickness } = metadata;
-      const modality = (metadata.getRawValue('x00080060') || '').toUpperCase();
+      const { sliceThickness } = metadata
+      const modality = (metadata.getRawValue('x00080060') || '').toUpperCase()
 
       // Stop here if the measurement does not match the modality and location filters
       if (options.locationIn && options.locationIn.indexOf(location) === -1)
-        return;
+        return
       if (options.modalityIn && options.modalityIn.indexOf(modality) === -1)
-        return;
+        return
       if (options.locationNotIn && options.locationNotIn.indexOf(location) > -1)
-        return;
+        return
       if (options.modalityNotIn && options.modalityNotIn.indexOf(modality) > -1)
-        return;
+        return
 
       // Check the measurement length
       const failed =
@@ -136,19 +136,19 @@ export class MeasurementsLengthCriterion extends BaseCriterion {
           longestDiameter < longMultiplier * sliceThickness) ||
         (shortMultiplier &&
           !isNaN(sliceThickness) &&
-          shortestDiameter < shortMultiplier * sliceThickness);
+          shortestDiameter < shortMultiplier * sliceThickness)
 
       // Mark this measurement as invalid if some of the checks have failed
       if (failed) {
-        measurements.push(measurement);
+        measurements.push(measurement)
       }
-    });
+    })
 
     // Use the options' message if some measurement is invalid
     if (measurements.length) {
-      message = options.message;
+      message = options.message
     }
 
-    return this.generateResponse(message, measurements);
+    return this.generateResponse(message, measurements)
   }
 }
