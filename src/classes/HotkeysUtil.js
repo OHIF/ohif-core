@@ -113,9 +113,23 @@ export default class HotkeysUtil {
         action: () => {
           // Call Redux Action to change viewport data for active viewport
           // Example for calling 'invert'
+
+          const state = window.store.getState()
+          const viewportIndex = state.viewports.activeViewportIndex
+          const viewportSpecificData =
+            state.viewports.viewportSpecificData[viewportIndex]
+          const currentViewportParameters = viewportSpecificData.viewport || {}
+          const newViewportParameters = Object.assign(
+            {},
+            currentViewportParameters,
+            {
+              invert: !currentViewportParameters.invert,
+            }
+          )
+
           window.store.dispatch(
             setActiveViewportSpecificData({
-              viewport: { invert: true, voi: {} },
+              viewport: newViewportParameters,
             })
           )
 
