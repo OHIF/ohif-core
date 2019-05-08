@@ -1,7 +1,7 @@
 import RetrieveMetadata from './services/wado/retrieveMetadata.js'
 
-// Define the StudyMetaDataPromises object. This is used as a cache to store study meta data
-// promises and prevent unnecessary subsequent calls to the server
+const module = 'RetrieveStudyMetadata'
+// Cache for promises. Prevents unnecessary subsequent calls to the server
 const StudyMetaDataPromises = new Map()
 
 /**
@@ -32,8 +32,16 @@ export function retrieveStudyMetadata(
   // and further requests for that metadata will always fail. On failure, we probably need to remove the
   // corresponding promise from the "StudyMetaDataPromises" map...
 
-  // If the StudyMetaDataPromises cache already has a pending or resolved promise related to the
-  // given studyInstanceUid, then that promise is returned
+  if (!server) {
+    throw new Error(`${module}: Required 'server' parameter not provided.`)
+  }
+  if (!studyInstanceUid) {
+    throw new Error(
+      `${module}: Required 'studyInstanceUid' parameter not provided.`
+    )
+  }
+
+  // Already waiting on result? Return cached promise
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
     return StudyMetaDataPromises.get(studyInstanceUid)
   }
