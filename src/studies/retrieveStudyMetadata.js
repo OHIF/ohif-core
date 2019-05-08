@@ -1,4 +1,3 @@
-import log from '../log.js'
 import RetrieveMetadata from './services/wado/retrieveMetadata.js'
 
 // Define the StudyMetaDataPromises object. This is used as a cache to store study meta data
@@ -38,12 +37,6 @@ export function retrieveStudyMetadata(
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
     return StudyMetaDataPromises.get(studyInstanceUid)
   }
-
-  const seriesKeys = Array.isArray(seriesInstanceUids)
-    ? '|' + seriesInstanceUids.join('|')
-    : ''
-  const timingKey = `retrieveStudyMetadata[${studyInstanceUid}${seriesKeys}]`
-  log.time(timingKey)
 
   // Create a promise to handle the data retrieval
   const promise = new Promise((resolve, reject) => {
