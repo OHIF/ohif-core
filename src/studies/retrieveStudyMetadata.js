@@ -49,10 +49,7 @@ export function retrieveStudyMetadata(
   const promise = new Promise((resolve, reject) => {
     // If no study metadata is in the cache variable, we need to retrieve it from
     // the server with a call.
-    if (
-      server.type === 'dicomWeb' &&
-      server.requestOptions.requestFromBrowser === true
-    ) {
+    if (server.type === 'dicomWeb') {
       RetrieveMetadata(server, studyInstanceUid).then(function(data) {
         resolve(data)
       }, reject)
