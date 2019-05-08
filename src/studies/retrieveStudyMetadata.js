@@ -1,9 +1,9 @@
-import log from '../log.js';
-import RetrieveMetadata from './services/wado/retrieveMetadata.js';
+import log from '../log.js'
+import RetrieveMetadata from './services/wado/retrieveMetadata.js'
 
 // Define the StudyMetaDataPromises object. This is used as a cache to store study meta data
 // promises and prevent unnecessary subsequent calls to the server
-const StudyMetaDataPromises = new Map();
+const StudyMetaDataPromises = new Map()
 
 /**
  * Delete the cached study metadata retrieval promise to ensure that the browser will
@@ -14,7 +14,7 @@ const StudyMetaDataPromises = new Map();
  */
 export function deleteStudyMetadataPromise(studyInstanceUid) {
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
-    StudyMetaDataPromises.delete(studyInstanceUid);
+    StudyMetaDataPromises.delete(studyInstanceUid)
   }
 }
 
@@ -36,14 +36,14 @@ export function retrieveStudyMetadata(
   // If the StudyMetaDataPromises cache already has a pending or resolved promise related to the
   // given studyInstanceUid, then that promise is returned
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
-    return StudyMetaDataPromises.get(studyInstanceUid);
+    return StudyMetaDataPromises.get(studyInstanceUid)
   }
 
   const seriesKeys = Array.isArray(seriesInstanceUids)
     ? '|' + seriesInstanceUids.join('|')
-    : '';
-  const timingKey = `retrieveStudyMetadata[${studyInstanceUid}${seriesKeys}]`;
-  log.time(timingKey);
+    : ''
+  const timingKey = `retrieveStudyMetadata[${studyInstanceUid}${seriesKeys}]`
+  log.time(timingKey)
 
   // Create a promise to handle the data retrieval
   const promise = new Promise((resolve, reject) => {
@@ -54,13 +54,13 @@ export function retrieveStudyMetadata(
       server.requestOptions.requestFromBrowser === true
     ) {
       RetrieveMetadata(server, studyInstanceUid).then(function(data) {
-        resolve(data);
-      }, reject);
+        resolve(data)
+      }, reject)
     }
-  });
+  })
 
   // Store the promise in cache
-  StudyMetaDataPromises.set(studyInstanceUid, promise);
+  StudyMetaDataPromises.set(studyInstanceUid, promise)
 
-  return promise;
+  return promise
 }
