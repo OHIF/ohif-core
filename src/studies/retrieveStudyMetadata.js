@@ -5,29 +5,13 @@ const module = 'RetrieveStudyMetadata'
 const StudyMetaDataPromises = new Map()
 
 /**
- * Delete the cached study metadata retrieval promise to ensure that the browser will
- * re-retrieve the study metadata when it is next requested
+ * Retrieves study metadata
  *
- * @param {String} studyInstanceUid The UID of the Study to be removed from cache
- *
- */
-export function deleteStudyMetadataPromise(studyInstanceUid) {
-  if (StudyMetaDataPromises.has(studyInstanceUid)) {
-    StudyMetaDataPromises.delete(studyInstanceUid)
-  }
-}
-
-/**
- * Retrieves study metadata using a server call
- *
- * @param {String} studyInstanceUid The UID of the Study to be retrieved
+ * @param {Object} server
+ * @param {string} studyInstanceUid The UID of the Study to be retrieved
  * @returns {Promise} that will be resolved with the metadata or rejected with the error
  */
-export function retrieveStudyMetadata(
-  server,
-  studyInstanceUid,
-  seriesInstanceUids
-) {
+export function retrieveStudyMetadata(server, studyInstanceUid) {
   // @TODO: Whenever a study metadata request has failed, its related promise will be rejected once and for all
   // and further requests for that metadata will always fail. On failure, we probably need to remove the
   // corresponding promise from the "StudyMetaDataPromises" map...
@@ -48,17 +32,26 @@ export function retrieveStudyMetadata(
 
   // Create a promise to handle the data retrieval
   const promise = new Promise((resolve, reject) => {
-    // If no study metadata is in the cache variable, we need to retrieve it from
-    // the server with a call.
-    if (server.type === 'dicomWeb') {
-      RetrieveMetadata(server, studyInstanceUid).then(function(data) {
-        resolve(data)
-      }, reject)
-    }
+    RetrieveMetadata(server, studyInstanceUid).then(function(data) {
+      resolve(data)
+    }, reject)
   })
 
   // Store the promise in cache
   StudyMetaDataPromises.set(studyInstanceUid, promise)
 
   return promise
+}
+
+/**
+ * Delete the cached study metadata retrieval promise to ensure that the browser will
+ * re-retrieve the study metadata when it is next requested
+ *
+ * @param {String} studyInstanceUid The UID of the Study to be removed from cache
+ *
+ */
+export function deleteStudyMetadataPromise(studyInstanceUid) {
+  if (StudyMetaDataPromises.has(studyInstanceUid)) {
+    StudyMetaDataPromises.delete(studyInstanceUid)
+  }
 }
