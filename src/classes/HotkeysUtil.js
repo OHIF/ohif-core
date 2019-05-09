@@ -72,6 +72,52 @@ export default class HotkeysUtil {
     }
   }
 
+  _rotate(currentPosition, rotationDegree) {
+    return currentPosition === undefined
+      ? 0 + rotationDegree
+      : currentPosition + rotationDegree
+  }
+
+  _getHotKeyCommand(currentViewportParameters, toolId) {
+    let hotKeyCommand = {}
+
+    switch (toolId) {
+      case 'rotateR':
+        hotKeyCommand['rotation'] = this._rotate(
+          currentViewportParameters.rotation,
+          90
+        )
+        break
+      case 'rotateL':
+        hotKeyCommand['rotation'] = this._rotate(
+          currentViewportParameters.rotation,
+          -90
+        )
+        break
+      case 'invert':
+        hotKeyCommand['invert'] = !currentViewportParameters.invert
+        break
+      case 'flipV':
+        hotKeyCommand['vflip'] = !currentViewportParameters.vflip
+        break
+      case 'flipH':
+        hotKeyCommand['hflip'] = !currentViewportParameters.hflip
+        break
+      case 'zoomIn':
+        const scaleIncrement = 0.15
+        const maximumScale = 10
+        hotKeyCommand['scale'] = Math.min(
+          (currentViewportParameters.scale === undefined
+            ? 0
+            : currentViewportParameters) + scaleIncrement,
+          maximumScale
+        )
+        break
+    }
+    console.log(hotKeyCommand)
+    return hotKeyCommand
+  }
+
   _isActiveViewportEmpty() {
     // TODO: check if it is empty using redux. Need to put viewportData into redux.
     // const activeViewport = Session.get('activeViewport') || 0;
@@ -112,19 +158,27 @@ export default class HotkeysUtil {
         name: commandName,
         action: () => {
           // Call Redux Action to change viewport data for active viewport
-          // Example for calling 'invert'
 
           const state = window.store.getState()
           const viewportIndex = state.viewports.activeViewportIndex
           const viewportSpecificData =
             state.viewports.viewportSpecificData[viewportIndex]
           const currentViewportParameters = viewportSpecificData.viewport || {}
+
+          console.log(commandName)
+          console.log(toolId)
+
+          console.log(state.viewports)
+
+          const hotKeyCommand = this._getHotKeyCommand(
+            currentViewportParameters,
+            toolId
+          )
+
           const newViewportParameters = Object.assign(
             {},
             currentViewportParameters,
-            {
-              invert: !currentViewportParameters.invert,
-            }
+            hotKeyCommand
           )
 
           window.store.dispatch(
