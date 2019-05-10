@@ -114,6 +114,9 @@ export default class HotkeysUtil {
       case 'zoomToFit':
         hotKeyCommand.zoomScale = 0
         break
+      case 'resetViewport':
+        hotKeyCommand.resetViewport = !currentViewportParameters.resetViewport
+        break
     }
 
     return hotKeyCommand
@@ -162,10 +165,8 @@ export default class HotkeysUtil {
 
           const state = window.store.getState()
           const viewportIndex = state.viewports.activeViewportIndex
-          const viewportSpecificData = window.store.getState().viewports
-            .viewportSpecificData[
-            window.store.getState().viewports.activeViewportIndex
-          ]
+          const viewportSpecificData =
+            state.viewports.viewportSpecificData[viewportIndex]
           const currentViewportParameters = viewportSpecificData.viewport || {}
 
           const hotKeyCommand = this._getHotKeyCommand(
