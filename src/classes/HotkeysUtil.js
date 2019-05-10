@@ -104,17 +104,16 @@ export default class HotkeysUtil {
         hotKeyCommand['hflip'] = !currentViewportParameters.hflip
         break
       case 'zoomIn':
-        const scaleIncrement = 0.15
-        const maximumScale = 10
-        hotKeyCommand['scale'] = Math.min(
-          (currentViewportParameters.scale === undefined
-            ? 0
-            : currentViewportParameters) + scaleIncrement,
-          maximumScale
-        )
+        hotKeyCommand['zoomScale'] = +0.15
+        break
+      case 'zoomOut':
+        hotKeyCommand['zoomScale'] = -0.15
+        break
+      case 'zoomToFit':
+        hotKeyCommand['zoomScale'] = 0
         break
     }
-    console.log(hotKeyCommand)
+
     return hotKeyCommand
   }
 
@@ -161,14 +160,11 @@ export default class HotkeysUtil {
 
           const state = window.store.getState()
           const viewportIndex = state.viewports.activeViewportIndex
-          const viewportSpecificData =
-            state.viewports.viewportSpecificData[viewportIndex]
+          const viewportSpecificData = window.store.getState().viewports
+            .viewportSpecificData[
+            window.store.getState().viewports.activeViewportIndex
+          ]
           const currentViewportParameters = viewportSpecificData.viewport || {}
-
-          console.log(commandName)
-          console.log(toolId)
-
-          console.log(state.viewports)
 
           const hotKeyCommand = this._getHotKeyCommand(
             currentViewportParameters,
