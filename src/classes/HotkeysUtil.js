@@ -79,7 +79,9 @@ export default class HotkeysUtil {
   }
 
   _getHotKeyCommand(currentViewportParameters, toolId) {
-    let hotKeyCommand = {}
+    let hotKeyCommand = {
+      zoomScale: null,
+    }
 
     switch (toolId) {
       case 'rotateR':
@@ -104,13 +106,13 @@ export default class HotkeysUtil {
         hotKeyCommand['hflip'] = !currentViewportParameters.hflip
         break
       case 'zoomIn':
-        hotKeyCommand['zoomScale'] = +0.15
+        hotKeyCommand.zoomScale = +0.15
         break
       case 'zoomOut':
-        hotKeyCommand['zoomScale'] = -0.15
+        hotKeyCommand.zoomScale = -0.15
         break
       case 'zoomToFit':
-        hotKeyCommand['zoomScale'] = 0
+        hotKeyCommand.zoomScale = 0
         break
     }
 
