@@ -1,7 +1,8 @@
 const displayFunction = data => {
   let meanValue = ''
-  if (data.meanStdDev && data.meanStdDev.mean) {
-    meanValue = data.meanStdDev.mean.toFixed(2) + ' HU'
+  const { cachedStats } = data
+  if (cachedStats && cachedStats.mean) {
+    meanValue = cachedStats.mean.toFixed(2) + ' HU'
   }
   return meanValue
 }
