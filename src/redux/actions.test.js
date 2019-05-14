@@ -29,7 +29,6 @@ describe('actions', () => {
 
   describe('viewport action creators', () => {
     // setViewportSpecificData,
-    // setLayout,
     // clearViewportSpecificData,
     it('should create an action to set the active viewport', () => {
       const viewportIndex = 1
@@ -38,6 +37,22 @@ describe('actions', () => {
         viewportIndex,
       }
       expect(actions.setViewportActive(viewportIndex)).toEqual(expectedAction)
+    })
+
+    it('should create an action to set the viewport layout', () => {
+      const layout = {
+        viewports: [
+          {
+            height: '100%',
+            width: '100%',
+          },
+        ],
+      }
+      const expectedAction = {
+        type: types.SET_VIEWPORT_LAYOUT,
+        layout,
+      }
+      expect(actions.setLayout(layout)).toEqual(expectedAction)
     })
   })
 })
