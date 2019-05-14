@@ -53,9 +53,6 @@ describe('viewports reducer', () => {
     expect(updatedState.layout).toEqual(setViewportLayoutAction.layout)
   })
 
-  // If there were previous keys, this would have
-  // "merge" behavior, not a clear & set
-  // May be worth another test?
   it('should handle SET_VIEWPORT', () => {
     const viewportToSet = 0
     const setViewportAction = {
