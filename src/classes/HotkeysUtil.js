@@ -81,6 +81,11 @@ export default class HotkeysUtil {
   _getHotKeyCommand(currentViewportParameters, toolId) {
     let hotKeyCommand = {
       zoomScale: null,
+      rotation: null,
+      resetViewport: null,
+      invert: null,
+      vflip: null,
+      hflip: null,
     }
 
     switch (toolId) {
@@ -174,15 +179,15 @@ export default class HotkeysUtil {
             toolId
           )
 
-          const newViewportParameters = Object.assign(
-            {},
-            currentViewportParameters,
-            hotKeyCommand
-          )
+          // const newViewportParameters = Object.assign(
+          //   {},
+          //   currentViewportParameters,
+          //   hotKeyCommand
+          // )
 
           window.store.dispatch(
             setActiveViewportSpecificData({
-              viewport: newViewportParameters,
+              viewport: hotKeyCommand,
             })
           )
 
