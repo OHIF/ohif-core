@@ -16,7 +16,7 @@ export default class HotkeysUtil {
       annotate: 'Annotate',
       stackScroll: 'StackScroll',
       pan: 'Pan',
-      length: 'Length Measurement',
+      length: 'Length',
       wwwcRegion: 'W/L by Region',
       crosshairs: 'Crosshairs',
     }
