@@ -1,98 +1,117 @@
-export const setToolActive = tool => ({
-  type: 'SET_TOOL_ACTIVE',
-  tool
-});
+/** Action Creators:
+ *  https://redux.js.org/basics/actions#action-creators
+ */
+
+import {
+  SET_VIEWPORT,
+  SET_VIEWPORT_ACTIVE,
+  SET_VIEWPORT_LAYOUT,
+  CLEAR_VIEWPORT,
+} from './constants/ActionTypes.js'
+
+/**
+ * VIEWPORT
+ */
+export const setViewportSpecificData = (viewportIndex, data) => ({
+  type: SET_VIEWPORT,
+  viewportIndex,
+  data,
+})
 
 export const setViewportActive = viewportIndex => ({
-  type: 'SET_VIEWPORT_ACTIVE',
-  viewportIndex
-});
+  type: SET_VIEWPORT_ACTIVE,
+  viewportIndex,
+})
 
 export const setLayout = layout => ({
-  type: 'SET_LAYOUT',
-  layout
-});
+  type: SET_VIEWPORT_LAYOUT,
+  layout,
+})
+
+export const clearViewportSpecificData = viewportIndex => ({
+  type: CLEAR_VIEWPORT,
+  viewportIndex,
+})
+
+/**
+ * NOT-VIEWPORT
+ */
+export const setToolActive = tool => ({
+  type: 'SET_TOOL_ACTIVE',
+  tool,
+})
 
 export const setStudyLoadingProgress = (progressId, progressData) => ({
   type: 'SET_STUDY_LOADING_PROGRESS',
   progressId,
-  progressData
-});
+  progressData,
+})
 
 export const clearStudyLoadingProgress = progressId => ({
   type: 'CLEAR_STUDY_LOADING_PROGRESS',
-  progressId
-});
+  progressId,
+})
 
 export const setUserPreferences = state => ({
   type: 'SET_USER_PREFERENCES',
-  state
-});
+  state,
+})
 
 export const setCommandContext = state => ({
   type: 'SET_COMMAND_CONTEXT',
-  state
-});
-
-export const setViewportSpecificData = (viewportIndex, data) => ({
-  type: 'SET_VIEWPORT_SPECIFIC_DATA',
-  viewportIndex,
-  data
-});
-
-export const clearViewportSpecificData = viewportIndex => ({
-  type: 'CLEAR_VIEWPORT_SPECIFIC_DATA',
-  viewportIndex
-});
+  state,
+})
 
 export const addPlugin = plugin => ({
   type: 'ADD_PLUGIN',
-  plugin
-});
+  plugin,
+})
 
 export const setAvailableButtons = buttons => ({
   type: 'SET_AVAILABLE_BUTTONS',
-  buttons
-});
+  buttons,
+})
 
 export const setExtensionData = (extension, data) => ({
   type: 'SET_EXTENSION_DATA',
   extension,
-  data
-});
+  data,
+})
 
 export const setTimepoints = state => ({
   type: 'SET_TIMEPOINTS',
-  state
-});
+  state,
+})
 
 export const setMeasurements = state => ({
   type: 'SET_MEASUREMENTS',
-  state
-});
+  state,
+})
 
 export const setStudyData = (studyInstanceUid, data) => ({
   type: 'SET_STUDY_DATA',
   studyInstanceUid,
-  data
-});
+  data,
+})
 
 const actions = {
-  setToolActive,
+  // VIEWPORT
   setViewportActive,
+  setViewportSpecificData,
   setLayout,
+  clearViewportSpecificData,
+  //
+  setToolActive,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
   setUserPreferences,
   setCommandContext,
-  setViewportSpecificData,
-  clearViewportSpecificData,
   addPlugin,
   setAvailableButtons,
   setExtensionData,
   setTimepoints,
   setMeasurements,
-  setStudyData
-};
+  setStudyData,
+}
 
-export default actions;
+export default actions
