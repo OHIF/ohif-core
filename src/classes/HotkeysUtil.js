@@ -86,6 +86,7 @@ export default class HotkeysUtil {
       invert: null,
       vflip: null,
       hflip: null,
+      clearTools: null,
     }
 
     switch (toolId) {
@@ -121,6 +122,9 @@ export default class HotkeysUtil {
         break
       case 'resetViewport':
         hotKeyCommand.resetViewport = !currentViewportParameters.resetViewport
+        break
+      case 'clearTools':
+        hotKeyCommand.clearTools = true
         break
     }
 
