@@ -95,6 +95,7 @@ export const setStudyData = (studyInstanceUid, data) => ({
 })
 
 const actions = {
+  // VIEWPORT
   setViewportActive,
   setViewportSpecificData,
   setLayout,
