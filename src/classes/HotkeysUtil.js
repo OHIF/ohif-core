@@ -37,11 +37,17 @@ export default class HotkeysUtil {
     this.commands = {
       scrollDown: {
         name: 'Scroll Down',
-        action: () => log.warn('TODO: scroll down'),
+        action: () => {
+          log.warn('TODO: scroll down')
+          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollDown'))
+        },
       },
       scrollUp: {
         name: 'Scroll Up',
-        action: () => log.warn('TODO: scroll up'),
+        action: () => {
+          log.warn('TODO: scroll up')
+          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollUp'))
+        },
       },
       scrollFirstImage: {
         name: 'Scroll to First Image',
@@ -78,6 +84,15 @@ export default class HotkeysUtil {
       : currentPosition + rotationDegree
   }
 
+  _dispatchCommand(options) {
+    const { setActiveViewportSpecificData } = actions
+    window.store.dispatch(
+      setActiveViewportSpecificData({
+        viewport: options,
+      })
+    )
+  }
+
   _getHotKeyCommand(currentViewportParameters, toolId) {
     let hotKeyCommand = {
       zoomScale: null,
@@ -87,6 +102,8 @@ export default class HotkeysUtil {
       vflip: null,
       hflip: null,
       clearTools: null,
+      scrollUp: null,
+      scrollDown: null,
     }
 
     switch (toolId) {
@@ -125,6 +142,12 @@ export default class HotkeysUtil {
         break
       case 'clearTools':
         hotKeyCommand.clearTools = true
+        break
+      case 'scrollUp':
+        hotKeyCommand.scrollUp = true
+        break
+      case 'scrollDown':
+        hotKeyCommand.scrollDown = true
         break
     }
 
