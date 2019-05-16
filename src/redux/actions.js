@@ -1,16 +1,44 @@
-export const setToolActive = tool => ({
-  type: 'SET_TOOL_ACTIVE',
-  tool,
+/** Action Creators:
+ *  https://redux.js.org/basics/actions#action-creators
+ */
+
+import {
+  SET_VIEWPORT,
+  SET_VIEWPORT_ACTIVE,
+  SET_VIEWPORT_LAYOUT,
+  CLEAR_VIEWPORT,
+} from './constants/ActionTypes.js'
+
+/**
+ * VIEWPORT
+ */
+export const setViewportSpecificData = (viewportIndex, data) => ({
+  type: SET_VIEWPORT,
+  viewportIndex,
+  data,
 })
 
 export const setViewportActive = viewportIndex => ({
-  type: 'SET_VIEWPORT_ACTIVE',
+  type: SET_VIEWPORT_ACTIVE,
   viewportIndex,
 })
 
 export const setLayout = layout => ({
-  type: 'SET_LAYOUT',
+  type: SET_VIEWPORT_LAYOUT,
   layout,
+})
+
+export const clearViewportSpecificData = viewportIndex => ({
+  type: CLEAR_VIEWPORT,
+  viewportIndex,
+})
+
+/**
+ * NOT-VIEWPORT
+ */
+export const setToolActive = tool => ({
+  type: 'SET_TOOL_ACTIVE',
+  tool,
 })
 
 export const setStudyLoadingProgress = (progressId, progressData) => ({
@@ -34,20 +62,9 @@ export const setCommandContext = state => ({
   state,
 })
 
-export const setViewportSpecificData = (viewportIndex, data) => ({
-  type: 'SET_VIEWPORT_SPECIFIC_DATA',
-  viewportIndex,
-  data,
-})
-
 export const setActiveViewportSpecificData = data => ({
   type: 'SET_ACTIVE_VIEWPORT_SPECIFIC_DATA',
   data,
-})
-
-export const clearViewportSpecificData = viewportIndex => ({
-  type: 'CLEAR_VIEWPORT_SPECIFIC_DATA',
-  viewportIndex,
 })
 
 export const addPlugin = plugin => ({
@@ -83,16 +100,17 @@ export const setStudyData = (studyInstanceUid, data) => ({
 })
 
 const actions = {
-  setToolActive,
+  // VIEWPORT
   setViewportActive,
+  setViewportSpecificData,
   setLayout,
+  clearViewportSpecificData,
+  setActiveViewportSpecificData,
+  setToolActive,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
   setUserPreferences,
   setCommandContext,
-  setViewportSpecificData,
-  setActiveViewportSpecificData,
-  clearViewportSpecificData,
   addPlugin,
   setAvailableButtons,
   setExtensionData,

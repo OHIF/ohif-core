@@ -1,17 +1,16 @@
 const displayFunction = data => {
   let meanValue = ''
-  const { cachedStats } = data
-  if (cachedStats && cachedStats.mean) {
-    meanValue = cachedStats.mean.toFixed(2) + ' HU'
+  if (data.meanStdDev && data.meanStdDev.mean) {
+    meanValue = data.meanStdDev.mean.toFixed(2) + ' HU'
   }
   return meanValue
 }
 
-export const rectangleRoi = {
-  id: 'RectangleRoi',
-  name: 'Rectangle',
+export const freehandMouse = {
+  id: 'FreehandMouse',
+  name: 'Freehand',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'RectangleRoi',
+  cornerstoneToolType: 'FreehandMouse',
   options: {
     measurementTable: {
       displayFunction,

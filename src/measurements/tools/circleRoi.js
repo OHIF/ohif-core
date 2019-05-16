@@ -7,11 +7,11 @@ const displayFunction = data => {
   return meanValue
 }
 
-export const rectangleRoi = {
-  id: 'RectangleRoi',
-  name: 'Rectangle',
+export const circleRoi = {
+  id: 'CircleRoi',
+  name: 'Circle',
   toolGroup: 'allTools',
-  cornerstoneToolType: 'RectangleRoi',
+  cornerstoneToolType: 'CircleRoi',
   options: {
     measurementTable: {
       displayFunction,
