@@ -63,7 +63,7 @@ const viewports = (state = defaultState, action) => {
       )
 
       return Object.assign({}, state, { viewportSpecificData })
-    case SET_ACTIVE_VIEWPORT_SPECIFIC_DATA:
+    case 'SET_ACTIVE_VIEWPORT_SPECIFIC_DATA':
       currentData =
         cloneDeep(state.viewportSpecificData[state.activeViewportIndex]) || {}
       viewportSpecificData = cloneDeep(state.viewportSpecificData)

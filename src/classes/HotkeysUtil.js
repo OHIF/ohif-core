@@ -37,25 +37,27 @@ export default class HotkeysUtil {
     this.commands = {
       scrollDown: {
         name: 'Scroll Down',
-        action: () => {
-          log.warn('TODO: scroll down')
-          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollDown'))
-        },
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollDown')),
       },
       scrollUp: {
         name: 'Scroll Up',
-        action: () => {
-          log.warn('TODO: scroll up')
-          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollUp'))
-        },
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollUp')),
       },
       scrollFirstImage: {
         name: 'Scroll to First Image',
-        action: () => log.warn('TODO: scroll to first image'),
+        action: () =>
+          this._dispatchCommand(
+            this._getHotKeyCommand(null, 'scrollFirstImage')
+          ),
       },
       scrollLastImage: {
         name: 'Scroll to Last Image',
-        action: () => log.warn('TODO: scroll last image'),
+        action: () =>
+          this._dispatchCommand(
+            this._getHotKeyCommand(null, 'scrollLastImage')
+          ),
       },
       previousDisplaySet: {
         name: 'Previous Series',
@@ -104,6 +106,8 @@ export default class HotkeysUtil {
       clearTools: null,
       scrollUp: null,
       scrollDown: null,
+      scrollFirstImage: null,
+      scrollLastImage: null,
     }
 
     switch (toolId) {
@@ -148,6 +152,12 @@ export default class HotkeysUtil {
         break
       case 'scrollDown':
         hotKeyCommand.scrollDown = true
+        break
+      case 'scrollFirstImage':
+        hotKeyCommand.scrollFirstImage = true
+        break
+      case 'scrollLastImage':
+        hotKeyCommand.scrollLastImage = true
         break
     }
 
@@ -206,22 +216,10 @@ export default class HotkeysUtil {
             toolId
           )
 
-          // const newViewportParameters = Object.assign(
-          //   {},
-          //   currentViewportParameters,
-          //   hotKeyCommand
-          // )
-
           window.store.dispatch(
             setActiveViewportSpecificData({
               viewport: hotKeyCommand,
             })
-          )
-
-          debugger
-          console.log(
-            'TODO: viewportUtils[commandId] - viewport set the active tool ->' +
-              commandName
           )
         },
         params: toolId,
