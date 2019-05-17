@@ -10,8 +10,8 @@ export default class HotkeysUtil {
       zoom: 'Zoom',
       angle: 'Angle',
       dragProbe: 'Pixel Probe',
-      ellipticalRoi: 'Elliptical ROI',
-      rectangleRoi: 'Rectangle ROI',
+      ellipticalRoi: 'EllipticalRoi',
+      rectangleRoi: 'RectangleRoi',
       // magnify: 'Magnify', -- TODO: implement magnify
       annotate: 'Annotate',
       stackScroll: 'StackScroll',
@@ -61,21 +61,25 @@ export default class HotkeysUtil {
       },
       previousDisplaySet: {
         name: 'Previous Series',
-        action: () => console.log('TODO: previous series'),
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'previousSeries')),
         disabled: () => !this._canMoveDisplaySets(false),
       },
       nextDisplaySet: {
         name: 'Next Series',
-        action: () => console.log('TODO: next display set'),
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'nextSeries')),
         disabled: () => !this._canMoveDisplaySets(true),
       },
       nextPanel: {
         name: 'Next Image Viewport',
-        action: () => log.warn('TODO: nextpanel'),
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'nextPanel')),
       },
       previousPanel: {
         name: 'Previous Image Viewport',
-        action: () => log.warn('TODO: previous panel'),
+        action: () =>
+          this._dispatchCommand(this._getHotKeyCommand(null, 'previousPanel')),
       },
     }
   }
@@ -108,6 +112,10 @@ export default class HotkeysUtil {
       scrollDown: null,
       scrollFirstImage: null,
       scrollLastImage: null,
+      previousPanel: null,
+      nextPanel: null,
+      nextSeries: null,
+      previousSeries: null,
     }
 
     switch (toolId) {
@@ -158,6 +166,18 @@ export default class HotkeysUtil {
         break
       case 'scrollLastImage':
         hotKeyCommand.scrollLastImage = true
+        break
+      case 'previousSeries':
+        hotKeyCommand.previousSeries = true
+        break
+      case 'nextSeries':
+        hotKeyCommand.nextSeries = true
+        break
+      case 'nextPanel':
+        hotKeyCommand.nextPanel = true
+        break
+      case 'previousPanel':
+        hotKeyCommand.previousPanel = true
         break
     }
 
@@ -221,6 +241,8 @@ export default class HotkeysUtil {
               viewport: hotKeyCommand,
             })
           )
+
+          debugger
         },
         params: toolId,
         disabled: this._isActiveViewportEmpty,
