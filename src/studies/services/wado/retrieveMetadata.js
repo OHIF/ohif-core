@@ -1,26 +1,26 @@
-import { api } from 'dicomweb-client';
-import DICOMWeb from '../../../DICOMWeb/';
+import { api } from 'dicomweb-client'
+import DICOMWeb from '../../../DICOMWeb/'
 
 const WADOProxy = {
   convertURL: (url, server) => {
     // TODO: Remove all WADOProxy stuff from this file
-    return url;
-  }
-};
+    return url
+  },
+}
 
 function parseFloatArray(obj) {
-  const result = [];
+  const result = []
 
   if (!obj) {
-    return result;
+    return result
   }
 
-  const objs = obj.split('\\');
+  const objs = obj.split('\\')
   for (let i = 0; i < objs.length; i++) {
-    result.push(parseFloat(objs[i]));
+    result.push(parseFloat(objs[i]))
   }
 
-  return result;
+  return result
 }
 
 /**
@@ -31,34 +31,34 @@ const paletteColorCache = {
   maxAge: 24 * 60 * 60 * 1000, // 24h cache?
   entries: {},
   isValidUID: function(paletteUID) {
-    return typeof paletteUID === 'string' && paletteUID.length > 0;
+    return typeof paletteUID === 'string' && paletteUID.length > 0
   },
   get: function(paletteUID) {
-    let entry = null;
+    let entry = null
     if (this.entries.hasOwnProperty(paletteUID)) {
-      entry = this.entries[paletteUID];
+      entry = this.entries[paletteUID]
       // check how the entry is...
       if (Date.now() - entry.time > this.maxAge) {
         // entry is too old... remove entry.
-        delete this.entries[paletteUID];
-        this.count--;
-        entry = null;
+        delete this.entries[paletteUID]
+        this.count--
+        entry = null
       }
     }
-    return entry;
+    return entry
   },
   add: function(entry) {
     if (this.isValidUID(entry.uid)) {
-      let paletteUID = entry.uid;
+      let paletteUID = entry.uid
       if (this.entries.hasOwnProperty(paletteUID) !== true) {
-        this.count++; // increment cache entry count...
+        this.count++ // increment cache entry count...
       }
-      entry.time = Date.now();
-      this.entries[paletteUID] = entry;
+      entry.time = Date.now()
+      this.entries[paletteUID] = entry
       // @TODO: Add logic to get rid of old entries and reduce memory usage...
     }
-  }
-};
+  },
+}
 
 /** Returns a WADO url for an instance
  *
@@ -74,18 +74,18 @@ function buildInstanceWadoUrl(
   sopInstanceUid
 ) {
   // TODO: This can be removed, since DICOMWebClient has the same function. Not urgent, though
-  const params = [];
+  const params = []
 
-  params.push('requestType=WADO');
-  params.push(`studyUID=${studyInstanceUid}`);
-  params.push(`seriesUID=${seriesInstanceUid}`);
-  params.push(`objectUID=${sopInstanceUid}`);
-  params.push('contentType=application/dicom');
-  params.push('transferSyntax=*');
+  params.push('requestType=WADO')
+  params.push(`studyUID=${studyInstanceUid}`)
+  params.push(`seriesUID=${seriesInstanceUid}`)
+  params.push(`objectUID=${sopInstanceUid}`)
+  params.push('contentType=application/dicom')
+  params.push('transferSyntax=*')
 
-  const paramString = params.join('&');
+  const paramString = params.join('&')
 
-  return `${server.wadoUriRoot}?${paramString}`;
+  return `${server.wadoUriRoot}?${paramString}`
 }
 
 function buildInstanceWadoRsUri(
@@ -96,7 +96,7 @@ function buildInstanceWadoRsUri(
 ) {
   return `${
     server.wadoRoot
-  }/studies/${studyInstanceUid}/series/${seriesInstanceUid}/instances/${sopInstanceUid}`;
+  }/studies/${studyInstanceUid}/series/${seriesInstanceUid}/instances/${sopInstanceUid}`
 }
 
 function buildInstanceFrameWadoRsUri(
@@ -111,10 +111,10 @@ function buildInstanceFrameWadoRsUri(
     studyInstanceUid,
     seriesInstanceUid,
     sopInstanceUid
-  );
-  frame = frame != null || 1;
+  )
+  frame = frame != null || 1
 
-  return `${baseWadoRsUri}/frames/${frame}`;
+  return `${baseWadoRsUri}/frames/${frame}`
 }
 
 /**
@@ -129,57 +129,57 @@ function getSourceImageInstanceUid(instance) {
   // TODO= Parse the whole Source Image Sequence
   // This is a really poor workaround for now.
   // Later we should probably parse the whole sequence.
-  var SourceImageSequence = instance['00082112'];
+  var SourceImageSequence = instance['00082112']
   if (
     SourceImageSequence &&
     SourceImageSequence.Value &&
     SourceImageSequence.Value.length
   ) {
-    return SourceImageSequence.Value[0]['00081155'].Value[0];
+    return SourceImageSequence.Value[0]['00081155'].Value[0]
   }
 }
 
 function getPaletteColor(server, instance, tag, lutDescriptor) {
-  const numLutEntries = lutDescriptor[0];
-  const bits = lutDescriptor[2];
+  const numLutEntries = lutDescriptor[0]
+  const bits = lutDescriptor[2]
 
-  let uri = WADOProxy.convertURL(instance[tag].BulkDataURI, server);
+  let uri = WADOProxy.convertURL(instance[tag].BulkDataURI, server)
 
   // TODO: Workaround for dcm4chee behind SSL-terminating proxy returning
   // incorrect bulk data URIs
   if (server.wadoRoot.indexOf('https') === 0 && !uri.includes('https')) {
-    uri = uri.replace('http', 'https');
+    uri = uri.replace('http', 'https')
   }
 
   const config = {
     url: server.wadoRoot, //BulkDataURI is absolute, so this isn't used
-    headers: DICOMWeb.getAuthorizationHeader(server)
-  };
-  const dicomWeb = new api.DICOMwebClient(config);
+    headers: DICOMWeb.getAuthorizationHeader(server),
+  }
+  const dicomWeb = new api.DICOMwebClient(config)
   const options = {
-    BulkDataURI: uri
-  };
+    BulkDataURI: uri,
+  }
 
   const readUInt16 = (byteArray, position) => {
-    return byteArray[position] + byteArray[position + 1] * 256;
-  };
+    return byteArray[position] + byteArray[position + 1] * 256
+  }
 
   const arrayBufferToPaletteColorLUT = arraybuffer => {
-    const byteArray = new Uint8Array(arraybuffer);
-    const lut = [];
+    const byteArray = new Uint8Array(arraybuffer)
+    const lut = []
 
     for (let i = 0; i < numLutEntries; i++) {
       if (bits === 16) {
-        lut[i] = readUInt16(byteArray, i * 2);
+        lut[i] = readUInt16(byteArray, i * 2)
       } else {
-        lut[i] = byteArray[i];
+        lut[i] = byteArray[i]
       }
     }
 
-    return lut;
-  };
+    return lut
+  }
 
-  return dicomWeb.retrieveBulkData(options).then(arrayBufferToPaletteColorLUT);
+  return dicomWeb.retrieveBulkData(options).then(arrayBufferToPaletteColorLUT)
 }
 
 /**
@@ -190,71 +190,72 @@ function getPaletteColor(server, instance, tag, lutDescriptor) {
  * @returns {String} The ReferenceSOPInstanceUID
  */
 async function getPaletteColors(server, instance, lutDescriptor) {
-  let paletteUID = DICOMWeb.getString(instance['00281199']);
+  let paletteUID = DICOMWeb.getString(instance['00281199'])
 
   return new Promise((resolve, reject) => {
+    let entry
     if (paletteColorCache.isValidUID(paletteUID)) {
-      const entry = paletteColorCache.get(paletteUID);
+      entry = paletteColorCache.get(paletteUID)
 
       if (entry) {
-        return resolve(entry);
+        return resolve(entry)
       }
     }
 
     // no entry in cache... Fetch remote data.
-    const r = getPaletteColor(server, instance, '00281201', lutDescriptor);
-    const g = getPaletteColor(server, instance, '00281202', lutDescriptor);
-    const b = getPaletteColor(server, instance, '00281203', lutDescriptor);
+    const r = getPaletteColor(server, instance, '00281201', lutDescriptor)
+    const g = getPaletteColor(server, instance, '00281202', lutDescriptor)
+    const b = getPaletteColor(server, instance, '00281203', lutDescriptor)
 
-    const promises = [r, g, b];
+    const promises = [r, g, b]
 
     Promise.all(promises).then(args => {
       entry = {
         red: args[0],
         green: args[1],
-        blue: args[2]
-      };
+        blue: args[2],
+      }
 
       // when paletteUID is present, the entry can be cached...
-      entry.uid = paletteUID;
-      paletteColorCache.add(entry);
+      entry.uid = paletteUID
+      paletteColorCache.add(entry)
 
-      resolve(entry);
-    });
-  });
+      resolve(entry)
+    })
+  })
 }
 
 function getFrameIncrementPointer(element) {
   const frameIncrementPointerNames = {
     '00181065': 'frameTimeVector',
-    '00181063': 'frameTime'
-  };
-
-  if (!element || !element.Value || !element.Value.length) {
-    return;
+    '00181063': 'frameTime',
   }
 
-  const value = element.Value[0];
-  return frameIncrementPointerNames[value];
+  if (!element || !element.Value || !element.Value.length) {
+    return
+  }
+
+  const value = element.Value[0]
+  return frameIncrementPointerNames[value]
 }
 
 function getRadiopharmaceuticalInfo(instance) {
-  const modality = DICOMWeb.getString(instance['00080060']);
+  const modality = DICOMWeb.getString(instance['00080060'])
 
   if (modality !== 'PT') {
-    return;
+    return
   }
 
-  const radiopharmaceuticalInfo = instance['00540016'];
+  const radiopharmaceuticalInfo = instance['00540016']
   if (
     radiopharmaceuticalInfo === undefined ||
     !radiopharmaceuticalInfo.Value ||
     !radiopharmaceuticalInfo.Value.length
   ) {
-    return;
+    return
   }
 
-  const firstPetRadiopharmaceuticalInfo = radiopharmaceuticalInfo.Value[0];
+  const firstPetRadiopharmaceuticalInfo = radiopharmaceuticalInfo.Value[0]
   return {
     radiopharmaceuticalStartTime: DICOMWeb.getString(
       firstPetRadiopharmaceuticalInfo['00181072']
@@ -264,8 +265,8 @@ function getRadiopharmaceuticalInfo(instance) {
     ),
     radionuclideHalfLife: DICOMWeb.getNumber(
       firstPetRadiopharmaceuticalInfo['00181075']
-    )
-  };
+    ),
+  }
 }
 
 /**
@@ -280,12 +281,12 @@ function getRadiopharmaceuticalInfo(instance) {
  */
 async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
   if (!resultData.length) {
-    return;
+    return
   }
 
-  const anInstance = resultData[0];
+  const anInstance = resultData[0]
   if (!anInstance) {
-    return;
+    return
   }
 
   // TODO: Pass a reference ID to the server instead of including the URLs here
@@ -306,15 +307,15 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
     studyDescription: DICOMWeb.getString(anInstance['00081030']),
     imageCount: DICOMWeb.getString(anInstance['00201208']),
     studyInstanceUid: DICOMWeb.getString(anInstance['0020000D']),
-    institutionName: DICOMWeb.getString(anInstance['00080080'])
-  };
+    institutionName: DICOMWeb.getString(anInstance['00080080']),
+  }
 
-  const seriesMap = {};
+  const seriesMap = {}
 
   await Promise.all(
     resultData.map(async function(instance) {
-      const seriesInstanceUid = DICOMWeb.getString(instance['0020000E']);
-      let series = seriesMap[seriesInstanceUid];
+      const seriesInstanceUid = DICOMWeb.getString(instance['0020000E'])
+      let series = seriesMap[seriesInstanceUid]
 
       if (!series) {
         series = {
@@ -324,31 +325,31 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
           seriesNumber: DICOMWeb.getNumber(instance['00200011']),
           seriesDate: DICOMWeb.getString(instance['00080021']),
           seriesTime: DICOMWeb.getString(instance['00080031']),
-          instances: []
-        };
-        seriesMap[seriesInstanceUid] = series;
-        studyData.seriesList.push(series);
+          instances: [],
+        }
+        seriesMap[seriesInstanceUid] = series
+        studyData.seriesList.push(series)
       }
 
-      const sopInstanceUid = DICOMWeb.getString(instance['00080018']);
+      const sopInstanceUid = DICOMWeb.getString(instance['00080018'])
       const wadouri = buildInstanceWadoUrl(
         server,
         studyInstanceUid,
         seriesInstanceUid,
         sopInstanceUid
-      );
+      )
       const baseWadoRsUri = buildInstanceWadoRsUri(
         server,
         studyInstanceUid,
         seriesInstanceUid,
         sopInstanceUid
-      );
+      )
       const wadorsuri = buildInstanceFrameWadoRsUri(
         server,
         studyInstanceUid,
         seriesInstanceUid,
         sopInstanceUid
-      );
+      )
 
       const instanceSummary = {
         imageType: DICOMWeb.getString(instance['00080008']),
@@ -400,45 +401,45 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
         wadouri: WADOProxy.convertURL(wadouri, server),
         wadorsuri: WADOProxy.convertURL(wadorsuri, server),
         imageRendering: server.imageRendering,
-        thumbnailRendering: server.thumbnailRendering
-      };
+        thumbnailRendering: server.thumbnailRendering,
+      }
 
       // Get additional information if the instance uses "PALETTE COLOR" photometric interpretation
       if (instanceSummary.photometricInterpretation === 'PALETTE COLOR') {
         const redPaletteColorLookupTableDescriptor = parseFloatArray(
           DICOMWeb.getString(instance['00281101'])
-        );
+        )
         const greenPaletteColorLookupTableDescriptor = parseFloatArray(
           DICOMWeb.getString(instance['00281102'])
-        );
+        )
         const bluePaletteColorLookupTableDescriptor = parseFloatArray(
           DICOMWeb.getString(instance['00281103'])
-        );
+        )
         const palettes = await getPaletteColors(
           server,
           instance,
           redPaletteColorLookupTableDescriptor
-        );
+        )
 
         if (palettes) {
           if (palettes.uid) {
-            instanceSummary.paletteColorLookupTableUID = palettes.uid;
+            instanceSummary.paletteColorLookupTableUID = palettes.uid
           }
 
-          instanceSummary.redPaletteColorLookupTableData = palettes.red;
-          instanceSummary.greenPaletteColorLookupTableData = palettes.green;
-          instanceSummary.bluePaletteColorLookupTableData = palettes.blue;
-          instanceSummary.redPaletteColorLookupTableDescriptor = redPaletteColorLookupTableDescriptor;
-          instanceSummary.greenPaletteColorLookupTableDescriptor = greenPaletteColorLookupTableDescriptor;
-          instanceSummary.bluePaletteColorLookupTableDescriptor = bluePaletteColorLookupTableDescriptor;
+          instanceSummary.redPaletteColorLookupTableData = palettes.red
+          instanceSummary.greenPaletteColorLookupTableData = palettes.green
+          instanceSummary.bluePaletteColorLookupTableData = palettes.blue
+          instanceSummary.redPaletteColorLookupTableDescriptor = redPaletteColorLookupTableDescriptor
+          instanceSummary.greenPaletteColorLookupTableDescriptor = greenPaletteColorLookupTableDescriptor
+          instanceSummary.bluePaletteColorLookupTableDescriptor = bluePaletteColorLookupTableDescriptor
         }
       }
 
-      series.instances.push(instanceSummary);
+      series.instances.push(instanceSummary)
     })
-  );
+  )
 
-  return studyData;
+  return studyData
 }
 
 /**
@@ -451,16 +452,16 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
 async function RetrieveMetadata(server, studyInstanceUid) {
   const config = {
     url: server.wadoRoot,
-    headers: DICOMWeb.getAuthorizationHeader(server)
-  };
-  const dicomWeb = new api.DICOMwebClient(config);
+    headers: DICOMWeb.getAuthorizationHeader(server),
+  }
+  const dicomWeb = new api.DICOMwebClient(config)
   const options = {
-    studyInstanceUID: studyInstanceUid
-  };
+    studyInstanceUID: studyInstanceUid,
+  }
 
   return dicomWeb.retrieveStudyMetadata(options).then(result => {
-    return resultDataToStudyMetadata(server, studyInstanceUid, result);
-  });
+    return resultDataToStudyMetadata(server, studyInstanceUid, result)
+  })
 }
 
-export default RetrieveMetadata;
+export default RetrieveMetadata
