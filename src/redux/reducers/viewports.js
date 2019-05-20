@@ -34,6 +34,7 @@ const defaultState = {
 const viewports = (state = defaultState, action) => {
   let currentData
   let viewportSpecificData
+  let useActiveViewport = false
   switch (action.type) {
     case SET_VIEWPORT_ACTIVE:
       return Object.assign({}, state, {
@@ -52,26 +53,15 @@ const viewports = (state = defaultState, action) => {
       )
 
       return Object.assign({}, state, { viewportSpecificData })
-    case SET_SPECIFIC_DATA:
-      currentData =
-        cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {}
-      viewportSpecificData = cloneDeep(state.viewportSpecificData)
-      viewportSpecificData[action.viewportIndex] = merge(
-        {},
-        currentData,
-        action.data
-      )
-
-      return Object.assign({}, state, { viewportSpecificData })
     case SET_ACTIVE_SPECIFIC_DATA:
-      currentData =
-        cloneDeep(state.viewportSpecificData[state.activeViewportIndex]) || {}
+      useActiveViewport = true
+    case SET_SPECIFIC_DATA:
+      const viewportIndex = useActiveViewport
+        ? state.activeViewportIndex
+        : action.viewportIndex
+      currentData = cloneDeep(state.viewportSpecificData[viewportIndex]) || {}
       viewportSpecificData = cloneDeep(state.viewportSpecificData)
-      viewportSpecificData[state.activeViewportIndex] = merge(
-        {},
-        currentData,
-        action.data
-      )
+      viewportSpecificData[viewportIndex] = merge({}, currentData, action.data)
 
       return Object.assign({}, state, { viewportSpecificData })
     case CLEAR_VIEWPORT:
