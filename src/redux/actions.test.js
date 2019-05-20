@@ -8,7 +8,7 @@ describe('actions', () => {
       'setViewportSpecificData',
       'setLayout',
       'clearViewportSpecificData',
-      //
+      'setActiveViewportSpecificData',
       'setToolActive',
       'setStudyLoadingProgress',
       'clearStudyLoadingProgress',

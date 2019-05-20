@@ -6,7 +6,8 @@ import {
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
   CLEAR_VIEWPORT,
-  SET_VIEWPORT_SPECIFIC_DATA,
+  SET_SPECIFIC_DATA,
+  SET_ACTIVE_SPECIFIC_DATA,
 } from './../constants/ActionTypes.js'
 
 const defaultState = {
@@ -51,7 +52,7 @@ const viewports = (state = defaultState, action) => {
       )
 
       return Object.assign({}, state, { viewportSpecificData })
-    case SET_VIEWPORT_SPECIFIC_DATA:
+    case SET_SPECIFIC_DATA:
       currentData =
         cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {}
       viewportSpecificData = cloneDeep(state.viewportSpecificData)
@@ -62,7 +63,7 @@ const viewports = (state = defaultState, action) => {
       )
 
       return Object.assign({}, state, { viewportSpecificData })
-    case 'SET_ACTIVE_VIEWPORT_SPECIFIC_DATA':
+    case SET_ACTIVE_SPECIFIC_DATA:
       currentData =
         cloneDeep(state.viewportSpecificData[state.activeViewportIndex]) || {}
       viewportSpecificData = cloneDeep(state.viewportSpecificData)
