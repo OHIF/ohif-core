@@ -5,3 +5,14 @@ export const SET_VIEWPORT = 'VIEWPORT::SET'
 export const SET_VIEWPORT_ACTIVE = 'VIEWPORT::SET_ACTIVE'
 export const SET_VIEWPORT_LAYOUT = 'VIEWPORT::SET_LAYOUT'
 export const CLEAR_VIEWPORT = 'VIEWPORT::CLEAR'
+
+/**
+ * SERVERS
+ */
+export const ADD_SERVER = 'ADD_SERVER'
+export const SET_SERVERS = 'SET_SERVERS'
+
+/**
+ * EXTENSIONS
+ */
+export const SET_EXTENSION_DATA = 'SET_EXTENSION_DATA'

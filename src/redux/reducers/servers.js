@@ -1,31 +1,21 @@
-const defaultState = {
-  servers: []
-};
+import uniqBy from 'lodash/uniqBy'
+
+export const defaultState = {
+  servers: [],
+}
 
 const servers = (state = defaultState, action) => {
   switch (action.type) {
     case 'ADD_SERVER':
-      const { servers } = state;
-      const alreadyExists = servers.find(
-        server => server.id === action.server.id
-      );
+      const servers = uniqBy([...state.servers, action.server], 'id')
+      return { ...state, servers }
 
-      if (alreadyExists) {
-        return state;
-      }
-
-      servers.push(action.server);
-
-      if (servers.length === 1) {
-        servers[0].active = true;
-      }
-
-      return Object.assign({}, state, { servers });
     case 'SET_SERVERS':
-      return Object.assign({}, state, { servers: action.servers });
-    default:
-      return state;
-  }
-};
+      return { ...state, servers: action.servers }
 
-export default servers;
+    default:
+      return state
+  }
+}
+
+export default servers
