@@ -1,10 +1,12 @@
 import log from '../log'
+import { connect } from 'react-redux'
 import commands from '../commands'
 import actions from '../redux/actions'
 import hotkeys from '../hotkeys'
 
-export default class HotkeysUtil {
-  constructor() {
+class HotkeysUtil {
+  constructor(props) {
+    this.props = props
     this.toolCommands = {
       wwwc: 'W/L',
       zoom: 'Zoom',
@@ -91,12 +93,7 @@ export default class HotkeysUtil {
   }
 
   _dispatchCommand(options) {
-    const { setActiveViewportSpecificData } = actions
-    window.store.dispatch(
-      setActiveViewportSpecificData({
-        viewport: options,
-      })
-    )
+    this.props.setActiveViewportSpecificData({ viewport: options })
   }
 
   _getHotKeyCommand(currentViewportParameters, toolId) {
@@ -202,8 +199,7 @@ export default class HotkeysUtil {
       commands.register(contextName, toolId, {
         name: commandName,
         action: () => {
-          const { setToolActive } = actions
-          window.store.dispatch(setToolActive(commandName))
+          this.props.setToolActive(commandName)
         },
         params: toolId,
       })
@@ -216,33 +212,21 @@ export default class HotkeysUtil {
    * @param {String} contextName
    */
   _registerViewportCommands(map, contextName) {
-    const { setActiveViewportSpecificData } = actions
-
     Object.keys(map).forEach(toolId => {
       const commandName = map[toolId]
       commands.register(contextName, toolId, {
         name: commandName,
         action: () => {
           // Call Redux Action to change viewport data for active viewport
-
-          const state = window.store.getState()
-          const viewportIndex = state.viewports.activeViewportIndex
-          const viewportSpecificData =
-            state.viewports.viewportSpecificData[viewportIndex]
-          const currentViewportParameters = viewportSpecificData.viewport || {}
+          const currentViewportParameters =
+            this.props.viewportSpecificData.viewport || {}
 
           const hotKeyCommand = this._getHotKeyCommand(
             currentViewportParameters,
             toolId
           )
 
-          window.store.dispatch(
-            setActiveViewportSpecificData({
-              viewport: hotKeyCommand,
-            })
-          )
-
-          debugger
+          this.props.setActiveViewportSpecificData({ viewport: hotKeyCommand })
         },
         params: toolId,
         disabled: this._isActiveViewportEmpty,
@@ -285,14 +269,8 @@ export default class HotkeysUtil {
     // Register viewport navigation commands
     commands.set(contextName, this.commands, true)
 
-    const hotkeysData = window.store.getState().preferences[contextName]
-      ? window.store.getState().preferences[contextName].hotKeysData
-      : window.store.getState().preferences['viewer'].hotKeysData
-
-    this.setHotkeys(hotkeysData, contextName)
-
-    const { setCommandContext } = actions
-    window.store.dispatch(setCommandContext({ context: contextName }))
+    this.setHotkeys(contextName)
+    this.props.setCommandContext({ context: contextName })
   }
 
   /**
@@ -300,13 +278,8 @@ export default class HotkeysUtil {
    * @param {*} hotKeysPreferences -- default redux values
    * @param {*} contextName  -- default redux value
    */
-  setHotkeys(
-    hotKeysPreferences,
-    contextName = window.store.getState().commandContext.context
-  ) {
-    hotKeysPreferences =
-      hotKeysPreferences ||
-      window.store.getState().preferences[contextName].hotKeysData
+  setHotkeys(contextName = this.props.contextName) {
+    const hotKeysPreferences = this.props.hotKeysPreferences
     const hotKeys = {}
 
     Object.keys(hotKeysPreferences).forEach(key => {
@@ -316,3 +289,35 @@ export default class HotkeysUtil {
     hotkeys.set(contextName, hotKeys, true)
   }
 }
+
+export default connect(
+  state => {
+    const contextName = state.commandContext.context
+    const hotkeysData = state.preferences[contextName]
+      ? state.preferences[contextName].hotKeysData
+      : state.preferences['viewer'].hotKeysData
+    const viewportIndex = state.viewports.activeViewportIndex
+    const viewportSpecificData =
+      state.viewports.viewportSpecificData[viewportIndex]
+
+    return {
+      hotkeysData,
+      contextName,
+      hotKeysPreferences: hotKeysData,
+      viewportSpecificData,
+    }
+  },
+  dispatch => {
+    const {
+      setCommandContext,
+      setActiveViewportSpecificData,
+      setToolActive,
+    } = actions
+    return {
+      setCommandContext: context => dispatch(setCommandContext(context)),
+      setActiveViewportSpecificData: viewport =>
+        dispatch(setActiveViewportSpecificData(viewport)),
+      setToolActive: commandName => dispatch(setToolActive(commandName)),
+    }
+  }
+)(HotkeysUtil)

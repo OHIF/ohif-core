@@ -9,14 +9,15 @@ import svgr from '@svgr/rollup'
 import pkg from './package.json'
 
 const globals = {
-  'react': 'React',
+  react: 'React',
+  'react-redux': 'reactRedux',
   'react-dom': 'ReactDOM',
   'cornerstone-core': 'cornerstone',
   'cornerstone-math': 'cornerstoneMath',
   'cornerstone-tools': 'cornerstoneTools',
   'cornerstone-wado-image-loader': 'cornerstoneWADOImageLoader',
-  'dicom-parser': 'dicomParser'
-};
+  'dicom-parser': 'dicomParser',
+}
 
 export default {
   input: 'src/index.js',
@@ -27,20 +28,20 @@ export default {
       name: 'OHIF',
       sourcemap: true,
       exports: 'named',
-      globals
+      globals,
     },
     {
       file: pkg.module,
       format: 'es',
       sourcemap: true,
       exports: 'named',
-      globals
+      globals,
     },
   ],
   plugins: [
     external(),
     postcss({
-      modules: false
+      modules: false,
     }),
     url(),
     json(),
@@ -48,17 +49,15 @@ export default {
     babel({
       exclude: 'node_modules/**',
       externalHelpers: false,
-      runtimeHelpers: true
+      runtimeHelpers: true,
     }),
     resolve(),
     commonjs({
       include: 'node_modules/**',
       namedExports: {
-          'node_modules/dicomweb-client/build/dicomweb-client.js': [
-            'api'
-          ]
-      }
-   }),
+        'node_modules/dicomweb-client/build/dicomweb-client.js': ['api'],
+      },
+    }),
   ],
   external: Object.keys(pkg.peerDependencies || {}),
 }
