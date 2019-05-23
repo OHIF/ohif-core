@@ -77,6 +77,17 @@ describe('actions', () => {
       )
     })
 
+    it('should create an action to clear clearViewportSpecificData', () => {
+      const viewportIndex = 1
+      const expectedAction = {
+        type: types.CLEAR_VIEWPORT,
+        viewportIndex,
+      }
+      expect(actions.clearViewportSpecificData(viewportIndex)).toEqual(
+        expectedAction
+      )
+    })
+
     it('should create an action to set the active viewport', () => {
       const viewportIndex = 1
       const expectedAction = {
