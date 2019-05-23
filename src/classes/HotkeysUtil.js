@@ -1,10 +1,12 @@
-import log from '../log'
 import commands from '../commands'
 import actions from '../redux/actions'
 import hotkeys from '../hotkeys'
 
 export default class HotkeysUtil {
-  constructor() {
+  constructor(
+    contextName,
+    { setViewportSpecificData, setToolActive, setActiveViewportSpecificData }
+  ) {
     this.toolCommands = {
       wwwc: 'W/L',
       zoom: 'Zoom',
@@ -34,54 +36,62 @@ export default class HotkeysUtil {
       clearTools: 'Clear Tools',
     }
 
+    const dispatchCommand = this._dispatchCommand.bind(setViewportSpecificData)
+
     this.commands = {
       scrollDown: {
         name: 'Scroll Down',
         action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollDown')),
+          dispatchCommand(this._getHotKeyCommand(null, 'scrollDown')),
       },
       scrollUp: {
         name: 'Scroll Up',
-        action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'scrollUp')),
+        action: () => dispatchCommand(this._getHotKeyCommand(null, 'scrollUp')),
       },
       scrollFirstImage: {
         name: 'Scroll to First Image',
         action: () =>
-          this._dispatchCommand(
-            this._getHotKeyCommand(null, 'scrollFirstImage')
-          ),
+          dispatchCommand(this._getHotKeyCommand(null, 'scrollFirstImage')),
       },
       scrollLastImage: {
         name: 'Scroll to Last Image',
         action: () =>
-          this._dispatchCommand(
-            this._getHotKeyCommand(null, 'scrollLastImage')
-          ),
+          dispatchCommand(this._getHotKeyCommand(null, 'scrollLastImage')),
       },
       previousDisplaySet: {
         name: 'Previous Series',
         action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'previousSeries')),
+          dispatchCommand(this._getHotKeyCommand(null, 'previousSeries')),
         disabled: () => !this._canMoveDisplaySets(false),
       },
       nextDisplaySet: {
         name: 'Next Series',
         action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'nextSeries')),
+          dispatchCommand(this._getHotKeyCommand(null, 'nextSeries')),
         disabled: () => !this._canMoveDisplaySets(true),
       },
       nextPanel: {
         name: 'Next Image Viewport',
         action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'nextPanel')),
+          dispatchCommand(this._getHotKeyCommand(null, 'nextPanel')),
       },
       previousPanel: {
         name: 'Previous Image Viewport',
         action: () =>
-          this._dispatchCommand(this._getHotKeyCommand(null, 'previousPanel')),
+          dispatchCommand(this._getHotKeyCommand(null, 'previousPanel')),
       },
     }
+
+    commands.createContext(contextName)
+    this._registerToolCommands(this.toolCommands, contextName, setToolActive)
+
+    this._registerViewportCommands(
+      this.viewportCommands,
+      contextName,
+      setActiveViewportSpecificData
+    )
+
+    this.setup(contextName)
   }
 
   _rotate(currentPosition, rotationDegree) {
@@ -90,13 +100,10 @@ export default class HotkeysUtil {
       : currentPosition + rotationDegree
   }
 
-  _dispatchCommand(options) {
-    const { setActiveViewportSpecificData } = actions
-    window.store.dispatch(
-      setActiveViewportSpecificData({
-        viewport: options,
-      })
-    )
+  _dispatchCommand(setActiveViewportSpecificData, options) {
+    setActiveViewportSpecificData({
+      viewport: options,
+    })
   }
 
   _getHotKeyCommand(currentViewportParameters, toolId) {
@@ -196,14 +203,14 @@ export default class HotkeysUtil {
    * @param {*} map
    * @param {String} contextName
    */
-  _registerToolCommands(map, contextName) {
+  _registerToolCommands(map, contextName, setToolActive) {
     Object.keys(map).forEach(toolId => {
       const commandName = map[toolId]
       commands.register(contextName, toolId, {
         name: commandName,
         action: () => {
-          const { setToolActive } = actions
-          window.store.dispatch(setToolActive(commandName))
+          // const { setToolActive } = actions
+          setToolActive(commandName)
         },
         params: toolId,
       })
@@ -215,9 +222,7 @@ export default class HotkeysUtil {
    * @param {*} map
    * @param {String} contextName
    */
-  _registerViewportCommands(map, contextName) {
-    const { setActiveViewportSpecificData } = actions
-
+  _registerViewportCommands(map, contextName, setActiveViewportSpecificData) {
     Object.keys(map).forEach(toolId => {
       const commandName = map[toolId]
       commands.register(contextName, toolId, {
@@ -236,11 +241,9 @@ export default class HotkeysUtil {
             toolId
           )
 
-          window.store.dispatch(
-            setActiveViewportSpecificData({
-              viewport: hotKeyCommand,
-            })
-          )
+          setActiveViewportSpecificData({
+            viewport: hotKeyCommand,
+          })
 
           debugger
         },
@@ -265,11 +268,6 @@ export default class HotkeysUtil {
    * @param {String} contextName
    */
   setup(contextName = 'viewer') {
-    commands.createContext(contextName)
-
-    this._registerToolCommands(this.toolCommands, contextName)
-    this._registerViewportCommands(this.viewportCommands, contextName)
-
     // TODO: preset wl
     // const applyPreset = presetName => WLPresets.applyWLPresetToActiveElement(presetName);
     for (let i = 0; i < 10; i++) {
