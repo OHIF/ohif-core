@@ -23,17 +23,12 @@ describe('viewports reducer', () => {
 
   it('should add to servers list on ADD_SERVER', () => {
     const initialState = {
-      servers: [
-        { id: 'one', active: true },
-        { id: 'two', active: true },
-        { id: 'three', active: true },
-        { id: 'four', active: true },
-      ],
+      servers: [{ id: 'one' }, { id: 'two' }, { id: 'three' }, { id: 'four' }],
     }
 
     const action = {
       type: types.ADD_SERVER,
-      server: { id: 'five', active: true },
+      server: { id: 'five' },
     }
 
     const expectedState = {
@@ -48,17 +43,12 @@ describe('viewports reducer', () => {
 
   it('should not add duplicated servers on ADD_SERVER', () => {
     const initialState = {
-      servers: [
-        { id: 'one', active: true },
-        { id: 'two', active: true },
-        { id: 'three', active: true },
-        { id: 'four', active: true },
-      ],
+      servers: [{ id: 'one' }, { id: 'two' }, { id: 'three' }, { id: 'four' }],
     }
 
     const action = {
       type: types.ADD_SERVER,
-      server: { id: 'two', active: true },
+      server: { id: 'two' },
     }
 
     Reducer(reducer)
