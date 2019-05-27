@@ -7,6 +7,7 @@ import {
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
   CLEAR_VIEWPORT,
+  SET_ACTIVE_SPECIFIC_DATA,
 } from './constants/ActionTypes.js'
 
 /**
@@ -31,6 +32,11 @@ export const setLayout = layout => ({
 export const clearViewportSpecificData = viewportIndex => ({
   type: CLEAR_VIEWPORT,
   viewportIndex,
+})
+
+export const setActiveViewportSpecificData = data => ({
+  type: SET_ACTIVE_SPECIFIC_DATA,
+  data,
 })
 
 /**
@@ -100,7 +106,7 @@ const actions = {
   setViewportSpecificData,
   setLayout,
   clearViewportSpecificData,
-  //
+  setActiveViewportSpecificData,
   setToolActive,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
