@@ -36,5 +36,5 @@ export {
   ProtocolMatchingRule,
   StudyMatchingRule,
   SeriesMatchingRule,
-  ImageMatchingRule
+  ImageMatchingRule,
 };

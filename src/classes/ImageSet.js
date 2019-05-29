@@ -20,7 +20,7 @@ class ImageSet {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: images
+      value: images,
     });
 
     // @property "uid"
@@ -28,7 +28,7 @@ class ImageSet {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: guid() // Unique ID of the instance
+      value: guid(), // Unique ID of the instance
     });
   }
 

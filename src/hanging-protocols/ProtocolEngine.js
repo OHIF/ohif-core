@@ -130,7 +130,7 @@ export default class ProtocolEngine {
       if (score > 0) {
         matched.push({
           score,
-          protocol
+          protocol,
         });
       }
     });
@@ -142,8 +142,8 @@ export default class ProtocolEngine {
       return [
         {
           score: 1,
-          protocol: defaultProtocol
-        }
+          protocol: defaultProtocol,
+        },
       ];
     }
 
@@ -251,7 +251,7 @@ export default class ProtocolEngine {
     const {
       studyMatchingRules,
       seriesMatchingRules,
-      imageMatchingRules: instanceMatchingRules
+      imageMatchingRules: instanceMatchingRules,
     } = viewport;
 
     const matchingScores = [];
@@ -406,7 +406,7 @@ export default class ProtocolEngine {
 
           const matchDetails = {
             passed: [],
-            failed: []
+            failed: [],
           };
 
           matchDetails.passed = matchDetails.passed.concat(
@@ -448,8 +448,8 @@ export default class ProtocolEngine {
                 instance.getTagValue('x00080020') +
                 instance.getTagValue('x00080030'), // StudyDate = x00080020 StudyTime = x00080030
               series: parseInt(instance.getTagValue('x00200011')), // TODO: change for seriesDateTime SeriesNumber = x00200011
-              instance: parseInt(instance.getTagValue('x00200013')) // TODO: change for acquisitionTime InstanceNumber = x00200013
-            }
+              instance: parseInt(instance.getTagValue('x00200013')), // TODO: change for acquisitionTime InstanceNumber = x00200013
+            },
           };
 
           // Find the displaySet
@@ -474,17 +474,17 @@ export default class ProtocolEngine {
     const sortingFunction = sortBy(
       {
         name: 'score',
-        reverse: true
+        reverse: true,
       },
       {
         name: 'study',
-        reverse: true
+        reverse: true,
       },
       {
-        name: 'instance'
+        name: 'instance',
       },
       {
-        name: 'series'
+        name: 'series',
       }
     );
     matchingScores.sort((a, b) =>
@@ -497,7 +497,7 @@ export default class ProtocolEngine {
 
     return {
       bestMatch,
-      matchingScores
+      matchingScores,
     };
   }
 
@@ -524,7 +524,7 @@ export default class ProtocolEngine {
     for (let i = 0; i < numViewports; i++) {
       viewports.push({
         height: `${100 / rows}%`,
-        width: `${100 / columns}%`
+        width: `${100 / columns}%`,
       });
     }
 
@@ -614,7 +614,7 @@ export default class ProtocolEngine {
       const currentViewportData = {
         viewportIndex,
         viewport: cornerstoneViewportParams,
-        ...layoutProps
+        ...layoutProps,
       };
 
       const customSettings = [];
@@ -626,7 +626,7 @@ export default class ProtocolEngine {
 
         customSettings.push({
           id: id,
-          value: viewport.viewportSettings[id]
+          value: viewport.viewportSettings[id],
         });
       });
 

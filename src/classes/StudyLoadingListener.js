@@ -2,7 +2,7 @@ import cornerstone from 'cornerstone-core';
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import {
   clearStudyLoadingProgress,
-  setStudyLoadingProgress
+  setStudyLoadingProgress,
 } from '../redux/actions';
 import StackManager from '../utils/StackManager';
 
@@ -16,7 +16,7 @@ class BaseLoadingListener {
       items: [],
       total: 0,
       elapsedTime: 0,
-      speed: 0
+      speed: 0,
     };
 
     this._setProgressData = options._setProgressData;
@@ -37,7 +37,7 @@ class BaseLoadingListener {
     const items = stats.items;
     const newItem = {
       value,
-      date
+      date,
     };
 
     items.push(newItem);
@@ -114,7 +114,7 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
       this._updateProgress({
         percentComplete: 100,
         loaded: dataSetLength,
-        total: dataSetLength
+        total: dataSetLength,
       });
     }
   }
@@ -175,7 +175,7 @@ class DICOMFileLoadingListener extends BaseLoadingListener {
       percentComplete: eventData.percentComplete,
       bytesLoaded: eventData.loaded,
       bytesTotal: eventData.total,
-      bytesPerSecond: this.stats.speed
+      bytesPerSecond: this.stats.speed,
     };
 
     this._setProgressData(progressId, progressData);
@@ -219,7 +219,7 @@ class StackLoadingListener extends BaseLoadingListener {
     for (let i = 0; i < imageIds.length; i++) {
       imageIdsMap.set(imageIds[i], {
         index: i,
-        loaded: false
+        loaded: false,
       });
     }
 
@@ -354,7 +354,7 @@ class StackLoadingListener extends BaseLoadingListener {
       loadingFramesCount,
       percentComplete,
       framesPerSecond: this.stats.speed,
-      framesStatus: this.framesStatus
+      framesStatus: this.framesStatus,
     };
 
     this._setProgressData(progressId, progressData);
@@ -410,7 +410,7 @@ class StudyLoadingListener {
       }
 
       this.addStack(stack, {
-        isMultiFrame: displaySet.isMultiFrame
+        isMultiFrame: displaySet.isMultiFrame,
       });
     });
   }

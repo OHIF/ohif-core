@@ -8,7 +8,7 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
     configurable: false,
     enumerable: false,
     writable: false,
-    value: Object.create(null)
+    value: Object.create(null),
   },
   tagNumberToString: {
     configurable: false,
@@ -21,7 +21,7 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
         string = 'x' + ('00000000' + tag.toString(16)).substr(-8);
       }
       return string;
-    }
+    },
   },
   isValidTagNumber: {
     configurable: false,
@@ -29,7 +29,7 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
     writable: false,
     value: function isValidTagNumber(tag) {
       return typeof tag === NUMBER && tag >= 0 && tag <= 0xffffffff;
-    }
+    },
   },
   isValidTag: {
     configurable: false,
@@ -39,7 +39,7 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
       return typeof tag === STRING
         ? REGEX_TAG.test(tag)
         : this.isValidTagNumber(tag);
-    }
+    },
   },
   find: {
     configurable: false,
@@ -55,7 +55,7 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
         description = this._descriptions[name];
       }
       return description;
-    }
+    },
   },
   init: {
     configurable: false,
@@ -104,8 +104,8 @@ const DICOMTagDescriptions = Object.create(Object.prototype, {
       Object.freeze(_descriptions);
       // Freeze itself...
       Object.freeze(this);
-    }
-  }
+    },
+  },
 });
 
 /**
@@ -3257,7 +3257,7 @@ let initialTagDescriptionMap = {
   xfffcfffc: 'DataSetTrailingPadding',
   xfffee000: 'StartOfItem',
   xfffee00d: 'EndOfItems',
-  xfffee0dd: 'EndOfSequence'
+  xfffee0dd: 'EndOfSequence',
 };
 
 DICOMTagDescriptions.init(initialTagDescriptionMap);

@@ -61,7 +61,7 @@ function encodeId(input) {
 
 const string = {
   search,
-  encodeId
+  encodeId,
 };
 
 export default string;

@@ -7,7 +7,7 @@ import {
   storeTimepoints,
   removeTimepoint,
   updateTimepoint,
-  disassociateStudy
+  disassociateStudy,
 } from './dataExchange';
 
 MeasurementApi.setConfiguration({
@@ -16,18 +16,18 @@ MeasurementApi.setConfiguration({
     {
       id: 'newTargets',
       name: 'New Targets',
-      toolGroupId: 'targets'
+      toolGroupId: 'targets',
     },
     {
       id: 'newNonTargets',
       name: 'New Non-Targets',
-      toolGroupId: 'nonTargets'
-    }
+      toolGroupId: 'nonTargets',
+    },
   ],
   dataExchange: {
     retrieve: retrieveMeasurements,
-    store: storeMeasurements
-  }
+    store: storeMeasurements,
+  },
 });
 
 TimepointApi.setConfiguration({
@@ -36,6 +36,6 @@ TimepointApi.setConfiguration({
     store: storeTimepoints,
     remove: removeTimepoint,
     update: updateTimepoint,
-    disassociate: disassociateStudy
-  }
+    disassociate: disassociateStudy,
+  },
 });

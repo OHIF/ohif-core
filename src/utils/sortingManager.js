@@ -8,7 +8,7 @@ const getDisplaySets = (studyMetadata, seriesNumber, iteratorFunction) => {
 };
 
 const sortingManager = {
-  getDisplaySets
+  getDisplaySets,
 };
 
 export { sortingManager };

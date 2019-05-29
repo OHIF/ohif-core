@@ -5,7 +5,7 @@ import localStorage from './localStorage.js';
 const redux = {
   reducers,
   actions,
-  localStorage
+  localStorage,
 };
 
 export default redux;

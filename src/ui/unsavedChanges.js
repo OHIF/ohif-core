@@ -404,7 +404,7 @@ export const unsavedChanges = {
         {
           title: 'You have unsaved changes!',
           message:
-            "Your changes will be lost if you don't save them before leaving the current page... Are you sure you want to proceed?"
+            "Your changes will be lost if you don't save them before leaving the current page... Are you sure you want to proceed?",
         },
         options
       );
@@ -489,7 +489,7 @@ export const unsavedChanges = {
       if (event) {
         dialogOptions.position = {
           x: event.clientX + 15,
-          y: event.clientY + 15
+          y: event.clientY + 15,
         };
       }
 
@@ -530,7 +530,7 @@ export const unsavedChanges = {
     if (!dialogPresented) {
       navigateCallback();
     }
-  }
+  },
 };
 
 export default unsavedChanges;

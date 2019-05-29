@@ -63,7 +63,7 @@ export class StudyPrefetcher {
     // TODO: Allow passing in config
     let config = {
       order: 'closest',
-      displaySetCount: 1
+      displaySetCount: 1,
     };
 
     const displaySetsToPrefetch = this.getDisplaySetsToPrefetch(config);
@@ -138,7 +138,7 @@ export class StudyPrefetcher {
     const prefetchMethodMap = {
       topdown: 'getFirstDisplaySets',
       downward: 'getNextDisplaySets',
-      closest: 'getClosestDisplaySets'
+      closest: 'getClosestDisplaySets',
     };
 
     const prefetchOrder = config.order;

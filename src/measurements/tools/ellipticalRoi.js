@@ -1,11 +1,11 @@
 const displayFunction = data => {
-  let meanValue = ''
-  const { cachedStats } = data
+  let meanValue = '';
+  const { cachedStats } = data;
   if (cachedStats && cachedStats.mean) {
-    meanValue = cachedStats.mean.toFixed(2) + ' HU'
+    meanValue = cachedStats.mean.toFixed(2) + ' HU';
   }
-  return meanValue
-}
+  return meanValue;
+};
 
 export const ellipticalRoi = {
   id: 'EllipticalRoi',
@@ -21,4 +21,4 @@ export const ellipticalRoi = {
       evaluate: true,
     },
   },
-}
+};

@@ -1,6 +1,6 @@
 const displayFunction = data => {
-  return data.text || ''
-}
+  return data.text || '';
+};
 
 export const arrowAnnotate = {
   id: 'ArrowAnnotate',
@@ -16,4 +16,4 @@ export const arrowAnnotate = {
       evaluate: true,
     },
   },
-}
+};

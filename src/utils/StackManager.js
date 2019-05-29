@@ -38,7 +38,7 @@ function createAndAddStack(
       series: displaySet, // TODO: Check this
       study,
       numImages,
-      imageIndex: imageIndex + 1
+      imageIndex: imageIndex + 1,
     };
 
     const numberOfFrames = image.numberOfFrames;
@@ -62,7 +62,7 @@ function createAndAddStack(
     displaySetInstanceUid: displaySet.displaySetInstanceUid,
     imageIds,
     frameRate: displaySet.frameRate,
-    isClip: displaySet.isClip
+    isClip: displaySet.isClip,
   };
 
   stackMap[displaySet.displaySetInstanceUid] = stack;
@@ -71,7 +71,7 @@ function createAndAddStack(
 }
 
 configuration = {
-  createAndAddStack
+  createAndAddStack,
 };
 
 /**
@@ -167,7 +167,7 @@ const StackManager = {
    */
   setConfiguration(config) {
     configuration = config;
-  }
+  },
 };
 
 export { StackManager };

@@ -13,32 +13,32 @@ export class StudyMetadata extends Metadata {
         configurable: true, // configurable so that it can be redefined in sub-classes...
         enumerable: false,
         writable: true,
-        value: null
+        value: null,
       },
       _series: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: []
+        value: [],
       },
       _displaySets: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: []
+        value: [],
       },
       _firstSeries: {
         configurable: false,
         enumerable: false,
         writable: true,
-        value: null
+        value: null,
       },
       _firstInstance: {
         configurable: false,
         enumerable: false,
         writable: true,
-        value: null
-      }
+        value: null,
+      },
     });
     // Initialize Public Properties
     this._definePublicProperties();
@@ -66,7 +66,7 @@ export class StudyMetadata extends Metadata {
       enumerable: false,
       get: function() {
         return this.getStudyInstanceUID();
-      }
+      },
     });
   }
 
@@ -360,7 +360,7 @@ export class StudyMetadata extends Metadata {
       if (series instanceof SeriesMetadata) {
         result = {
           series,
-          instance
+          instance,
         };
       }
     }

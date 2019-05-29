@@ -7,7 +7,7 @@ export const nonTargets = {
   options: {
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
+      evaluate: true,
+    },
+  },
 };

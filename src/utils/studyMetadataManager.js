@@ -27,5 +27,5 @@ export default {
   get,
   all,
   remove,
-  purge
+  purge,
 };

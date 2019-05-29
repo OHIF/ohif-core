@@ -49,7 +49,7 @@ function getShallowObject(nestedObject) {
 
 const object = {
   getNestedObject,
-  getShallowObject
+  getShallowObject,
 };
 
 export default object;

@@ -19,7 +19,7 @@ const reducers = {
   studies,
   timepointManager,
   tools,
-  viewports
+  viewports,
 };
 
 export default reducers;

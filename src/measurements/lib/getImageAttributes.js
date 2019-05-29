@@ -23,7 +23,7 @@ export default function(element) {
     studyInstanceUid,
     seriesInstanceUid,
     sopInstanceUid,
-    frameIndex
+    frameIndex,
   ].join('_');
 
   return {
@@ -32,6 +32,6 @@ export default function(element) {
     seriesInstanceUid,
     sopInstanceUid,
     frameIndex,
-    imagePath
+    imagePath,
   };
 }

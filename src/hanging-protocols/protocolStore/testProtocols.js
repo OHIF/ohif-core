@@ -5,7 +5,7 @@ import Stage from '../classes/Stage';
 import {
   ImageMatchingRule,
   ProtocolMatchingRule,
-  SeriesMatchingRule
+  SeriesMatchingRule,
 } from '../classes';
 
 function getMRTwoByTwoTest() {
@@ -18,8 +18,8 @@ function getMRTwoByTwoTest() {
     'studyInstanceUid',
     {
       equals: {
-        value: '1.2.840.113619.2.5.1762583153.215519.978957063.78'
-      }
+        value: '1.2.840.113619.2.5.1762583153.215519.978957063.78',
+      },
     },
     true
   );
@@ -28,7 +28,7 @@ function getMRTwoByTwoTest() {
 
   var oneByTwo = new ViewportStructure('grid', {
     rows: 1,
-    columns: 2
+    columns: 2,
   });
 
   // Stage 1
@@ -37,20 +37,20 @@ function getMRTwoByTwoTest() {
 
   var firstSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
-      value: 1
-    }
+      value: 1,
+    },
   });
 
   var secondSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
-      value: 2
-    }
+      value: 2,
+    },
   });
 
   var thirdImage = new ImageMatchingRule('instanceNumber', {
     equals: {
-      value: 3
-    }
+      value: 3,
+    },
   });
 
   left.seriesMatchingRules.push(firstSeries);
@@ -68,21 +68,21 @@ function getMRTwoByTwoTest() {
   // Stage 2
   var twoByOne = new ViewportStructure('grid', {
     rows: 2,
-    columns: 1
+    columns: 1,
   });
   var left2 = new Viewport();
   var right2 = new Viewport();
 
   var fourthSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
-      value: 4
-    }
+      value: 4,
+    },
   });
 
   var fifthSeries = new SeriesMatchingRule('seriesNumber', {
     equals: {
-      value: 5
-    }
+      value: 5,
+    },
   });
 
   left2.seriesMatchingRules.push(fourthSeries);
@@ -121,10 +121,10 @@ function getDemoProtocols() {
         attribute: 'x00081030',
         constraint: {
           contains: {
-            value: 'DFCI CT CHEST'
-          }
-        }
-      }
+            value: 'DFCI CT CHEST',
+          },
+        },
+      },
     ],
     stages: [
       {
@@ -134,9 +134,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -150,12 +150,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '2.0'
-                  }
-                }
-              }
+                    value: '2.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -168,10 +168,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '2.0'
-                  }
-                }
-              }
+                    value: '2.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -181,14 +181,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'XTzu8HB3feep3HYKs',
@@ -196,9 +196,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -212,12 +212,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '3.0'
-                  }
-                }
-              }
+                    value: '3.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -230,10 +230,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '3.0'
-                  }
-                }
-              }
+                    value: '3.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -243,14 +243,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:12.085Z'
+        createdDate: '2017-02-14T16:07:12.085Z',
       },
       {
         id: '3yPYNaeFtr76Qz3jq',
@@ -258,9 +258,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 2,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -274,16 +274,16 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
-              }
+                    value: 'Body 3.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {
-              wlPreset: 'Lung'
+              wlPreset: 'Lung',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -294,12 +294,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 3.0'
-                  }
-                }
-              }
+                    value: 'Lung 3.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -312,10 +312,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
-              }
+                    value: 'Body 3.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -325,15 +325,15 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
+                    value: 1,
+                  },
+                },
+              },
+            ],
           },
           {
             viewportSettings: {
-              wlPreset: 'Lung'
+              wlPreset: 'Lung',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -344,10 +344,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 3.0'
-                  }
-                }
-              }
+                    value: 'Lung 3.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -357,17 +357,17 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:11:40.489Z'
-      }
+        createdDate: '2017-02-14T16:11:40.489Z',
+      },
     ],
-    numberOfPriorsReferenced: 4
+    numberOfPriorsReferenced: 4,
   });
 
   /**
@@ -390,10 +390,10 @@ function getDemoProtocols() {
         attribute: 'x00081030',
         constraint: {
           contains: {
-            value: 'DFCI CT CHEST'
-          }
-        }
-      }
+            value: 'DFCI CT CHEST',
+          },
+        },
+      },
     ],
     stages: [
       {
@@ -403,9 +403,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -419,12 +419,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '2.0'
-                  }
-                }
-              }
+                    value: '2.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -437,10 +437,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '2.0'
-                  }
-                }
-              }
+                    value: '2.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -450,14 +450,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'XTzu8HB3feep3HYKs',
@@ -465,9 +465,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -481,9 +481,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
+                    value: 'Body 3.0',
+                  },
+                },
               },
               {
                 id: 'mYnsCcNwZL56z7mTZ',
@@ -492,12 +492,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 5.0'
-                  }
-                }
-              }
+                    value: 'Body 5.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -510,9 +510,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
+                    value: 'Body 3.0',
+                  },
+                },
               },
               {
                 id: 'ygz4nb29iJZcJhnYa',
@@ -521,10 +521,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 5.0'
-                  }
-                }
-              }
+                    value: 'Body 5.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -534,14 +534,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:12.085Z'
+        createdDate: '2017-02-14T16:07:12.085Z',
       },
       {
         id: '3yPYNaeFtr76Qz3jq',
@@ -549,9 +549,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 2,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -565,9 +565,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
+                    value: 'Body 3.0',
+                  },
+                },
               },
               {
                 id: 'jXnsCcNzZL56z7mTZ',
@@ -576,16 +576,16 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 5.0'
-                  }
-                }
-              }
+                    value: 'Body 5.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {
-              wlPreset: 'Lung'
+              wlPreset: 'Lung',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -596,9 +596,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 3.0'
-                  }
-                }
+                    value: 'Lung 3.0',
+                  },
+                },
               },
               {
                 id: 'ycz4nb28iJZcJhnYa',
@@ -607,12 +607,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 5.0'
-                  }
-                }
-              }
+                    value: 'Lung 5.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -625,9 +625,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
+                    value: 'Body 3.0',
+                  },
+                },
               },
               {
                 id: '6vdBRFYnqmmosipph',
@@ -636,10 +636,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 5.0'
-                  }
-                }
-              }
+                    value: 'Body 5.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -649,15 +649,15 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
+                    value: 1,
+                  },
+                },
+              },
+            ],
           },
           {
             viewportSettings: {
-              wlPreset: 'Lung'
+              wlPreset: 'Lung',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -668,9 +668,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 3.0'
-                  }
-                }
+                    value: 'Lung 3.0',
+                  },
+                },
               },
               {
                 id: 'DTAyChZCPW68yJjXD',
@@ -679,10 +679,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 5.0'
-                  }
-                }
-              }
+                    value: 'Lung 5.0',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -692,17 +692,17 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:11:40.489Z'
-      }
+        createdDate: '2017-02-14T16:11:40.489Z',
+      },
     ],
-    numberOfPriorsReferenced: 1
+    numberOfPriorsReferenced: 1,
   });
 
   /**
@@ -725,10 +725,10 @@ function getDemoProtocols() {
         attribute: 'x00081030',
         constraint: {
           contains: {
-            value: 'DFCI CT CHEST'
-          }
-        }
-      }
+            value: 'DFCI CT CHEST',
+          },
+        },
+      },
     ],
     stages: [
       {
@@ -738,9 +738,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 1
+            columns: 1,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -754,15 +754,15 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: '2.0'
-                  }
-                }
-              }
+                    value: '2.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
-          }
+            studyMatchingRules: [],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F4mffZPif5',
@@ -771,9 +771,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 2,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -787,9 +787,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 5.0'
-                  }
-                }
+                    value: 'Body 5.0',
+                  },
+                },
               },
               {
                 id: 'mXnsCcNzZL56z7rTZ',
@@ -798,12 +798,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 3.0'
-                  }
-                }
-              }
+                    value: 'Body 3.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -816,9 +816,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 5.0'
-                  }
-                }
+                    value: 'Lung 5.0',
+                  },
+                },
               },
               {
                 id: 'mXnsCcNzZL56a7mTZ',
@@ -827,12 +827,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Lung 3.0'
-                  }
-                }
-              }
+                    value: 'Lung 3.0',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -845,9 +845,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 4.0'
-                  }
-                }
+                    value: 'Body 4.0',
+                  },
+                },
               },
               {
                 id: 'mXnsCcNzTL56z7mTZ',
@@ -856,12 +856,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Coronal'
-                  }
-                }
-              }
+                    value: 'Coronal',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -874,9 +874,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Body 4.0'
-                  }
-                }
+                    value: 'Body 4.0',
+                  },
+                },
               },
               {
                 id: 'mXnsCcAzZL56z7mTZ',
@@ -885,18 +885,18 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Sagittal'
-                  }
-                }
-              }
+                    value: 'Sagittal',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
-          }
+            studyMatchingRules: [],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
-      }
+        createdDate: '2017-02-14T16:07:09.033Z',
+      },
     ],
-    numberOfPriorsReferenced: 0
+    numberOfPriorsReferenced: 0,
   });
 
   /**
@@ -919,10 +919,10 @@ function getDemoProtocols() {
         attribute: 'x00081030',
         constraint: {
           contains: {
-            value: 'PETCT'
-          }
-        }
-      }
+            value: 'PETCT',
+          },
+        },
+      },
     ],
     stages: [
       {
@@ -932,9 +932,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -948,12 +948,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
-              }
+                    value: 'Topogram',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -966,9 +966,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
+                    value: 'Topogram',
+                  },
+                },
               },
               {
                 id: 'mRnsCcNzZL56z7mTZ',
@@ -977,15 +977,15 @@ function getDemoProtocols() {
                 attribute: 'x00200011',
                 constraint: {
                   numericality: {
-                    greaterThanOrEqualTo: 2
-                  }
-                }
-              }
+                    greaterThanOrEqualTo: 2,
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
-          }
+            studyMatchingRules: [],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F6mFgZPif5',
@@ -994,9 +994,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -1010,12 +1010,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Corrected'
-                  }
-                }
-              }
+                    value: 'PET WB Corrected',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1028,15 +1028,15 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT WB'
-                  }
-                }
-              }
+                    value: 'CT WB',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
-          }
+            studyMatchingRules: [],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F6mFgZPif5',
@@ -1045,14 +1045,14 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
             viewportSettings: {
-              invert: 'YES'
+              invert: 'YES',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -1063,12 +1063,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Uncorrected'
-                  }
-                }
-              }
+                    value: 'PET WB Uncorrected',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1081,18 +1081,18 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT Nk'
-                  }
-                }
-              }
+                    value: 'CT Nk',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
-          }
+            studyMatchingRules: [],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
-      }
+        createdDate: '2017-02-14T16:07:09.033Z',
+      },
     ],
-    numberOfPriorsReferenced: 0
+    numberOfPriorsReferenced: 0,
   });
 
   /**
@@ -1115,10 +1115,10 @@ function getDemoProtocols() {
         attribute: 'x00081030',
         constraint: {
           contains: {
-            value: 'PETCT'
-          }
-        }
-      }
+            value: 'PETCT',
+          },
+        },
+      },
     ],
     stages: [
       {
@@ -1128,9 +1128,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -1144,12 +1144,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
-              }
+                    value: 'Topogram',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1162,10 +1162,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
-              }
+                    value: 'Topogram',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1175,14 +1175,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F6mFgZPif5',
@@ -1191,9 +1191,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 1,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -1207,9 +1207,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
+                    value: 'Topogram',
+                  },
+                },
               },
               {
                 id: 'mXnsCcNzZL56z7gTZ',
@@ -1218,12 +1218,12 @@ function getDemoProtocols() {
                 attribute: 'x00200011',
                 constraint: {
                   numericality: {
-                    greaterThanOrEqualTo: 2
-                  }
-                }
-              }
+                    greaterThanOrEqualTo: 2,
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1236,9 +1236,9 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'Topogram'
-                  }
-                }
+                    value: 'Topogram',
+                  },
+                },
               },
               {
                 id: 'mXnsCcNzZL56z7mTZ',
@@ -1247,10 +1247,10 @@ function getDemoProtocols() {
                 attribute: 'x00200011',
                 constraint: {
                   numericality: {
-                    greaterThanOrEqualTo: 2
-                  }
-                }
-              }
+                    greaterThanOrEqualTo: 2,
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1260,14 +1260,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F6mFgZPif5',
@@ -1276,9 +1276,9 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 2,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
@@ -1292,12 +1292,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Corrected'
-                  }
-                }
-              }
+                    value: 'PET WB Corrected',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1310,12 +1310,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT WB'
-                  }
-                }
-              }
+                    value: 'CT WB',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1328,10 +1328,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Corrected'
-                  }
-                }
-              }
+                    value: 'PET WB Corrected',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1341,11 +1341,11 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
+                    value: 1,
+                  },
+                },
+              },
+            ],
           },
           {
             viewportSettings: {},
@@ -1358,10 +1358,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT WB'
-                  }
-                }
-              }
+                    value: 'CT WB',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1371,14 +1371,14 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
+        createdDate: '2017-02-14T16:07:09.033Z',
       },
       {
         id: 'v5PfGt9F6mFgZPif5',
@@ -1387,14 +1387,14 @@ function getDemoProtocols() {
           type: 'grid',
           properties: {
             rows: 2,
-            columns: 2
+            columns: 2,
           },
-          layoutTemplateName: 'gridLayout'
+          layoutTemplateName: 'gridLayout',
         },
         viewports: [
           {
             viewportSettings: {
-              invert: 'YES'
+              invert: 'YES',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -1405,12 +1405,12 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Uncorrected'
-                  }
-                }
-              }
+                    value: 'PET WB Uncorrected',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {},
@@ -1423,16 +1423,16 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT Nk'
-                  }
-                }
-              }
+                    value: 'CT Nk',
+                  },
+                },
+              },
             ],
-            studyMatchingRules: []
+            studyMatchingRules: [],
           },
           {
             viewportSettings: {
-              invert: 'YES'
+              invert: 'YES',
             },
             imageMatchingRules: [],
             seriesMatchingRules: [
@@ -1443,10 +1443,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'PET WB Uncorrected'
-                  }
-                }
-              }
+                    value: 'PET WB Uncorrected',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1456,11 +1456,11 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
+                    value: 1,
+                  },
+                },
+              },
+            ],
           },
           {
             viewportSettings: {},
@@ -1473,10 +1473,10 @@ function getDemoProtocols() {
                 attribute: 'x0008103e',
                 constraint: {
                   contains: {
-                    value: 'CT Nk'
-                  }
-                }
-              }
+                    value: 'CT Nk',
+                  },
+                },
+              },
             ],
             studyMatchingRules: [
               {
@@ -1486,17 +1486,17 @@ function getDemoProtocols() {
                 attribute: 'abstractPriorValue',
                 constraint: {
                   equals: {
-                    value: 1
-                  }
-                }
-              }
-            ]
-          }
+                    value: 1,
+                  },
+                },
+              },
+            ],
+          },
         ],
-        createdDate: '2017-02-14T16:07:09.033Z'
-      }
+        createdDate: '2017-02-14T16:07:09.033Z',
+      },
     ],
-    numberOfPriorsReferenced: 1
+    numberOfPriorsReferenced: 1,
   });
 
   return demoProtocols;
@@ -1504,7 +1504,7 @@ function getDemoProtocols() {
 
 const testProtocols = {
   getMRTwoByTwoTest,
-  getDemoProtocols
+  getDemoProtocols,
 };
 
 export default testProtocols;

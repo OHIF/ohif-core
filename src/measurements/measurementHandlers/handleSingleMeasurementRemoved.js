@@ -6,7 +6,7 @@ export default function handleSingleMeasurementRemoved({
   eventData,
   tool,
   toolGroupId,
-  toolGroup
+  toolGroup,
 }) {
   log.info('CornerstoneToolsMeasurementRemoved');
   const { measurementData, toolType } = eventData;
@@ -31,7 +31,7 @@ export default function handleSingleMeasurementRemoved({
   const { lesionNamingNumber, timepointId } = measurement;
   measurementApi.deleteMeasurements(toolType, measurementTypeId, {
     lesionNamingNumber,
-    timepointId
+    timepointId,
   });
 
   // TODO: This is very hacky, but will work for now

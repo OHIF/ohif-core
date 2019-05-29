@@ -10,7 +10,7 @@ function getDefaultProtocol() {
 
   const oneByOne = new ViewportStructure('grid', {
     rows: 1,
-    columns: 1
+    columns: 1,
   });
 
   const viewport = new Viewport();

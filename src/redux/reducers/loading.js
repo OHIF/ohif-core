@@ -2,7 +2,7 @@ import cloneDeep from 'lodash.clonedeep';
 
 const defaultState = {
   progress: {},
-  lastUpdated: null
+  lastUpdated: null,
 };
 
 const loading = (state = defaultState, action) => {

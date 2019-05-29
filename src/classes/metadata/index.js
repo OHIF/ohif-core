@@ -17,7 +17,7 @@ const metadata = {
   InstanceMetadata,
   OHIFStudyMetadata,
   OHIFSeriesMetadata,
-  OHIFInstanceMetadata
+  OHIFInstanceMetadata,
 };
 
 export default metadata;
