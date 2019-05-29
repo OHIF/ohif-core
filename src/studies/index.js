@@ -2,7 +2,7 @@ import { QIDO, WADO } from './services/';
 import { loadStudy } from './loadStudy.js';
 import {
   retrieveStudyMetadata,
-  deleteStudyMetadataPromise
+  deleteStudyMetadataPromise,
 } from './retrieveStudyMetadata.js';
 import retrieveStudiesMetadata from './retrieveStudiesMetadata.js';
 import getStudyBoxData from './getStudyBoxData';
@@ -12,7 +12,7 @@ import sortStudy from './sortStudy';
 const studies = {
   services: {
     QIDO,
-    WADO
+    WADO,
   },
   loadingDict: {},
   retrieveStudyMetadata,
@@ -21,7 +21,7 @@ const studies = {
   getStudyBoxData,
   searchStudies,
   loadStudy,
-  sortStudy
+  sortStudy,
 };
 
 export default studies;

@@ -4,12 +4,12 @@ import Studies from './qido/studies.js';
 import RetrieveMetadata from './wado/retrieveMetadata.js';
 
 const WADO = {
-  RetrieveMetadata
+  RetrieveMetadata,
 };
 
 const QIDO = {
   Studies,
-  Instances
+  Instances,
 };
 
 export { QIDO, WADO };

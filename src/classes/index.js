@@ -36,7 +36,7 @@ export {
   TypeSafeCollection,
   OHIFError,
   StudyMetadataSource,
-  HotkeysUtil
+  HotkeysUtil,
 };
 
 const classes = {
@@ -57,7 +57,7 @@ const classes = {
   StudySummary,
   TypeSafeCollection,
   OHIFError,
-  StudyMetadataSource
+  StudyMetadataSource,
 };
 
 export default classes;

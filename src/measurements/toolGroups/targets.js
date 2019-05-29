@@ -7,7 +7,7 @@ export const targets = {
   options: {
     caseProgress: {
       include: true,
-      evaluate: true
-    }
-  }
+      evaluate: true,
+    },
+  },
 };

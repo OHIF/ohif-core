@@ -86,5 +86,5 @@ export const parsingUtils = {
    */
   floatArray: function(data, tag) {
     return this.multiValue(data, tag, parseFloat);
-  }
+  },
 };

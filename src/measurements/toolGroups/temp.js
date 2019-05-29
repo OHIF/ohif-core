@@ -1,7 +1,7 @@
-import { length, ellipticalRoi } from '../tools'
-import cloneDeep from 'lodash.clonedeep'
+import { length, ellipticalRoi } from '../tools';
+import cloneDeep from 'lodash.clonedeep';
 
-const childTools = cloneDeep([length, ellipticalRoi])
+const childTools = cloneDeep([length, ellipticalRoi]);
 
 // Exclude temp tools from case progress
 childTools.forEach(childTool => {
@@ -10,8 +10,8 @@ childTools.forEach(childTool => {
       include: false,
       evaluate: false,
     },
-  })
-})
+  });
+});
 
 export const temp = {
   id: 'temp',
@@ -23,4 +23,4 @@ export const temp = {
       evaluate: false,
     },
   },
-}
+};

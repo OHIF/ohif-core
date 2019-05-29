@@ -8,7 +8,7 @@ const ui = {
   getScrollbarSize,
   getOffset,
   isCharacterKeyPress,
-  handleError
+  handleError,
 };
 
 export default ui;

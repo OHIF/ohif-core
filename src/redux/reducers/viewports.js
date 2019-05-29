@@ -1,5 +1,5 @@
-import cloneDeep from 'lodash.clonedeep'
-import merge from 'lodash.merge'
+import cloneDeep from 'lodash.clonedeep';
+import merge from 'lodash.merge';
 
 import {
   SET_VIEWPORT,
@@ -8,7 +8,7 @@ import {
   CLEAR_VIEWPORT,
   SET_SPECIFIC_DATA,
   SET_ACTIVE_SPECIFIC_DATA,
-} from './../constants/ActionTypes.js'
+} from './../constants/ActionTypes.js';
 
 const defaultState = {
   activeViewportIndex: 0,
@@ -21,7 +21,7 @@ const defaultState = {
     ],
   },
   viewportSpecificData: {},
-}
+};
 
 /**
  * @param {Object} [state=defaultState]
@@ -32,46 +32,46 @@ const defaultState = {
  * @param {Object} [action.viewportSpecificData]
  */
 const viewports = (state = defaultState, action) => {
-  let currentData
-  let viewportSpecificData
-  let useActiveViewport = false
+  let currentData;
+  let viewportSpecificData;
+  let useActiveViewport = false;
   switch (action.type) {
     case SET_VIEWPORT_ACTIVE:
       return Object.assign({}, state, {
         activeViewportIndex: action.viewportIndex,
-      })
+      });
     case SET_VIEWPORT_LAYOUT:
-      return Object.assign({}, state, { layout: action.layout })
+      return Object.assign({}, state, { layout: action.layout });
     case SET_VIEWPORT:
       currentData =
-        cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {}
-      viewportSpecificData = cloneDeep(state.viewportSpecificData)
+        cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {};
+      viewportSpecificData = cloneDeep(state.viewportSpecificData);
       viewportSpecificData[action.viewportIndex] = merge(
         {},
         currentData,
         action.data
-      )
+      );
 
-      return Object.assign({}, state, { viewportSpecificData })
+      return Object.assign({}, state, { viewportSpecificData });
     case SET_ACTIVE_SPECIFIC_DATA:
-      useActiveViewport = true
+      useActiveViewport = true;
     case SET_SPECIFIC_DATA:
       const viewportIndex = useActiveViewport
         ? state.activeViewportIndex
-        : action.viewportIndex
-      currentData = cloneDeep(state.viewportSpecificData[viewportIndex]) || {}
-      viewportSpecificData = cloneDeep(state.viewportSpecificData)
-      viewportSpecificData[viewportIndex] = merge({}, currentData, action.data)
+        : action.viewportIndex;
+      currentData = cloneDeep(state.viewportSpecificData[viewportIndex]) || {};
+      viewportSpecificData = cloneDeep(state.viewportSpecificData);
+      viewportSpecificData[viewportIndex] = merge({}, currentData, action.data);
 
-      return Object.assign({}, state, { viewportSpecificData })
+      return Object.assign({}, state, { viewportSpecificData });
     case CLEAR_VIEWPORT:
-      viewportSpecificData = cloneDeep(state.viewportSpecificData)
-      viewportSpecificData[action.viewportIndex] = {}
+      viewportSpecificData = cloneDeep(state.viewportSpecificData);
+      viewportSpecificData[action.viewportIndex] = {};
 
-      return Object.assign({}, state, { viewportSpecificData })
+      return Object.assign({}, state, { viewportSpecificData });
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default viewports
+export default viewports;

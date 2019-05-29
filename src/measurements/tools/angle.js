@@ -1,10 +1,10 @@
 const displayFunction = data => {
-  let text = ''
+  let text = '';
   if (data.rAngle) {
-    text = data.rAngle.toFixed(2) + String.fromCharCode(parseInt('00B0', 16))
+    text = data.rAngle.toFixed(2) + String.fromCharCode(parseInt('00B0', 16));
   }
-  return text
-}
+  return text;
+};
 
 export const angle = {
   id: 'Angle',
@@ -20,4 +20,4 @@ export const angle = {
       evaluate: true,
     },
   },
-}
+};

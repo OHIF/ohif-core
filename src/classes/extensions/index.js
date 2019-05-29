@@ -7,7 +7,7 @@ import ExtensionManager from './ExtensionManager';
 const extensions = {
   OHIFPlugin,
   ExtensionManager,
-  entryPoints: {}
+  entryPoints: {},
 };
 
 export default extensions;

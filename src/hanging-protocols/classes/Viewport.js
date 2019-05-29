@@ -1,7 +1,7 @@
 import {
   StudyMatchingRule,
   SeriesMatchingRule,
-  ImageMatchingRule
+  ImageMatchingRule,
 } from './rules';
 import { removeFromArray } from '../lib/removeFromArray';
 

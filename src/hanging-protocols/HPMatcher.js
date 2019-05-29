@@ -28,12 +28,12 @@ const match = (metadataInstance, rules) => {
   }
 
   const options = {
-    format: 'grouped'
+    format: 'grouped',
   };
 
   const details = {
     passed: [],
-    failed: []
+    failed: [],
   };
 
   let requiredFailed = false;
@@ -53,7 +53,7 @@ const match = (metadataInstance, rules) => {
 
     // Format the constraint as required by Validate.js
     const testConstraint = {
-      [attribute]: rule.constraint
+      [attribute]: rule.constraint,
     };
 
     // Create a single attribute object to be validated, since metadataInstance is an
@@ -62,7 +62,7 @@ const match = (metadataInstance, rules) => {
       ? metadataInstance.getCustomAttribute(attribute)
       : metadataInstance.getTagValue(attribute);
     const attributeMap = {
-      [attribute]: attributeValue
+      [attribute]: attributeValue,
     };
 
     // Use Validate.js to evaluate the constraints on the specified metadataInstance
@@ -81,7 +81,7 @@ const match = (metadataInstance, rules) => {
 
       // Log that this rule passed in the matching details object
       details.passed.push({
-        rule
+        rule,
       });
     } else {
       // If errorMessages were present, then validation failed
@@ -96,7 +96,7 @@ const match = (metadataInstance, rules) => {
       // and include any error messages
       details.failed.push({
         rule,
-        errorMessages
+        errorMessages,
       });
     }
   });
@@ -109,12 +109,12 @@ const match = (metadataInstance, rules) => {
   return {
     score,
     details,
-    requiredFailed
+    requiredFailed,
   };
 };
 
 const HPMatcher = {
-  match
+  match,
 };
 
 export { HPMatcher };

@@ -36,49 +36,49 @@ const defaultState = {
       scrollLastImage: {
         label: 'Scroll to Last Image',
         command: 'END',
-        column: 1
+        column: 1,
       },
       scrollFirstImage: {
         label: 'Scroll to First Image',
         command: 'HOME',
-        column: 1
+        column: 1,
       },
       previousDisplaySet: {
         label: 'Previous Series',
         command: 'PAGEUP',
-        column: 1
+        column: 1,
       },
       nextDisplaySet: { label: 'Next Series', command: 'PAGEDOWN', column: 1 },
       nextPanel: { label: 'Next Image Viewport', command: 'RIGHT', column: 1 },
       previousPanel: {
         label: 'Previous Image Viewport',
         command: 'LEFT',
-        column: 1
+        column: 1,
       },
 
       // Miscellaneous hotkeys
       toggleOverlayTags: {
         label: 'Toggle Image Info Overlay',
         command: 'O',
-        column: 1
+        column: 1,
       },
       toggleCinePlay: { label: 'Play/Pause Cine', command: 'SPACE', column: 1 },
       toggleCineDialog: {
         label: 'Show/Hide Cine Controls',
         command: '',
-        column: 1
+        column: 1,
       },
       toggleDownloadDialog: {
         label: 'Show/Hide Download Dialog',
         command: '',
-        column: 1
+        column: 1,
       },
 
       // Preset hotkeys
       WLPreset0: {
         label: 'W/L Preset 0  (Soft Tissue)',
         command: '1',
-        column: 1
+        column: 1,
       },
       WLPreset1: { label: 'W/L Preset 1 (Lung)', command: '2', column: 1 },
       WLPreset2: { label: 'W/L Preset 2 (Liver)', command: '3', column: 1 },
@@ -88,7 +88,7 @@ const defaultState = {
       WLPreset6: { label: 'W/L Preset 6', command: '7', column: 1 },
       WLPreset7: { label: 'W/L Preset 7', command: '8', column: 1 },
       WLPreset8: { label: 'W/L Preset 8', command: '9', column: 1 },
-      WLPreset9: { label: 'W/L Preset 0', command: '0', column: 1 }
+      WLPreset9: { label: 'W/L Preset 0', command: '0', column: 1 },
     },
     windowLevelData: {
       0: { description: 'Soft tissue', window: 400, level: 40 },
@@ -101,9 +101,9 @@ const defaultState = {
       7: { description: '', window: '', level: '' },
       8: { description: '', window: '', level: '' },
       9: { description: '', window: '', level: '' },
-      10: { description: '', window: '', level: '' }
-    }
-  }
+      10: { description: '', window: '', level: '' },
+    },
+  },
 };
 
 const preferences = (state, action) => {

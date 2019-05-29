@@ -1,5 +1,5 @@
-import actions from './actions.js'
-import * as types from './constants/ActionTypes.js'
+import actions from './actions.js';
+import * as types from './constants/ActionTypes.js';
 
 describe('actions', () => {
   test('exports have not changed', () => {
@@ -20,12 +20,12 @@ describe('actions', () => {
       'setTimepoints',
       'setMeasurements',
       'setStudyData',
-    ].sort()
+    ].sort();
 
-    const exports = Object.keys(actions).sort()
+    const exports = Object.keys(actions).sort();
 
-    expect(exports).toEqual(expectedExports)
-  })
+    expect(exports).toEqual(expectedExports);
+  });
 
   describe('viewport action creators', () => {
     // setViewportSpecificData,
@@ -65,37 +65,37 @@ describe('actions', () => {
           nextSeries: null,
           previousSeries: null,
         },
-      }
+      };
 
       const expectedAction = {
         type: types.SET_ACTIVE_SPECIFIC_DATA,
         data,
-      }
+      };
 
       expect(actions.setActiveViewportSpecificData(data)).toEqual(
         expectedAction
-      )
-    })
+      );
+    });
 
     it('should create an action to clear clearViewportSpecificData', () => {
-      const viewportIndex = 1
+      const viewportIndex = 1;
       const expectedAction = {
         type: types.CLEAR_VIEWPORT,
         viewportIndex,
-      }
+      };
       expect(actions.clearViewportSpecificData(viewportIndex)).toEqual(
         expectedAction
-      )
-    })
+      );
+    });
 
     it('should create an action to set the active viewport', () => {
-      const viewportIndex = 1
+      const viewportIndex = 1;
       const expectedAction = {
         type: types.SET_VIEWPORT_ACTIVE,
         viewportIndex,
-      }
-      expect(actions.setViewportActive(viewportIndex)).toEqual(expectedAction)
-    })
+      };
+      expect(actions.setViewportActive(viewportIndex)).toEqual(expectedAction);
+    });
 
     it('should create an action to set the viewport layout', () => {
       const layout = {
@@ -105,12 +105,12 @@ describe('actions', () => {
             width: '100%',
           },
         ],
-      }
+      };
       const expectedAction = {
         type: types.SET_VIEWPORT_LAYOUT,
         layout,
-      }
-      expect(actions.setLayout(layout)).toEqual(expectedAction)
-    })
-  })
-})
+      };
+      expect(actions.setLayout(layout)).toEqual(expectedAction);
+    });
+  });
+});

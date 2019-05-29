@@ -1,34 +1,34 @@
-import { BaseCriterion } from './BaseCriterion'
+import { BaseCriterion } from './BaseCriterion';
 
 export const LocationSchema = {
   type: 'object',
-}
+};
 
 /* LocationCriterion
  *   Check if the there are non-target measurements with response different than "present" on baseline
  */
 export class LocationCriterion extends BaseCriterion {
   constructor(...props) {
-    super(...props)
+    super(...props);
   }
 
   evaluate(data) {
-    const items = data.targets.concat(data.nonTargets)
-    const measurements = []
-    let message
+    const items = data.targets.concat(data.nonTargets);
+    const measurements = [];
+    let message;
 
     items.forEach(item => {
-      const measurement = item.measurement
+      const measurement = item.measurement;
 
       if (!measurement.location) {
-        measurements.push(measurement)
+        measurements.push(measurement);
       }
-    })
+    });
 
     if (measurements.length) {
-      message = 'All measurements should have a location'
+      message = 'All measurements should have a location';
     }
 
-    return this.generateResponse(message, measurements)
+    return this.generateResponse(message, measurements);
   }
 }

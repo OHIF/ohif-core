@@ -26,7 +26,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
   const imageAttributes = getImageAttributes(eventData.element);
 
   const additionalProperties = Object.assign(imageAttributes, {
-    userId: user.getUserId()
+    userId: user.getUserId(),
   });
 
   const childMeasurement = Object.assign(
@@ -64,7 +64,7 @@ export default function({ eventData, tool, toolGroupId, toolGroup }) {
       lesionNamingNumber: measurementData.lesionNamingNumber,
       userId: user.getUserId(),
       patientId: imageAttributes.patientId,
-      studyInstanceUid: imageAttributes.studyInstanceUid
+      studyInstanceUid: imageAttributes.studyInstanceUid,
     };
 
     measurement[tool.attribute] = Object.assign(

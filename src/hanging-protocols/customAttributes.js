@@ -23,7 +23,7 @@ const CustomAttributeRetrievalCallbacks = {};
 function addCustomAttribute(attributeId, attributeName, callback) {
   CustomAttributeRetrievalCallbacks[attributeId] = {
     name: attributeName,
-    callback: callback
+    callback: callback,
   };
 }
 

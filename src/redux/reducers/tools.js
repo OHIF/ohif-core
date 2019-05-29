@@ -6,71 +6,71 @@ const defaultButtons = [
     type: 'tool',
     text: 'Pan',
     svgUrl: '/icons.svg#icon-tools-pan',
-    active: false
+    active: false,
   },
   {
     command: 'Zoom',
     type: 'tool',
     text: 'Zoom',
     svgUrl: '/icons.svg#icon-tools-zoom',
-    active: false
+    active: false,
   },
   {
     command: 'Bidirectional',
     type: 'tool',
     text: 'Bidirectional',
     svgUrl: '/icons.svg#icon-tools-measure-target',
-    active: false
+    active: false,
   },
   {
     command: 'StackScroll',
     type: 'tool',
     text: 'Stack Scroll',
     svgUrl: '/icons.svg#icon-tools-stack-scroll',
-    active: false
+    active: false,
   },
   {
     command: 'reset',
     type: 'command',
     text: 'Reset',
     svgUrl: '/icons.svg#icon-tools-reset',
-    active: false
+    active: false,
   },
   {
     command: 'Wwwc',
     type: 'tool',
     text: 'Manual',
     svgUrl: '/icons.svg#icon-tools-levels',
-    active: true
+    active: true,
   },
   {
     command: 'setWLPresetSoftTissue',
     type: 'command',
     text: 'Soft Tissue',
     svgUrl: '/icons.svg#icon-wl-soft-tissue',
-    active: false
+    active: false,
   },
   {
     command: 'setWLPresetLung',
     type: 'command',
     text: 'Lung',
     svgUrl: '/icons.svg#icon-wl-lung',
-    active: false
+    active: false,
   },
   {
     command: 'setWLPresetLiver',
     type: 'command',
     text: 'Liver',
     svgUrl: '/icons.svg#icon-wl-liver',
-    active: false
+    active: false,
   },
   {
     command: 'setWLPresetBrain',
     type: 'command',
     text: 'Brain',
     svgUrl: '/icons.svg#icon-wl-brain',
-    active: false
-  }
+    active: false,
+  },
 ];
 
 const tools = (state = { buttons: defaultButtons }, action) => {
@@ -95,11 +95,11 @@ const tools = (state = { buttons: defaultButtons }, action) => {
       }
 
       return {
-        buttons
+        buttons,
       };
     case 'SET_AVAILABLE_BUTTONS':
       return {
-        buttons: action.buttons
+        buttons: action.buttons,
       };
     default:
       return state;
