@@ -148,7 +148,12 @@ function createStacks(study) {
       sopClassUids
     );
 
+    const seriesData = series.getData();
+    const seriesDate = seriesData.seriesDate;
+
     if (displaySet) {
+      displaySet.seriesDate = seriesDate;
+
       displaySets.push(displaySet);
 
       return;
@@ -203,6 +208,13 @@ function createStacks(study) {
       });
       displaySets.push(displaySet);
     }
+  });
+
+  displaySets.sort((a, b) => {
+    const seriesDateA = a.seriesDate || a.getAttribute('seriesDate');
+    const seriesDateB = b.seriesDate || b.getAttribute('seriesDate');
+
+    return seriesDateA - seriesDateB;
   });
 
   return displaySets;
