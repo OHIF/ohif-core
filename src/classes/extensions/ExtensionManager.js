@@ -37,7 +37,7 @@ export default class ExtensionManager {
         addPlugin({
           id: extensionId,
           type,
-          component
+          component,
         })
       );
     });

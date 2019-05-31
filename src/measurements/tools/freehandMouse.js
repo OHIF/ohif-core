@@ -1,10 +1,10 @@
 const displayFunction = data => {
-  let meanValue = ''
+  let meanValue = '';
   if (data.meanStdDev && data.meanStdDev.mean) {
-    meanValue = data.meanStdDev.mean.toFixed(2) + ' HU'
+    meanValue = data.meanStdDev.mean.toFixed(2) + ' HU';
   }
-  return meanValue
-}
+  return meanValue;
+};
 
 export const freehandMouse = {
   id: 'FreehandMouse',
@@ -20,4 +20,4 @@ export const freehandMouse = {
       evaluate: true,
     },
   },
-}
+};

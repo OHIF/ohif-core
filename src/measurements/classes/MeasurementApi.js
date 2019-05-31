@@ -61,7 +61,7 @@ export default class MeasurementApi {
     return {
       toolGroupId,
       toolGroup,
-      tool
+      tool,
     };
   }
 
@@ -137,7 +137,7 @@ export default class MeasurementApi {
     } else {
       // If no toolData exists for this toolType, create an empty array to hold some
       toolState[imageId][toolType] = {
-        data: []
+        data: [],
       };
     }
 
@@ -271,7 +271,7 @@ export default class MeasurementApi {
     const patientId = timepoints[0].patientId;
     const filter = {
       patientId,
-      timepointIds
+      timepointIds,
     };
 
     log.info('Saving Measurements for timepoints:', timepoints);
@@ -718,7 +718,7 @@ export default class MeasurementApi {
     const updateObject = {
       timepointId: timepoint.timepointId,
       lesionNamingNumber: measurement.lesionNamingNumber,
-      measurementNumber: measurement.measurementNumber
+      measurementNumber: measurement.measurementNumber,
     };
 
     // Find the matched measurement from other timepoints
@@ -780,7 +780,7 @@ export default class MeasurementApi {
         studyInstanceUid: addedMeasurement.studyInstanceUid,
         createdAt: addedMeasurement.createdAt,
         lesionNamingNumber: addedMeasurement.lesionNamingNumber,
-        measurementNumber: addedMeasurement.measurementNumber
+        measurementNumber: addedMeasurement.measurementNumber,
       });
     }
 

@@ -126,5 +126,5 @@ export const sopClassDictionary = {
   RTBeamsDeliveryInstructionStorage: '1.2.840.10008.5.1.4.34.7',
   GenericImplantTemplateStorage: '1.2.840.10008.5.1.4.43.1',
   ImplantAssemblyTemplateStorage: '1.2.840.10008.5.1.4.44.1',
-  ImplantTemplateGroupStorage: '1.2.840.10008.5.1.4.45.1'
+  ImplantTemplateGroupStorage: '1.2.840.10008.5.1.4.45.1',
 };

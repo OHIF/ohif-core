@@ -22,7 +22,7 @@ export default function handleError(error) {
       class: 'themed',
       hideConfirm: true,
       cancelLabel: 'Dismiss',
-      cancelClass: 'btn-secondary'
+      cancelClass: 'btn-secondary',
     },
     error || {}
   );

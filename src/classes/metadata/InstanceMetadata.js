@@ -20,14 +20,14 @@ export class InstanceMetadata extends Metadata {
         configurable: true, // configurable so that it can be redefined in sub-classes...
         enumerable: false,
         writable: true,
-        value: null
+        value: null,
       },
       _imageId: {
         configurable: true, // configurable so that it can be redefined in sub-classes...
         enumerable: false,
         writable: true,
-        value: null
-      }
+        value: null,
+      },
     });
     // Initialize Public Properties
     this._definePublicProperties();
@@ -55,7 +55,7 @@ export class InstanceMetadata extends Metadata {
       enumerable: false,
       get: function() {
         return this.getSOPInstanceUID();
-      }
+      },
     });
   }
 

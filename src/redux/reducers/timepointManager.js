@@ -1,6 +1,6 @@
 const defaultState = {
   timepoints: [],
-  measurements: []
+  measurements: [],
 };
 
 const timepointManager = (state = defaultState, action) => {

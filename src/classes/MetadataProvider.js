@@ -9,7 +9,7 @@ class MetadataProvider {
       configurable: false,
       enumerable: false,
       writable: false,
-      value: new Map()
+      value: new Map(),
     });
 
     // Local reference to provider function bound to current instance.
@@ -17,7 +17,7 @@ class MetadataProvider {
       configurable: false,
       enumerable: false,
       writable: true,
-      value: null
+      value: null,
     });
   }
 
@@ -50,7 +50,7 @@ class MetadataProvider {
       studyTime: studyMetadata.studyTime,
       studyDescription: studyMetadata.studyDescription,
       institutionName: studyMetadata.institutionName,
-      patientHistory: studyMetadata.patientHistory
+      patientHistory: studyMetadata.patientHistory,
     };
 
     metadata.series = {
@@ -60,7 +60,7 @@ class MetadataProvider {
       seriesTime: seriesMetadata.seriesTime,
       modality: seriesMetadata.modality,
       seriesInstanceUid: seriesMetadata.seriesInstanceUid,
-      numImages: numImages
+      numImages: numImages,
     };
 
     metadata.instance = instanceMetadata;
@@ -70,7 +70,7 @@ class MetadataProvider {
       id: studyMetadata.patientId,
       birthDate: studyMetadata.patientBirthDate,
       sex: studyMetadata.patientSex,
-      age: studyMetadata.patientAge
+      age: studyMetadata.patientAge,
     };
 
     // If there is sufficient information, populate
@@ -138,7 +138,7 @@ class MetadataProvider {
     if (parsingUtils.isValidDataSet(dataSet)) {
       const frameInstancePointerNames = {
         x00181063: 'frameTime',
-        x00181065: 'frameTimeVector'
+        x00181065: 'frameTimeVector',
       };
 
       // (0028,0009) = Frame Increment Pointer
@@ -296,20 +296,20 @@ class MetadataProvider {
       rowCosines: [
         parseFloat(imageOrientation[0]),
         parseFloat(imageOrientation[1]),
-        parseFloat(imageOrientation[2])
+        parseFloat(imageOrientation[2]),
       ],
       columnCosines: [
         parseFloat(imageOrientation[3]),
         parseFloat(imageOrientation[4]),
-        parseFloat(imageOrientation[5])
+        parseFloat(imageOrientation[5]),
       ],
       imagePositionPatient: [
         parseFloat(imagePosition[0]),
         parseFloat(imagePosition[1]),
-        parseFloat(imagePosition[2])
+        parseFloat(imagePosition[2]),
       ],
       rowPixelSpacing,
-      columnPixelSpacing
+      columnPixelSpacing,
     };
   }
 
@@ -326,7 +326,7 @@ class MetadataProvider {
       numberOfFrames: 0,
       frameTime: 0,
       frameTimeVector: null,
-      averageFrameRate: 0 // backwards compatibility only... it might be useless in the future
+      averageFrameRate: 0, // backwards compatibility only... it might be useless in the future
     };
 
     let frameTime;

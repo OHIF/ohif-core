@@ -374,7 +374,7 @@ var dialogPolyfill = (function() {
         event.stopPropagation();
         var cancelEvent = new supportCustomEvent('cancel', {
           bubbles: false,
-          cancelable: true
+          cancelable: true,
         });
         if (dialog.dispatchEvent(cancelEvent)) {
           dialog.close();

@@ -1,5 +1,5 @@
 const defaultState = {
-  context: 'viewer'
+  context: 'viewer',
 };
 
 const commandContext = (state = defaultState, action) => {

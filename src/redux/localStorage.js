@@ -20,7 +20,7 @@ export const saveState = state => {
 
 const localStorage = {
   saveState,
-  loadState
+  loadState,
 };
 
 export default localStorage;

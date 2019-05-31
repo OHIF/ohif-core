@@ -1,6 +1,6 @@
-import commands from '../commands'
-import actions from '../redux/actions'
-import hotkeys from '../hotkeys'
+import commands from '../commands';
+import actions from '../redux/actions';
+import hotkeys from '../hotkeys';
 
 export default class HotkeysUtil {
   constructor(
@@ -21,7 +21,7 @@ export default class HotkeysUtil {
       length: 'Length',
       wwwcRegion: 'W/L by Region',
       crosshairs: 'Crosshairs',
-    }
+    };
 
     this.viewportCommands = {
       zoomIn: 'Zoom In',
@@ -34,9 +34,9 @@ export default class HotkeysUtil {
       rotateL: 'Rotate Left',
       resetViewport: 'Reset',
       clearTools: 'Clear Tools',
-    }
+    };
 
-    const dispatchCommand = this._dispatchCommand.bind(setViewportSpecificData)
+    const dispatchCommand = this._dispatchCommand.bind(setViewportSpecificData);
 
     this.commands = {
       scrollDown: {
@@ -80,30 +80,30 @@ export default class HotkeysUtil {
         action: () =>
           dispatchCommand(this._getHotKeyCommand(null, 'previousPanel')),
       },
-    }
+    };
 
-    commands.createContext(contextName)
-    this._registerToolCommands(this.toolCommands, contextName, setToolActive)
+    commands.createContext(contextName);
+    this._registerToolCommands(this.toolCommands, contextName, setToolActive);
 
     this._registerViewportCommands(
       this.viewportCommands,
       contextName,
       setActiveViewportSpecificData
-    )
+    );
 
-    this.setup(contextName)
+    this.setup(contextName);
   }
 
   _rotate(currentPosition, rotationDegree) {
     return currentPosition === undefined
       ? 0 + rotationDegree
-      : currentPosition + rotationDegree
+      : currentPosition + rotationDegree;
   }
 
   _dispatchCommand(setActiveViewportSpecificData, options) {
     setActiveViewportSpecificData({
       viewport: options,
-    })
+    });
   }
 
   _getHotKeyCommand(currentViewportParameters, toolId) {
@@ -123,79 +123,79 @@ export default class HotkeysUtil {
       nextPanel: null,
       nextSeries: null,
       previousSeries: null,
-    }
+    };
 
     switch (toolId) {
       case 'rotateR':
         hotKeyCommand['rotation'] = this._rotate(
           currentViewportParameters.rotation,
           90
-        )
-        break
+        );
+        break;
       case 'rotateL':
         hotKeyCommand['rotation'] = this._rotate(
           currentViewportParameters.rotation,
           -90
-        )
-        break
+        );
+        break;
       case 'invert':
-        hotKeyCommand['invert'] = !currentViewportParameters.invert
-        break
+        hotKeyCommand['invert'] = !currentViewportParameters.invert;
+        break;
       case 'flipV':
-        hotKeyCommand['vflip'] = !currentViewportParameters.vflip
-        break
+        hotKeyCommand['vflip'] = !currentViewportParameters.vflip;
+        break;
       case 'flipH':
-        hotKeyCommand['hflip'] = !currentViewportParameters.hflip
-        break
+        hotKeyCommand['hflip'] = !currentViewportParameters.hflip;
+        break;
       case 'zoomIn':
-        hotKeyCommand.zoomScale = +0.15
-        break
+        hotKeyCommand.zoomScale = +0.15;
+        break;
       case 'zoomOut':
-        hotKeyCommand.zoomScale = -0.15
-        break
+        hotKeyCommand.zoomScale = -0.15;
+        break;
       case 'zoomToFit':
-        hotKeyCommand.zoomScale = 0
-        break
+        hotKeyCommand.zoomScale = 0;
+        break;
       case 'resetViewport':
-        hotKeyCommand.resetViewport = !currentViewportParameters.resetViewport
-        break
+        hotKeyCommand.resetViewport = !currentViewportParameters.resetViewport;
+        break;
       case 'clearTools':
-        hotKeyCommand.clearTools = true
-        break
+        hotKeyCommand.clearTools = true;
+        break;
       case 'scrollUp':
-        hotKeyCommand.scrollUp = true
-        break
+        hotKeyCommand.scrollUp = true;
+        break;
       case 'scrollDown':
-        hotKeyCommand.scrollDown = true
-        break
+        hotKeyCommand.scrollDown = true;
+        break;
       case 'scrollFirstImage':
-        hotKeyCommand.scrollFirstImage = true
-        break
+        hotKeyCommand.scrollFirstImage = true;
+        break;
       case 'scrollLastImage':
-        hotKeyCommand.scrollLastImage = true
-        break
+        hotKeyCommand.scrollLastImage = true;
+        break;
       case 'previousSeries':
-        hotKeyCommand.previousSeries = true
-        break
+        hotKeyCommand.previousSeries = true;
+        break;
       case 'nextSeries':
-        hotKeyCommand.nextSeries = true
-        break
+        hotKeyCommand.nextSeries = true;
+        break;
       case 'nextPanel':
-        hotKeyCommand.nextPanel = true
-        break
+        hotKeyCommand.nextPanel = true;
+        break;
       case 'previousPanel':
-        hotKeyCommand.previousPanel = true
-        break
+        hotKeyCommand.previousPanel = true;
+        break;
     }
 
-    return hotKeyCommand
+    return hotKeyCommand;
   }
 
   _isActiveViewportEmpty() {
     // TODO: check if it is empty using redux. Need to put viewportData into redux.
     // const activeViewport = Session.get('activeViewport') || 0;
     // return $('.imageViewerViewport').eq(activeViewport).hasClass('empty');
-    return false
+    return false;
   }
 
   /**
@@ -205,16 +205,16 @@ export default class HotkeysUtil {
    */
   _registerToolCommands(map, contextName, setToolActive) {
     Object.keys(map).forEach(toolId => {
-      const commandName = map[toolId]
+      const commandName = map[toolId];
       commands.register(contextName, toolId, {
         name: commandName,
         action: () => {
           // const { setToolActive } = actions
-          setToolActive(commandName)
+          setToolActive(commandName);
         },
         params: toolId,
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -224,37 +224,37 @@ export default class HotkeysUtil {
    */
   _registerViewportCommands(map, contextName, setActiveViewportSpecificData) {
     Object.keys(map).forEach(toolId => {
-      const commandName = map[toolId]
+      const commandName = map[toolId];
       commands.register(contextName, toolId, {
         name: commandName,
         action: () => {
           // Call Redux Action to change viewport data for active viewport
 
-          const state = window.store.getState()
-          const viewportIndex = state.viewports.activeViewportIndex
+          const state = window.store.getState();
+          const viewportIndex = state.viewports.activeViewportIndex;
           const viewportSpecificData =
-            state.viewports.viewportSpecificData[viewportIndex]
-          const currentViewportParameters = viewportSpecificData.viewport || {}
+            state.viewports.viewportSpecificData[viewportIndex];
+          const currentViewportParameters = viewportSpecificData.viewport || {};
 
           const hotKeyCommand = this._getHotKeyCommand(
             currentViewportParameters,
             toolId
-          )
+          );
 
           setActiveViewportSpecificData({
             viewport: hotKeyCommand,
-          })
+          });
 
-          debugger
+          debugger;
         },
         params: toolId,
         disabled: this._isActiveViewportEmpty,
-      })
-    })
+      });
+    });
   }
 
   _canMoveDisplaySets(isNext) {
-    return false
+    return false;
     // TODO
     // if (!OHIF.viewerbase.layoutManager) {
     //     return false;
@@ -274,23 +274,23 @@ export default class HotkeysUtil {
       commands.register(contextName, `WLPreset${i}`, {
         name: `W/L Preset ${i + 1}`,
         action: () => {
-          console.log(`TODO: window level preset - WLPreset${i}`)
+          console.log(`TODO: window level preset - WLPreset${i}`);
         },
         params: i,
-      })
+      });
     }
 
     // Register viewport navigation commands
-    commands.set(contextName, this.commands, true)
+    commands.set(contextName, this.commands, true);
 
     const hotkeysData = window.store.getState().preferences[contextName]
       ? window.store.getState().preferences[contextName].hotKeysData
-      : window.store.getState().preferences['viewer'].hotKeysData
+      : window.store.getState().preferences['viewer'].hotKeysData;
 
-    this.setHotkeys(hotkeysData, contextName)
+    this.setHotkeys(hotkeysData, contextName);
 
-    const { setCommandContext } = actions
-    window.store.dispatch(setCommandContext({ context: contextName }))
+    const { setCommandContext } = actions;
+    window.store.dispatch(setCommandContext({ context: contextName }));
   }
 
   /**
@@ -304,13 +304,13 @@ export default class HotkeysUtil {
   ) {
     hotKeysPreferences =
       hotKeysPreferences ||
-      window.store.getState().preferences[contextName].hotKeysData
-    const hotKeys = {}
+      window.store.getState().preferences[contextName].hotKeysData;
+    const hotKeys = {};
 
     Object.keys(hotKeysPreferences).forEach(key => {
-      hotKeys[key] = hotKeysPreferences[key].command
-    })
+      hotKeys[key] = hotKeysPreferences[key].command;
+    });
 
-    hotkeys.set(contextName, hotKeys, true)
+    hotkeys.set(contextName, hotKeys, true);
   }
 }

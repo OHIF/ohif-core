@@ -1,4 +1,4 @@
-import { BaseCriterion } from './BaseCriterion'
+import { BaseCriterion } from './BaseCriterion';
 
 export const MaxTargetsPerOrganSchema = {
   type: 'object',
@@ -14,7 +14,7 @@ export const MaxTargetsPerOrganSchema = {
     },
   },
   required: ['limit'],
-}
+};
 
 /*
  * MaxTargetsPerOrganCriterion
@@ -25,44 +25,44 @@ export const MaxTargetsPerOrganSchema = {
  */
 export class MaxTargetsPerOrganCriterion extends BaseCriterion {
   constructor(...props) {
-    super(...props)
+    super(...props);
   }
 
   evaluate(data) {
-    const { options } = this
-    const targetsPerOrgan = {}
-    let measurements = []
+    const { options } = this;
+    const targetsPerOrgan = {};
+    let measurements = [];
 
-    const newTargetNumbers = this.getNewTargetNumbers(data)
+    const newTargetNumbers = this.getNewTargetNumbers(data);
     data.targets.forEach(target => {
-      const { measurement } = target
-      const { location, measurementNumber, isSplitLesion } = measurement
+      const { measurement } = target;
+      const { location, measurementNumber, isSplitLesion } = measurement;
 
-      if (isSplitLesion) return
+      if (isSplitLesion) return;
 
       if (!targetsPerOrgan[location]) {
-        targetsPerOrgan[location] = new Set()
+        targetsPerOrgan[location] = new Set();
       }
 
       if (!options.newTarget || newTargetNumbers.has(measurementNumber)) {
-        targetsPerOrgan[location].add(measurementNumber)
+        targetsPerOrgan[location].add(measurementNumber);
       }
 
       if (targetsPerOrgan[location].size > options.limit) {
-        measurements.push(measurement)
+        measurements.push(measurement);
       }
-    })
+    });
 
-    let message
+    let message;
     if (measurements.length) {
-      const increment = options.newTarget ? 'new ' : ''
+      const increment = options.newTarget ? 'new ' : '';
       message =
         options.message ||
         `Each organ should not have more than ${
           options.limit
-        } ${increment}targets.`
+        } ${increment}targets.`;
     }
 
-    return this.generateResponse(message, measurements)
+    return this.generateResponse(message, measurements);
   }
 }

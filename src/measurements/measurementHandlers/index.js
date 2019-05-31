@@ -29,13 +29,13 @@ const MeasurementHandlers = {
     const {
       toolGroupId,
       toolGroup,
-      tool
+      tool,
     } = MeasurementApi.getToolConfiguration(toolType);
     const params = {
       eventData,
       tool,
       toolGroupId,
-      toolGroup
+      toolGroup,
     };
 
     if (!tool) return;
@@ -53,13 +53,13 @@ const MeasurementHandlers = {
     const {
       toolGroupId,
       toolGroup,
-      tool
+      tool,
     } = MeasurementApi.getToolConfiguration(toolType);
     const params = {
       eventData,
       tool,
       toolGroupId,
-      toolGroup
+      toolGroup,
     };
 
     if (!tool) return;
@@ -77,13 +77,13 @@ const MeasurementHandlers = {
     const {
       toolGroupId,
       toolGroup,
-      tool
+      tool,
     } = MeasurementApi.getToolConfiguration(toolType);
     const params = {
       eventData,
       tool,
       toolGroupId,
-      toolGroup
+      toolGroup,
     };
 
     if (!tool) return;
@@ -93,7 +93,7 @@ const MeasurementHandlers = {
     } else {
       handleSingleMeasurementRemoved(params);
     }
-  }
+  },
 };
 
 export default MeasurementHandlers;

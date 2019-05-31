@@ -1,25 +1,25 @@
-export const defaultState = {}
+export const defaultState = {};
 
 const extensions = (state = defaultState, action) => {
   switch (action.type) {
     case 'SET_EXTENSION_DATA':
-      const extensionName = action.extension
-      const currentData = state[extensionName] || {}
+      const extensionName = action.extension;
+      const currentData = state[extensionName] || {};
 
-      const incomingData = action.data
+      const incomingData = action.data;
 
       const extension = {
         [extensionName]: {
           ...currentData,
           ...incomingData,
         },
-      }
+      };
 
-      return { ...state, ...extension }
+      return { ...state, ...extension };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default extensions
+export default extensions;

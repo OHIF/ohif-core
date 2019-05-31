@@ -20,32 +20,32 @@ export class OHIFInstanceMetadata extends InstanceMetadata {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: instance.sopInstanceUid
+        value: instance.sopInstanceUid,
       },
       _study: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: study
+        value: study,
       },
       _series: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: series
+        value: series,
       },
       _instance: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: instance
+        value: instance,
       },
       _cache: {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: Object.create(null)
-      }
+        value: Object.create(null),
+      },
     });
   }
 

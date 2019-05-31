@@ -27,7 +27,7 @@ export default function handleSingleMeasurementAdded({ eventData, tool }) {
   const measurement = Object.assign({}, measurementData, imageAttributes, {
     lesionNamingNumber: measurementData.lesionNamingNumber,
     userId: user.getUserId(),
-    toolType
+    toolType,
   });
 
   const addedMeasurement = measurementApi.addMeasurement(toolType, measurement);

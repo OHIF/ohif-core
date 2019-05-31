@@ -27,7 +27,7 @@ const makeDisplaySet = (series, instances) => {
     numImageFrames: instances.length,
     frameRate: instance.getRawValue('x00181063'),
     modality: instance.getRawValue('x00080060'),
-    isMultiFrame: isMultiFrame(instance)
+    isMultiFrame: isMultiFrame(instance),
   });
 
   // Sort the images in this series if needed
@@ -107,7 +107,7 @@ function getDisplaySetFromSopClassPluginsIfApplicable(
 
   const dicomWebClient = new dwc({
     url: study.getData().wadoRoot,
-    headers
+    headers,
   });
 
   return plugin.getDisplaySetFromSeries(series, study, dicomWebClient, headers);
@@ -177,7 +177,7 @@ function createStacks(study) {
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid for drag/drop purposes
           numImageFrames: instance.getRawValue('x00280008'), // Override the default value of instances.length
           instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
-          acquisitionDatetime: instance.getRawValue('x0008002a') // Include the acquisition datetime
+          acquisitionDatetime: instance.getRawValue('x0008002a'), // Include the acquisition datetime
         });
         displaySets.push(displaySet);
       } else if (isSingleImageModality(instance.modality)) {
@@ -187,7 +187,7 @@ function createStacks(study) {
           studyInstanceUid: study.getStudyInstanceUID(), // Include the study instance Uid
           seriesInstanceUid: series.getSeriesInstanceUID(),
           instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
-          acquisitionDatetime: instance.getRawValue('x0008002a') // Include the acquisition datetime
+          acquisitionDatetime: instance.getRawValue('x0008002a'), // Include the acquisition datetime
         });
         displaySets.push(displaySet);
       } else {
@@ -199,7 +199,7 @@ function createStacks(study) {
       const displaySet = makeDisplaySet(series, stackableInstances);
       displaySet.setAttribute('studyInstanceUid', study.getStudyInstanceUID());
       displaySet.setAttributes({
-        sopClassUids
+        sopClassUids,
       });
       displaySets.push(displaySet);
     }

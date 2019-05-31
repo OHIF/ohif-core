@@ -7,7 +7,7 @@ export class WadoRsMetaDataBuilder {
     this.tags[tag] = {
       tag,
       value,
-      multi
+      multi,
     };
 
     return this;
@@ -39,7 +39,7 @@ export class WadoRsMetaDataBuilder {
       }
 
       json[key] = {
-        Value: value
+        Value: value,
       };
     });
 

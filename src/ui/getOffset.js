@@ -16,6 +16,6 @@ export default function getOffset(element) {
 
   return {
     left,
-    top
+    top,
   };
 }

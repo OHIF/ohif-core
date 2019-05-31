@@ -8,7 +8,7 @@ const defaultButtons = [
   //   svgUrl: '/icons.svg#icon-tools-pan',
   //   active: false
   // }
-]
+];
 
 const tools = (state = { buttons: defaultButtons }, action) => {
   switch (action.type) {
@@ -33,11 +33,11 @@ const tools = (state = { buttons: defaultButtons }, action) => {
 
       return {
         buttons,
-      }
+      };
     case 'SET_AVAILABLE_BUTTONS':
       return {
         buttons: action.buttons,
-      }
+      };
     default:
       return state
   }

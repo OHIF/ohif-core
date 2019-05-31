@@ -5,7 +5,7 @@ const configuration = {};
 const TIMEPOINT_TYPE_NAMES = {
   prebaseline: 'Pre-Baseline',
   baseline: 'Baseline',
-  followup: 'Follow-up'
+  followup: 'Follow-up',
 };
 
 export default class TimepointApi {
@@ -149,7 +149,7 @@ export default class TimepointApi {
     }
 
     const timepointData = {
-      timepointId
+      timepointId,
     };
 
     log.info('Preparing to remove timepoint');
@@ -178,7 +178,7 @@ export default class TimepointApi {
     }
 
     const timepointData = {
-      timepointId
+      timepointId,
     };
 
     log.info('Preparing to update timepoint');
@@ -234,7 +234,7 @@ export default class TimepointApi {
     }
 
     this.timepoints[tpIndex] = Object.assign({}, this.timepoints[tpIndex], {
-      locked: true
+      locked: true,
     });
   }
 
@@ -557,7 +557,7 @@ export default class TimepointApi {
 
     const states = {
       0: ['Current'],
-      1: ['Prior']
+      1: ['Prior'],
     };
     const parenthesis = states[index] || [];
     const nadir = this.nadir();

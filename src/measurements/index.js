@@ -19,7 +19,7 @@ const measurements = {
   getLabel,
   getDescription,
   getImageAttributes,
-  getImageIdForImagePath
+  getImageIdForImagePath,
 };
 
 export default measurements;
