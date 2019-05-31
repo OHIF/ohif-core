@@ -21,7 +21,7 @@ const utils = {
   createStacks,
   createDisplaySets,
   studyMetadataManager,
-  DICOMTagDescriptions
+  DICOMTagDescriptions,
 };
 
 export default utils;

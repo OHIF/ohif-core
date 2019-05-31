@@ -8,7 +8,7 @@ export default function addServers(servers, store) {
 
       store.dispatch({
         type: 'ADD_SERVER',
-        server
+        server,
       });
     });
   });

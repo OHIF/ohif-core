@@ -28,7 +28,7 @@ function getBoundingBox(context, textLines, x, y, options) {
   // Calculate the bounding box for this text box
   const boundingBox = {
     width: maxWidth + padding * 2,
-    height: padding + textLines.length * (fontSize + padding)
+    height: padding + textLines.length * (fontSize + padding),
   };
 
   if (options && options.centering && options.centering.x === true) {
@@ -52,7 +52,7 @@ function pixelToPage(element, position) {
   const enabledElement = cornerstone.getEnabledElement(element);
   const result = {
     x: 0,
-    y: 0
+    y: 0,
   };
 
   // Stop here if the cornerstone element is not enabled or position is not an object
@@ -88,7 +88,7 @@ function repositionTextBox(eventData, measurementData, config) {
     T: !allowedBorders || allowedBorders.includes('T'),
     R: !allowedBorders || allowedBorders.includes('R'),
     B: !allowedBorders || allowedBorders.includes('B'),
-    L: !allowedBorders || allowedBorders.includes('L')
+    L: !allowedBorders || allowedBorders.includes('L'),
   };
 
   const getAvailableBlankAreas = (enabledElement, labelWidth, labelHeight) => {
@@ -96,12 +96,12 @@ function repositionTextBox(eventData, measurementData, config) {
 
     const topLeft = cornerstone.pixelToCanvas(element, {
       x: 0,
-      y: 0
+      y: 0,
     });
 
     const bottomRight = cornerstone.pixelToCanvas(element, {
       x: image.width,
-      y: image.height
+      y: image.height,
     });
 
     const $canvas = $(canvas);
@@ -134,7 +134,7 @@ function repositionTextBox(eventData, measurementData, config) {
       'x-1': 'L',
       'y-1': 'T',
       x1: 'R',
-      y1: 'B'
+      y1: 'B',
     };
 
     let current = 0;
@@ -150,7 +150,7 @@ function repositionTextBox(eventData, measurementData, config) {
 
     return {
       directions,
-      cornerAxis
+      cornerAxis,
     };
   };
 
@@ -167,7 +167,7 @@ function repositionTextBox(eventData, measurementData, config) {
     const bottomRight = cornerstone.pageToPixel(element, bounds.x, bounds.y);
     return {
       x: bottomRight.x - topLeft.x,
-      y: bottomRight.y - topLeft.y
+      y: bottomRight.y - topLeft.y,
     };
   };
 
@@ -180,7 +180,7 @@ function repositionTextBox(eventData, measurementData, config) {
     const halfBoxSizeY = boxSize.y / 2;
     const offset = {
       x: [],
-      y: []
+      y: [],
     };
 
     if (cornerAxis === 'x') {
@@ -211,7 +211,7 @@ function repositionTextBox(eventData, measurementData, config) {
   const offset = $canvas.offset();
   const canvasDimensions = {
     x: canvasWidth,
-    y: canvasHeight
+    y: canvasHeight,
   };
 
   const bounds = {};
@@ -278,7 +278,7 @@ function repositionTextBox(eventData, measurementData, config) {
 
     const position = {
       x: directions.x < 0 ? offset.left : offset.left + canvasWidth,
-      y: directions.y < 0 ? offset.top : offset.top + canvasHeight
+      y: directions.y < 0 ? offset.top : offset.top + canvasHeight,
     };
 
     const pixelPosition = cornerstone.pageToPixel(
@@ -303,13 +303,13 @@ function repositionTextBox(eventData, measurementData, config) {
   const topLeft = cornerstone.pixelToCanvas(element, textBox);
   const bottomRight = {
     x: topLeft.x + bounds.x,
-    y: topLeft.y + bounds.y
+    y: topLeft.y + bounds.y,
   };
   const canvasBorders = {
     x0: offset.left,
     y0: offset.top,
     x1: offset.left + canvasWidth,
-    y1: offset.top + canvasHeight
+    y1: offset.top + canvasHeight,
   };
   if (topLeft[toolAxis] < 0) {
     const x = canvasBorders.x0;

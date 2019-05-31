@@ -8,7 +8,7 @@ const hangingProtocols = {
   ProtocolStore,
   ProtocolStrategy,
   addCustomAttribute,
-  addCustomViewportSetting
+  addCustomViewportSetting,
 };
 
 export default hangingProtocols;

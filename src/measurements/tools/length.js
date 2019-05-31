@@ -1,10 +1,10 @@
 const displayFunction = data => {
-  let lengthValue = ''
+  let lengthValue = '';
   if (data.length) {
-    lengthValue = data.length.toFixed(2) + ' mm'
+    lengthValue = data.length.toFixed(2) + ' mm';
   }
-  return lengthValue
-}
+  return lengthValue;
+};
 
 export const length = {
   id: 'Length',
@@ -20,4 +20,4 @@ export const length = {
       evaluate: true,
     },
   },
-}
+};

@@ -55,7 +55,7 @@
 
   const styleProperty = {
     check,
-    set
+    set,
   };
 
   OHIF.ui.styleProperty = styleProperty;

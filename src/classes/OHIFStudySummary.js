@@ -7,7 +7,7 @@ import StudySummary from './StudySummary';
 const STRING = 'string';
 const propertyReplacementMap = {
   modalities: 'ModalitiesInStudy',
-  patientBirthdate: 'PatientBirthDate'
+  patientBirthdate: 'PatientBirthDate',
 };
 
 /**

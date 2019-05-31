@@ -1,7 +1,7 @@
 import { default as OHIFPlugins } from '../../plugins.js';
 
 const defaultState = {
-  availablePlugins: []
+  availablePlugins: [],
 };
 
 const plugins = (state = defaultState, action) => {
@@ -20,7 +20,7 @@ const plugins = (state = defaultState, action) => {
 
       availablePlugins.push({
         id: action.plugin.id,
-        type: action.plugin.type
+        type: action.plugin.type,
       });
 
       // Not sure where else to put this. We shouldn't store functions in Redux, so I'll do this instead

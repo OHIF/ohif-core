@@ -1,8 +1,8 @@
-import RetrieveMetadata from './services/wado/retrieveMetadata.js'
+import RetrieveMetadata from './services/wado/retrieveMetadata.js';
 
-const module = 'RetrieveStudyMetadata'
+const module = 'RetrieveStudyMetadata';
 // Cache for promises. Prevents unnecessary subsequent calls to the server
-const StudyMetaDataPromises = new Map()
+const StudyMetaDataPromises = new Map();
 
 /**
  * Retrieves study metadata
@@ -17,30 +17,30 @@ export function retrieveStudyMetadata(server, studyInstanceUid) {
   // corresponding promise from the "StudyMetaDataPromises" map...
 
   if (!server) {
-    throw new Error(`${module}: Required 'server' parameter not provided.`)
+    throw new Error(`${module}: Required 'server' parameter not provided.`);
   }
   if (!studyInstanceUid) {
     throw new Error(
       `${module}: Required 'studyInstanceUid' parameter not provided.`
-    )
+    );
   }
 
   // Already waiting on result? Return cached promise
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
-    return StudyMetaDataPromises.get(studyInstanceUid)
+    return StudyMetaDataPromises.get(studyInstanceUid);
   }
 
   // Create a promise to handle the data retrieval
   const promise = new Promise((resolve, reject) => {
     RetrieveMetadata(server, studyInstanceUid).then(function(data) {
-      resolve(data)
-    }, reject)
-  })
+      resolve(data);
+    }, reject);
+  });
 
   // Store the promise in cache
-  StudyMetaDataPromises.set(studyInstanceUid, promise)
+  StudyMetaDataPromises.set(studyInstanceUid, promise);
 
-  return promise
+  return promise;
 }
 
 /**
@@ -52,6 +52,6 @@ export function retrieveStudyMetadata(server, studyInstanceUid) {
  */
 export function deleteStudyMetadataPromise(studyInstanceUid) {
   if (StudyMetaDataPromises.has(studyInstanceUid)) {
-    StudyMetaDataPromises.delete(studyInstanceUid)
+    StudyMetaDataPromises.delete(studyInstanceUid);
   }
 }

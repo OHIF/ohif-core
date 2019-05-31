@@ -11,7 +11,7 @@ const DICOMWeb = {
   getModalities,
   getName,
   getNumber,
-  getString
+  getString,
 };
 
 export default DICOMWeb;

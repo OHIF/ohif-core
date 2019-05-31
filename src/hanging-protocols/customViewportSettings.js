@@ -15,7 +15,7 @@ function addCustomViewportSetting(settingId, settingName, options, callback) {
     id: settingId,
     text: settingName,
     options: options,
-    callback: callback
+    callback: callback,
   };
 }
 

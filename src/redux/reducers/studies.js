@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 
 const defaultState = {
-  studyData: {}
+  studyData: {},
 };
 
 const servers = (state = defaultState, action) => {

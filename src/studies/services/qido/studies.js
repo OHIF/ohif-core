@@ -30,7 +30,7 @@ function dateToString(date) {
 function getQIDOQueryParams(filter, serverSupportsQIDOIncludeField) {
   const commaSeparatedFields = [
     '00081030', // Study Description
-    '00080060' //Modality
+    '00080060', //Modality
     // Add more fields here if you want them in the result
   ].join(',');
 
@@ -42,7 +42,7 @@ function getQIDOQueryParams(filter, serverSupportsQIDOIncludeField) {
     ModalitiesInStudy: filter.modalitiesInStudy,
     limit: filter.limit,
     offset: filter.offset,
-    includefield: serverSupportsQIDOIncludeField ? commaSeparatedFields : 'all'
+    includefield: serverSupportsQIDOIncludeField ? commaSeparatedFields : 'all',
   };
 
   // build the StudyDate range parameter
@@ -103,7 +103,7 @@ function resultDataToStudies(resultData) {
       // modalitiesInStudy: DICOMWeb.getString(study['00080061']),
       modalities: DICOMWeb.getString(
         DICOMWeb.getModalities(study['00080060'], study['00080061'])
-      )
+      ),
     })
   );
 
@@ -113,7 +113,7 @@ function resultDataToStudies(resultData) {
 export default function Studies(server, filter) {
   const config = {
     url: server.qidoRoot,
-    headers: DICOMWeb.getAuthorizationHeader(server)
+    headers: DICOMWeb.getAuthorizationHeader(server),
   };
 
   const dicomWeb = new api.DICOMwebClient(config);
@@ -122,7 +122,7 @@ export default function Studies(server, filter) {
     server.qidoSupportsIncludeField
   );
   const options = {
-    queryParams
+    queryParams,
   };
 
   return dicomWeb.searchForStudies(options).then(resultDataToStudies);

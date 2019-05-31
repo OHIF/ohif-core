@@ -162,7 +162,7 @@ export default class Rule {
 
         validatorAndValue = {
           value: constraintValue,
-          validator: constraintInfo.id
+          validator: constraintInfo.id,
         };
 
         this._validatorAndValue = validatorAndValue;

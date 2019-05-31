@@ -7,7 +7,7 @@ import {
   ProtocolMatchingRule,
   StudyMatchingRule,
   SeriesMatchingRule,
-  ImageMatchingRule
+  ImageMatchingRule,
 } from './rules.js';
 
 export {
@@ -19,5 +19,5 @@ export {
   ProtocolMatchingRule,
   StudyMatchingRule,
   SeriesMatchingRule,
-  ImageMatchingRule
+  ImageMatchingRule,
 };

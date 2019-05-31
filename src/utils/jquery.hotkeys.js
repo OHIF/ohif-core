@@ -138,13 +138,13 @@ export default function(jQuery) {
       filterTextInputs: true,
       filterContentEditable: true,
     },
-  }
+  };
 
   function keyHandler(handleObj) {
     if (typeof handleObj.data === 'string') {
       handleObj.data = {
         keys: handleObj.data,
-      }
+      };
     }
 
     // Only care when a possible input has been specified
@@ -153,11 +153,11 @@ export default function(jQuery) {
       !handleObj.data.keys ||
       typeof handleObj.data.keys !== 'string'
     ) {
-      return
+      return;
     }
 
     var origHandler = handleObj.handler,
-      keys = handleObj.data.keys.toLowerCase().split(' ')
+      keys = handleObj.data.keys.toLowerCase().split(' ');
 
     handleObj.handler = function(event) {
       //      Don't fire in text-accepting inputs that we didn't directly bind to
@@ -173,24 +173,24 @@ export default function(jQuery) {
               jQuery.hotkeys.textAcceptingInputTypes
             ) > -1))
       ) {
-        return
+        return;
       }
 
       var special =
           event.type !== 'keypress' && jQuery.hotkeys.specialKeys[event.which],
         character = String.fromCharCode(event.which).toLowerCase(),
         modif = '',
-        possible = {}
+        possible = {};
 
       jQuery.each(['alt', 'ctrl', 'shift'], function(index, specialKey) {
         if (event[specialKey + 'Key'] && special !== specialKey) {
-          modif += specialKey + '+'
+          modif += specialKey + '+';
         }
-      })
+      });
 
       // metaKey is triggered off ctrlKey erronously
       if (event.metaKey && !event.ctrlKey && special !== 'meta') {
-        modif += 'meta+'
+        modif += 'meta+';
       }
 
       if (
@@ -198,32 +198,32 @@ export default function(jQuery) {
         special !== 'meta' &&
         modif.indexOf('alt+ctrl+shift+') > -1
       ) {
-        modif = modif.replace('alt+ctrl+shift+', 'hyper+')
+        modif = modif.replace('alt+ctrl+shift+', 'hyper+');
       }
 
       if (special) {
-        possible[modif + special] = true
+        possible[modif + special] = true;
       } else {
-        possible[modif + character] = true
-        possible[modif + jQuery.hotkeys.shiftNums[character]] = true
+        possible[modif + character] = true;
+        possible[modif + jQuery.hotkeys.shiftNums[character]] = true;
 
         // "$" can be triggered as "Shift+4" or "Shift+$" or just "$"
         if (modif === 'shift+') {
-          possible[jQuery.hotkeys.shiftNums[character]] = true
+          possible[jQuery.hotkeys.shiftNums[character]] = true;
         }
       }
 
       for (var i = 0, l = keys.length; i < l; i++) {
         if (possible[keys[i]]) {
-          return origHandler.apply(this, arguments)
+          return origHandler.apply(this, arguments);
         }
       }
-    }
+    };
   }
 
   jQuery.each(['keydown', 'keyup', 'keypress'], function() {
     jQuery.event.special[this] = {
       add: keyHandler,
-    }
-  })
+    };
+  });
 }

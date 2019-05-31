@@ -27,7 +27,7 @@ function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
       series = {
         seriesInstanceUid: seriesInstanceUid,
         seriesNumber: DICOMWeb.getString(instance['00200011']),
-        instances: []
+        instances: [],
       };
 
       // Save this data in the seriesMap cache variable
@@ -60,7 +60,7 @@ function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
       sopClassUid: DICOMWeb.getString(instance['00080016']),
       sopInstanceUid: sopInstanceUid,
       uri: uri,
-      instanceNumber: DICOMWeb.getString(instance['00200013'])
+      instanceNumber: DICOMWeb.getString(instance['00200013']),
     });
   });
   return seriesList;
@@ -78,7 +78,7 @@ export default function Instances(server, studyInstanceUid) {
 
   const config = {
     url: server.qidoRoot,
-    headers: DICOMWeb.getAuthorizationHeader(server)
+    headers: DICOMWeb.getAuthorizationHeader(server),
   };
   const dicomWeb = new api.DICOMwebClient(config);
   const queryParams = getQIDOQueryParams(
@@ -86,7 +86,7 @@ export default function Instances(server, studyInstanceUid) {
     server.qidoSupportsIncludeField
   );
   const options = {
-    studyInstanceUID: studyInstanceUid
+    studyInstanceUID: studyInstanceUid,
   };
 
   return dicomWeb.searchForInstances(options).then(result => {
@@ -97,7 +97,7 @@ export default function Instances(server, studyInstanceUid) {
         server,
         studyInstanceUid,
         result.data
-      )
+      ),
     };
   });
 }

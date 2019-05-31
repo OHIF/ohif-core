@@ -34,7 +34,7 @@ export class OHIFStudyMetadataSource extends StudyMetadataSource {
 
       if (study instanceof StudyMetadata) {
         const alreadyLoaded = OHIF.viewer.Studies.findBy({
-          studyInstanceUid: studyInstanceUID
+          studyInstanceUid: studyInstanceUID,
         });
 
         if (!alreadyLoaded) {

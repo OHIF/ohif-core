@@ -12,4 +12,4 @@ export const targetUN = {
       evaluate: true,
     },
   },
-}
+};
