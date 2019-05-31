@@ -1,25 +1,25 @@
 import './lib';
-//import './schema.js';
-import studies from './studies/';
-import commands from './commands';
-import hotkeys from './hotkeys.js';
-import ui from './ui';
-import header from './header.js';
-import HotkeysUtil from './classes/HotkeysUtil.js';
-import utils from './utils/';
-import metadata from './classes/metadata/';
-import cornerstone from './cornerstone.js';
+
+import CommandsManager from './CommandsManager.js';
+import DICOMWeb from './DICOMWeb';
+import HotkeysManager from './HotkeysManager.js';
 import classes from './classes/';
+import cornerstone from './cornerstone.js';
+import extensions from './classes/extensions/';
+import hangingProtocols from './hanging-protocols';
+import header from './header.js';
+import log from './log.js';
+import measurements from './measurements';
+import metadata from './classes/metadata/';
+import object from './object.js';
+import plugins from './plugins.js';
 import redux from './redux/';
 import string from './string.js';
+//import './schema.js';
+import studies from './studies/';
+import ui from './ui';
 import user from './user.js';
-import object from './object.js';
-import DICOMWeb from './DICOMWeb';
-import log from './log.js';
-import plugins from './plugins.js';
-import extensions from './classes/extensions/';
-import measurements from './measurements';
-import hangingProtocols from './hanging-protocols';
+import utils from './utils/';
 
 const OHIF = {
   utils,
@@ -27,15 +27,14 @@ const OHIF = {
   redux,
   classes,
   metadata,
-  hotkeys,
-  HotkeysUtil,
+  HotkeysManager,
   header,
   cornerstone,
   string,
   ui,
   user,
   object,
-  commands,
+  CommandsManager,
   log,
   DICOMWeb,
   plugins,
@@ -51,14 +50,14 @@ export {
   redux,
   classes,
   metadata,
-  hotkeys,
+  HotkeysManager,
   header,
   cornerstone,
   string,
   ui,
   user,
   object,
-  commands,
+  CommandsManager,
   log,
   DICOMWeb,
   plugins,
