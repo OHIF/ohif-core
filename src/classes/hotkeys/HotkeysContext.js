@@ -1,6 +1,8 @@
 import CommandsManager from '../CommandsManager.js';
-import Mousetrap from 'mousetrap';
-import log from '../log.js';
+import Mousetrap from './Mousetrap.js';
+import log from './../../log.js';
+
+// https://github.com/jsdoc/jsdoc/issues/1537
 
 export class HotkeysContext {
   constructor(store, name, definitions, enabled) {

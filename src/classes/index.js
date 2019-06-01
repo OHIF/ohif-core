@@ -1,7 +1,7 @@
 import MetadataProvider from './MetadataProvider.js';
 import CommandsManager from './CommandsManager.js';
-import HotkeysContext from './HotkeysContext.js';
-import HotkeysManager from './HotkeysManager.js';
+import HotkeysContext from './hotkeys/HotkeysContext.js/index.js';
+import HotkeysManager from './hotkeys/HotkeysManager.js/index.js';
 import ImageSet from './ImageSet';
 import { StudyPrefetcher } from './StudyPrefetcher';
 import { StudyLoadingListener } from './StudyLoadingListener';

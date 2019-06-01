@@ -24,6 +24,7 @@ export class CommandsManager {
    * command. The distinction of a context allows us to call the command in either
    * context, and have faith that the correct command will be run.
    *
+   * @method
    * @param {string} contextName - Namespace for commands
    * @returns {undefined}
    */
@@ -42,6 +43,7 @@ export class CommandsManager {
   /**
    * Returns all command definitions for a given context
    *
+   * @method
    * @param {string} contextName - Namespace for commands
    * @returs {Object} - the matched context
    */
@@ -73,6 +75,7 @@ export class CommandsManager {
    * Register a new command with the command manager. Scoped to a context, and
    * with a definition to assist command callers w/ providing the necessary params
    *
+   * @method
    * @param {string} contextName - Namespace for command; often scoped to the extension that added it
    * @param {string} commandName - Unique name identifying the command
    * @param {CommandDefinition} definition - {@link CommandDefinition}
@@ -92,6 +95,7 @@ export class CommandsManager {
 
   /**
    *
+   * @method
    * @param {String} commandName
    * @param {String} [contextName]
    */
@@ -108,6 +112,7 @@ export class CommandsManager {
 
   /**
    *
+   * @method
    * @param {String} commandName
    * @param {String} [contextName]
    */
