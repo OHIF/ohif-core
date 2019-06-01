@@ -1,58 +1,41 @@
+import CommandsManager from '../CommandsManager.js';
+import Mousetrap from 'mousetrap';
 import log from '../log.js';
-import commands from '../commands';
 
 export class HotkeysContext {
-  constructor(name, definitions, enabled) {
+  constructor(store, name, definitions, enabled) {
+    this.store = store;
     this.name = name;
     this.definitions = Object.assign({}, definitions);
     this.enabled = enabled;
   }
 
-  extend(definitions = {}) {
-    if (typeof definitions !== 'object') {
+  register(hotkeysName) {
+    const hotkeysDefinition = this.definitions[hotkeysName];
+    const commandDefinition = _findCommandDefinition(this.name, commandName);
+
+    if (keys instanceof Array) {
+      // TODO: register each instance
       return;
     }
 
-    this.definitions = Object.assign({}, definitions);
-
-    Object.keys(definitions).forEach(command => {
-      const hotkey = definitions[command];
-      this.unregister(command);
-
-      if (hotkey) {
-        this.register(command, hotkey);
-      }
-
-      this.definitions[command] = hotkey;
-    });
-  }
-
-  register(command, hotkey) {
-    if (!hotkey) {
+    if (!keys) {
       return;
     }
 
-    if (!command) {
-      return log.warn(`No command was defined for hotkey "${hotkey}"`);
+    if (!commandDefinition) {
+      return log.warn(`No command was defined for hotkey "${keys}"`);
     }
 
-    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+    const { commandFn, storeContexts, options } = commandDefinition;
 
-    const bind = hotkey =>
-      $(document).bind(bindingKey, hotkey, event => {
-        if (!this.enabled) {
-          return;
-        }
-        if (event.target.tagName !== 'INPUT') {
-          commands.run(command);
-        }
+    Mousetrap.bind(keys, () => {
+      let commandParams = options;
+      storeContexts.forEach(context => {
+        commandParams[context] = this.store.getState()[context];
       });
-
-    if (hotkey instanceof Array) {
-      hotkey.forEach(hotkey => bind(hotkey));
-    } else {
-      bind(hotkey);
-    }
+      commandFn(commandParams);
+    });
   }
 
   unregister(command) {
@@ -71,8 +54,19 @@ export class HotkeysContext {
   }
 
   destroy() {
-    $(document).unbind(`keydown.hotkey.${this.name}`);
+    // TODO:
+    // $(document).unbind(`keydown.hotkey.${this.name}`);
   }
+}
+
+// * @param {Function} definition.commandFn - Command to call
+// * @param {Array} definition.storeContexts - Array of string of modules required from store
+// * @param {Object} definition.options - Object of params to pass action
+function _findCommandDefinition(contextName, commandName) {
+  const commandContext = CommandsManager.getContext(contextName);
+  const command = commandContext[commandName];
+
+  return command;
 }
 
 export default HotkeysContext;

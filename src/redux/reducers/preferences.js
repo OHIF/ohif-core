@@ -108,15 +108,11 @@ const defaultState = {
 
 const preferences = (state, action) => {
   switch (action.type) {
-    case 'SET_USER_PREFERENCES':
-      let newState = action.state;
-
-      // If no value is provided, reset to defaults
-      if (!action.state) {
-        newState = cloneDeep(defaultState);
-      }
+    case 'SET_USER_PREFERENCES': {
+      const newState = action.state ? action.state : cloneDeep(defaultState);
 
       return Object.assign({}, state, newState);
+    }
     default:
       return cloneDeep(state) || cloneDeep(defaultState);
   }

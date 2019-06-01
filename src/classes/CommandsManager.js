@@ -4,11 +4,19 @@ function isFunction(subject) {
   return typeof subject === 'function';
 }
 
+/**
+ *
+ */
 export class CommandsManager {
   constructor() {
     this.contexts = {};
   }
 
+  /**
+   * Returns all command definitions for a given context
+   *
+   * @param {string} contextName - Namespace for commands
+   */
   getContext(contextName) {
     const context = this.contexts[contextName];
 
@@ -19,17 +27,14 @@ export class CommandsManager {
     return context;
   }
 
-  getCurrentContext() {
-    const contextName = window.store.getState().commandContext.context;
-
-    if (!contextName) {
-      log.warn('There is no selected context');
-      return null;
-    }
-
-    return this.getContext(contextName);
-  }
-
+  /**
+   * Allows us to create commands "per context". An example would be the "Cornerstone"
+   * context having a `SaveImage` command, and the "VTK" context having a `SaveImage`
+   * command. The distinction of a context allows us to call the command in either
+   * context, and have faith that the correct command will be run.
+   *
+   * @param {string} contextName - Namespace for commands
+   */
   createContext(contextName) {
     if (!contextName) {
       return;
@@ -42,26 +47,18 @@ export class CommandsManager {
     this.contexts[contextName] = {};
   }
 
-  set(contextName, definitions, extend = false) {
-    if (typeof definitions !== 'object') {
-      return;
-    }
-
-    const context = this.getContext(contextName);
-    if (!context) {
-      return;
-    }
-
-    if (!extend) {
-      this.clear(contextName);
-    }
-
-    Object.keys(definitions).forEach(
-      command => (context[command] = definitions[command])
-    );
-  }
-
-  register(contextName, command, definition) {
+  /**
+   * Register a new command with the command manager. Scoped to a context, and
+   * with a definition to assist command callers w/ providing the necessary params
+   *
+   * @param {string} contextName - Namespace for command; often scoped to the extension that added it
+   * @param {string} commandName - Unique name identifying the command
+   * @param {Object} definition -
+   * @param {Function} definition.commandFn - Command to call
+   * @param {Array} definition.storeContexts - Array of string of modules required from store
+   * @param {Object} definition.options - Object of params to pass action
+   */
+  register(contextName, commandName, definition) {
     if (typeof definition !== 'object') {
       return;
     }
@@ -71,7 +68,7 @@ export class CommandsManager {
       return;
     }
 
-    context[command] = definition;
+    context[commandName] = definition;
   }
 
   setDisabledFunction(contextName, command, func) {
