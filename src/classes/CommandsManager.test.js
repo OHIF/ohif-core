@@ -13,6 +13,11 @@ describe('CommandsManager', () => {
     commandsManager = new CommandsManager();
   });
 
+  it('has a contexts property', () => {
+    expect(commandsManager).toHaveProperty('contexts');
+    expect(commandsManager.contexts).toEqual({});
+  });
+
   describe('createContext()', () => {
     it('creates a context', () => {
       commandsManager.createContext(contextName);
@@ -88,7 +93,7 @@ describe('CommandsManager', () => {
       expect(result).toBe(undefined);
     });
     it('uses the globalCurrentContext if contextName is not provided', () => {
-      // NOT IMPLEMENTED
+      // TODO: NOT IMPLEMENTED
     });
     it('returns the expected command', () => {
       commandsManager.createContext(contextName);
@@ -97,5 +102,9 @@ describe('CommandsManager', () => {
 
       expect(result).toEqual(command);
     });
+  });
+
+  describe('runCommand()', () => {
+    // TODO: NOT IMPLEMENTED
   });
 });
