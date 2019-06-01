@@ -1,11 +1,17 @@
 import log from '../log.js';
 
-function isFunction(subject) {
-  return typeof subject === 'function';
-}
+/**
+ * The definition of a command
+ *
+ * @typedef {Object} CommandDefinition
+ * @property {Function} commandFn - Command to call
+ * @property {Array} storeContexts - Array of string of modules required from store
+ * @property {Object} options - Object of params to pass action
+ */
 
 /**
- *
+ * A more robust version of the CommandsManager lives in v1. If you're looking
+ * to extend this class, please check it's source before adding new methods.
  */
 export class CommandsManager {
   constructor() {
@@ -13,9 +19,31 @@ export class CommandsManager {
   }
 
   /**
+   * Allows us to create commands "per context". An example would be the "Cornerstone"
+   * context having a `SaveImage` command, and the "VTK" context having a `SaveImage`
+   * command. The distinction of a context allows us to call the command in either
+   * context, and have faith that the correct command will be run.
+   *
+   * @param {string} contextName - Namespace for commands
+   * @returns {undefined}
+   */
+  createContext(contextName) {
+    if (!contextName) {
+      return;
+    }
+
+    if (this.contexts[contextName]) {
+      return this.clearContext(contextName);
+    }
+
+    this.contexts[contextName] = {};
+  }
+
+  /**
    * Returns all command definitions for a given context
    *
    * @param {string} contextName - Namespace for commands
+   * @returs {Object} - the matched context
    */
   getContext(contextName) {
     const context = this.contexts[contextName];
@@ -28,20 +56,14 @@ export class CommandsManager {
   }
 
   /**
-   * Allows us to create commands "per context". An example would be the "Cornerstone"
-   * context having a `SaveImage` command, and the "VTK" context having a `SaveImage`
-   * command. The distinction of a context allows us to call the command in either
-   * context, and have faith that the correct command will be run.
+   * Clears all registered commands for a given context.
    *
    * @param {string} contextName - Namespace for commands
+   * @returns {undefined}
    */
-  createContext(contextName) {
+  clearContext(contextName) {
     if (!contextName) {
       return;
-    }
-
-    if (this.contexts[contextName]) {
-      return this.clear(contextName);
     }
 
     this.contexts[contextName] = {};
@@ -53,12 +75,9 @@ export class CommandsManager {
    *
    * @param {string} contextName - Namespace for command; often scoped to the extension that added it
    * @param {string} commandName - Unique name identifying the command
-   * @param {Object} definition -
-   * @param {Function} definition.commandFn - Command to call
-   * @param {Array} definition.storeContexts - Array of string of modules required from store
-   * @param {Object} definition.options - Object of params to pass action
+   * @param {CommandDefinition} definition - {@link CommandDefinition}
    */
-  register(contextName, commandName, definition) {
+  registerCommand(contextName, commandName, definition) {
     if (typeof definition !== 'object') {
       return;
     }
@@ -71,79 +90,37 @@ export class CommandsManager {
     context[commandName] = definition;
   }
 
-  setDisabledFunction(contextName, command, func) {
-    if (!command || !isFunction(func)) {
-      return;
-    }
-
+  /**
+   *
+   * @param {String} commandName
+   * @param {String} [contextName]
+   */
+  getCommand(commandName, contextName) {
+    contextName = contextName || this.getCurrentContext();
     const context = this.getContext(contextName);
-    if (!context) {
-      return;
-    }
-
-    const definition = context[command];
-    if (!definition) {
-      log.warn(
-        `Trying to set a disabled function to a command "${command}" that was not yet defined`
-      );
-      return;
-    }
-
-    definition.disabled = func;
-  }
-
-  clear(contextName) {
-    if (!contextName) {
-      return;
-    }
-
-    this.contexts[contextName] = {};
-  }
-
-  getDefinition(command) {
-    const context = this.getCurrentContext();
 
     if (!context) {
       return;
     }
 
-    return context[command];
+    return context[commandName];
   }
 
-  isDisabled(command) {
-    const definition = this.getDefinition(command);
-
+  /**
+   *
+   * @param {String} commandName
+   * @param {String} [contextName]
+   */
+  runCommand(commandName, contextName) {
+    const definition = this.getCommand(commandName, contextName);
     if (!definition) {
-      return false;
-    }
-
-    const { disabled } = definition;
-
-    if (isFunction(disabled) && disabled()) {
-      return true;
-    }
-
-    if (!isFunction(disabled) && disabled) {
-      return true;
-    }
-
-    return false;
-  }
-
-  run(command) {
-    const definition = this.getDefinition(command);
-    if (!definition) {
-      return log.warn(`Command "${command}" not found in current context`);
-    }
-
-    if (this.isDisabled(command)) {
-      return;
+      return log.warn(`Command "${commandName}" not found in current context`);
     }
 
     const { action, params } = definition;
 
-    if (!isFunction(action)) {
-      log.warn(`No action was defined for command "${command}"`);
+    if (typeof subject !== 'function') {
+      log.warn(`No action was defined for command "${commandName}"`);
       return;
     } else {
       return action(params);
