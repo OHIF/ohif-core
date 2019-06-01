@@ -114,9 +114,10 @@ export class CommandsManager {
    *
    * @method
    * @param {String} commandName
+   * @param {Object} [options] - Extra options to pass the command. Like a mousedown event
    * @param {String} [contextName]
    */
-  runCommand(commandName, contextName) {
+  runCommand(commandName, options, contextName) {
     const definition = this.getCommand(commandName, contextName);
     if (!definition) {
       return log.warn(`Command "${commandName}" not found in current context`);

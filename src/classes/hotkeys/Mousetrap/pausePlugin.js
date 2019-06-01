@@ -1,5 +1,3 @@
-import Mousetrap from 'mousetrap';
-
 /**
  * adds a pause and unpause method to Mousetrap
  * this allows you to enable or disable keyboard shortcuts
@@ -7,7 +5,7 @@ import Mousetrap from 'mousetrap';
  *
  * https://github.com/ccampbell/mousetrap/blob/master/plugins/pause/mousetrap-pause.js
  */
-(function(Mousetrap) {
+export default function(Mousetrap) {
   var _originalStopCallback = Mousetrap.prototype.stopCallback;
 
   Mousetrap.prototype.stopCallback = function(e, element, combo) {
@@ -31,6 +29,4 @@ import Mousetrap from 'mousetrap';
   };
 
   Mousetrap.init();
-})(Mousetrap);
-
-export default Mousetrap;
+}

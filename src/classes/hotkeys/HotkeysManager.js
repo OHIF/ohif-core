@@ -1,12 +1,6 @@
-import Mousetrap from './Mousetrap.js';
-import HotkeysContext from './HotkeysContext';
-
-// Hotkeysmanager has hotkeys..
-// Hotkeys have...
-// - context
-// - default keys
-// - keys
-// - command (by name)
+import Mousetrap from './Mousetrap';
+import CommandsManager from '../CommandsManager.js';
+import log from './../../log.js';
 
 /**
  *
@@ -16,16 +10,11 @@ import HotkeysContext from './HotkeysContext';
  * @property {String[]} keys - Keys to bind; Follows Mousetrap.js binding syntax
  */
 
-// Hotkeys are really... Commands that CAN be bound to one or more keys
-// So we can use the same identifier we use for commands?
-
 export class HotkeysManager {
   constructor() {
-    this.contexts = {};
-    this.defaults = {};
-    this.currentContextName = null;
-    this.enabled = true;
-    this.storeFunction = null;
+    this.hotkeyDefinitions = {};
+    this.hotkeyDefaults = {};
+    this.isEnabled = true;
   }
 
   /**
@@ -33,49 +22,42 @@ export class HotkeysManager {
    * input.
    */
   disable() {
-    this.enabled.set(false);
-    Mousetrap.pause();
+    if (this.isEnabled) {
+      this.isEnabled.set(false);
+      Mousetrap.pause();
+    }
   }
 
   /**
    * Enables all hotkeys.
    */
   enable() {
-    this.enabled.set(true);
-    Mousetrap.unpause();
+    if (!this.isEnabled) {
+      this.isEnabled.set(true);
+      Mousetrap.unpause();
+    }
   }
 
+  // TODO: Just... Get Hotkeys?
+  // Or.. GetHotkeysForExtension?
   getContext(contextName) {
     return this.contexts[contextName];
   }
 
-  getCurrentContext() {
-    return this.getContext(this.currentContextName);
-  }
-
   /**
-   * Sets all hotkeys for a given context. If the context does not exist,
-   * it is created.
    *
-   * @param {String} contextName
    * @param {HotkeyDefinition[]} hotkeyDefinitions
    * @param {Boolean} [isDefaultDefinitions]
    */
-  set(contextName, hotkeyDefinitions, isDefaultDefinitions = false) {
-    const enabled = this.enabled;
-    const context = new HotkeysContext(contextName, hotkeyDefinitions, enabled);
+  set(hotkeyDefinitions, isDefaultDefinitions = false) {
+    hotkeyDefinitions.forEach(definition => {
+      const { commandName, keys } = definition;
+      this.registerHotkeys(commandName, keys);
+    });
 
-    // const currentContext = this.getCurrentContext() || context;
-    // currentContext.destroy();
-
-    context.initialize();
-
-    this.contexts[contextName] = context;
     if (isDefaultDefinitions) {
-      this.defaults[contextName] = hotkeyDefinitions;
+      this.defaultsHotkeys = hotkeyDefinitions;
     }
-
-    // this.currentContextName = contextName;
   }
 
   /**
@@ -85,14 +67,111 @@ export class HotkeysManager {
    * @param {String} contextName
    * @returns {undefined}
    */
-  unsetContext(contextName) {
-    if (contextName === this.currentContextName) {
-      this.getCurrentContext().destroy();
+  // unsetContext(contextName) {
+  //   delete this.contexts[contextName];
+  //   delete this.defaults[contextName];
+  // }
+
+  /**
+   *
+   * @param {string} commandName
+   * @param {String[]} keys
+   * @returns {undefined}
+   */
+  registerHotkeys(commandName, keys, extension) {
+    if (!commandName) {
+      log.warn(`No command was defined for hotkey "${keys}"`);
+      return;
     }
 
-    delete this.contexts[contextName];
-    delete this.defaults[contextName];
+    const hotkeyExists = this.hotkeyDefinitions[commandName] !== undefined;
+    if (hotkeyExists) {
+      this._unbindHotkeys(commandName, keys);
+    }
+
+    // Set definition & bind
+    this.hotkeyDefinitions[commandName] = keys;
+    this._bindHotkeys(commandName, keys);
+  }
+
+  unregister(command) {
+    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
+    if (this.definitions[command]) {
+      $(document).unbind(bindingKey);
+      delete this.definitions[command];
+    }
+  }
+
+  /**
+   *
+   */
+  restoreDefaults() {
+    // TODO
+  }
+
+  /**
+   *
+   */
+  destroy() {
+    this.hotkeyDefaults = {};
+    this.hotkeyDefinitions = {};
+    Mousetrap.reset();
+  }
+
+  /**
+   * Binds one or more set of hotkey combinations for a given command
+   *
+   * @private
+   * @param {string} commandName - The name of the command to trigger when hotkeys are used
+   * @param {string[]} keys - One or more key combinations that should trigger command
+   * @returns {undefined}
+   */
+  _bindHotkeys(commandName, keys) {
+    const isKeyDefined = keys === '' || keys === undefined;
+    if (!isKeyDefined) {
+      return;
+    }
+
+    const isKeyArray = keys instanceof Array;
+    if (isKeyArray) {
+      keys.forEach(key => this._bindHotkeys(commandName, key));
+      return;
+    }
+
+    Mousetrap.bind(keys, evt => {
+      CommandsManager.runCommand(commandName, { evt });
+    });
+  }
+
+  /**
+   * unbinds one or more set of hotkey combinations for a given command
+   *
+   * @private
+   * @param {string} commandName - The name of the previously bound command
+   * @param {string[]} keys - One or more sets of previously bound keys
+   * @returns {undefined}
+   */
+  _unbindHotkeys(commandName, keys) {
+    const isKeyDefined = keys === '' || keys === undefined;
+    if (!isKeyDefined) {
+      return;
+    }
+
+    const isKeyArray = keys instanceof Array;
+    if (isKeyArray) {
+      keys.forEach(key => this._unbindHotkeys(commandName, key));
+      return;
+    }
+
+    Mousetrap.unbind(keys);
   }
 }
 
 export default HotkeysManager;
+
+// Commands Contexts:
+
+// --> Name and Priority
+// GLOBAL: 0
+// VIEWER::CORNERSTONE: 1
+// VIEWER::VTK: 1
