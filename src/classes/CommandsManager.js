@@ -108,10 +108,12 @@ export class CommandsManager {
   }
 
   /**
+   * Finds a command with the provided name if it exists in the specified context,
+   * or a currently active context.
    *
    * @method
-   * @param {String} commandName
-   * @param {String} [contextName]
+   * @param {String} commandName - Command to find
+   * @param {String} [contextName] - Specific command to look in. Defaults to current activeContexts
    */
   getCommand(commandName, contextName) {
     let contexts = [];
@@ -155,7 +157,8 @@ export class CommandsManager {
   runCommand(commandName, options, contextName) {
     const definition = this.getCommand(commandName, contextName);
     if (!definition) {
-      return log.warn(`Command "${commandName}" not found in current context`);
+      log.warn(`Command "${commandName}" not found in current context`);
+      return;
     }
 
     const { commandFn, storeContexts } = definition;
@@ -175,7 +178,7 @@ export class CommandsManager {
     );
 
     if (typeof commandFn !== 'function') {
-      console.warn(`No commandFn was defined for command "${commandName}"`);
+      log.warn(`No commandFn was defined for command "${commandName}"`);
       return;
     } else {
       return commandFn(commandParams);

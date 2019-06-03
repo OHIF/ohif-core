@@ -1,4 +1,7 @@
 import CommandsManager from './CommandsManager.js';
+import log from './../log.js';
+
+jest.mock('./../log.js');
 
 describe('CommandsManager', () => {
   let commandsManager,
@@ -7,15 +10,30 @@ describe('CommandsManager', () => {
       commandFn: jest.fn(),
       storeContexts: [],
       options: {},
+    },
+    commandsManagerConfig = {
+      getAppState: () => {
+        return {
+          viewers: 'Test',
+        };
+      },
+      getActiveContexts: () => ['VIEWER', 'ACTIVEVIEWER::CORNERSTONE'],
     };
 
   beforeEach(() => {
-    commandsManager = new CommandsManager();
+    commandsManager = new CommandsManager(commandsManagerConfig);
+    jest.clearAllMocks();
   });
 
   it('has a contexts property', () => {
     expect(commandsManager).toHaveProperty('contexts');
     expect(commandsManager.contexts).toEqual({});
+  });
+
+  it('logs a warning if instantiated without getAppState or getActiveContexts', () => {
+    new CommandsManager();
+
+    expect(log.warn.mock.calls.length).toBe(1);
   });
 
   describe('createContext()', () => {
@@ -86,14 +104,25 @@ describe('CommandsManager', () => {
 
       expect(result).toBe(undefined);
     });
-    it('returns undefined if command does not exist', () => {
+    it('returns undefined if command does not exist in context', () => {
       commandsManager.createContext(contextName);
       const result = commandsManager.getCommand('TestCommand', contextName);
 
       expect(result).toBe(undefined);
     });
-    it('uses the globalCurrentContext if contextName is not provided', () => {
-      // TODO: NOT IMPLEMENTED
+    it('uses contextName param to get command', () => {
+      commandsManager.createContext('GLOBAL');
+      commandsManager.registerCommand('GLOBAL', 'TestCommand', command);
+      const foundCommand = commandsManager.getCommand('TestCommand', 'GLOBAL');
+
+      expect(foundCommand).toBe(command);
+    });
+    it('uses activeContexts, if contextName is not provided, to get command', () => {
+      commandsManager.createContext('VIEWER');
+      commandsManager.registerCommand('VIEWER', 'TestCommand', command);
+      const foundCommand = commandsManager.getCommand('TestCommand');
+
+      expect(foundCommand).toBe(command);
     });
     it('returns the expected command', () => {
       commandsManager.createContext(contextName);
