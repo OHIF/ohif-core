@@ -100,14 +100,34 @@ export class CommandsManager {
    * @param {String} [contextName]
    */
   getCommand(commandName, contextName) {
-    contextName = contextName || this.getCurrentContext();
-    const context = this.getContext(contextName);
+    let contexts = [];
 
-    if (!context) {
+    if (contextName) {
+      const context = this.getContext(contextName);
+      if (context) {
+        contexts.push(context);
+      }
+    } else {
+      this.activeContexts.forEach(activeContext => {
+        const context = this.getContext(activeContext);
+        if (context) {
+          contexts.push(context);
+        }
+      });
+    }
+
+    if (contexts.length === 0) {
       return;
     }
 
-    return context[commandName];
+    let foundCommand;
+    contexts.forEach(context => {
+      if (context[commandName]) {
+        foundCommand = context[commandName];
+      }
+    });
+
+    return foundCommand;
   }
 
   /**
