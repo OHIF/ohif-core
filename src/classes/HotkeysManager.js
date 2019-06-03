@@ -1,4 +1,4 @@
-import Mousetrap from './Mousetrap';
+import hotkeys from './hotkeys';
 import log from './../../log.js';
 
 /**
@@ -26,7 +26,7 @@ export class HotkeysManager {
   disable() {
     if (this.isEnabled) {
       this.isEnabled.set(false);
-      Mousetrap.pause();
+      hotkeys.pause();
     }
   }
 
@@ -36,7 +36,7 @@ export class HotkeysManager {
   enable() {
     if (!this.isEnabled) {
       this.isEnabled.set(true);
-      Mousetrap.unpause();
+      hotkeys.unpause();
     }
   }
 
@@ -117,7 +117,7 @@ export class HotkeysManager {
   destroy() {
     this.hotkeyDefaults = {};
     this.hotkeyDefinitions = {};
-    Mousetrap.reset();
+    hotkeys.reset();
   }
 
   /**
@@ -140,7 +140,7 @@ export class HotkeysManager {
       return;
     }
 
-    Mousetrap.bind(keys, evt => {
+    hotkeys.bind(keys, evt => {
       this._commandsManager.runCommand(commandName, { evt });
     });
   }
@@ -165,7 +165,7 @@ export class HotkeysManager {
       return;
     }
 
-    Mousetrap.unbind(keys);
+    hotkeys.unbind(keys);
   }
 }
 

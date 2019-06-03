@@ -1,5 +1,6 @@
 /**
  * This extension allows you to record a sequence using Mousetrap.
+ * {@link https://craig.is/killing/mice}
  *
  * @author Dan Tao <daniel.tao@gmail.com>
  */
