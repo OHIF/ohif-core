@@ -10,14 +10,26 @@ import log from '../log.js';
  */
 
 /**
- * A more robust version of the CommandsManager lives in v1. If you're looking
+ * The Commands Manager tracks named commands (or functions) that are scoped to
+ * a context. When we attempt to run a command with a given name, we look for it
+ * in our active contexts. If found, we run the command, passing in any application
+ * or call specific data specified in the command's definition.
+ *
+ * NOTE: A more robust version of the CommandsManager lives in v1. If you're looking
  * to extend this class, please check it's source before adding new methods.
  */
 export class CommandsManager {
-  constructor(store) {
+  constructor({ getAppState, getActiveContexts } = {}) {
     this.contexts = {};
-    this.activeContexts = [];
-    this._store = store;
+
+    if (!getAppState || !getActiveContexts) {
+      log.warn(
+        'CommandsManager was instantiated without getAppState() or getActiveContexts()'
+      );
+    }
+
+    this._getAppState = getAppState;
+    this._getActiveContexts = getActiveContexts;
   }
 
   /**
@@ -110,8 +122,8 @@ export class CommandsManager {
         contexts.push(context);
       }
     } else {
-      this.activeContexts = this._store.getState().ui.activeContexts;
-      this.activeContexts.forEach(activeContext => {
+      const activeContexts = this._getActiveContexts();
+      activeContexts.forEach(activeContext => {
         const context = this.getContext(activeContext);
         if (context) {
           contexts.push(context);
@@ -150,8 +162,9 @@ export class CommandsManager {
     const definitionOptions = definition.options;
 
     let commandParams = {};
+    const appState = this._getAppState();
     storeContexts.forEach(context => {
-      commandParams[context] = this._store.getState()[context];
+      commandParams[context] = appState[context];
     });
 
     commandParams = Object.assign(
