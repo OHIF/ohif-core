@@ -1,5 +1,5 @@
 import hotkeys from './hotkeys';
-import log from './../../log.js';
+import log from './../log.js';
 
 /**
  *

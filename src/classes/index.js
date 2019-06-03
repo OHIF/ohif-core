@@ -1,20 +1,21 @@
-import MetadataProvider from './MetadataProvider.js';
 import CommandsManager from './CommandsManager.js';
-import HotkeysManager from './hotkeys/index.js';
-import ImageSet from './ImageSet';
-import { StudyPrefetcher } from './StudyPrefetcher';
-import { StudyLoadingListener } from './StudyLoadingListener';
-import { StackLoadingListener } from './StudyLoadingListener';
 import { DICOMFileLoadingListener } from './StudyLoadingListener';
-import { StudyMetadata } from './metadata/StudyMetadata';
-import { SeriesMetadata } from './metadata/SeriesMetadata';
+import HotkeysManager from './HotkeysManager.js';
+import ImageSet from './ImageSet';
 import { InstanceMetadata } from './metadata/InstanceMetadata';
-//import { StudySummary } from './metadata/StudySummary';
-import { TypeSafeCollection } from './TypeSafeCollection';
+import MetadataProvider from './MetadataProvider.js';
 import OHIFError from './OHIFError.js';
-import { StudyMetadataSource } from './StudyMetadataSource';
 import { OHIFStudyMetadataSource } from './OHIFStudyMetadataSource';
+import { SeriesMetadata } from './metadata/SeriesMetadata';
+import { StackLoadingListener } from './StudyLoadingListener';
+import { StudyLoadingListener } from './StudyLoadingListener';
+import { StudyMetadata } from './metadata/StudyMetadata';
+import { StudyMetadataSource } from './StudyMetadataSource';
+import { StudyPrefetcher } from './StudyPrefetcher';
 import { StudySummary } from './metadata/StudySummary';
+import { TypeSafeCollection } from './TypeSafeCollection';
+
+//import { StudySummary } from './metadata/StudySummary';
 
 export {
   OHIFStudyMetadataSource,

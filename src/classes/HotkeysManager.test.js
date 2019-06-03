@@ -1,4 +1,4 @@
-import HotkeysManager from './HotkeysContext';
+import HotkeysManager from './HotkeysManager.js';
 
 describe('HotkeysManager', () => {
   let hotkeysManager;
