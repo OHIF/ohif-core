@@ -14,8 +14,10 @@ import log from '../log.js';
  * to extend this class, please check it's source before adding new methods.
  */
 export class CommandsManager {
-  constructor() {
+  constructor(store) {
     this.contexts = {};
+    this.activeContexts = [];
+    this._store = store;
   }
 
   /**
@@ -108,6 +110,7 @@ export class CommandsManager {
         contexts.push(context);
       }
     } else {
+      this.activeContexts = this._store.getState().ui.activeContexts;
       this.activeContexts.forEach(activeContext => {
         const context = this.getContext(activeContext);
         if (context) {
@@ -143,13 +146,26 @@ export class CommandsManager {
       return log.warn(`Command "${commandName}" not found in current context`);
     }
 
-    const { action, params } = definition;
+    const { commandFn, storeContexts } = definition;
+    const definitionOptions = definition.options;
 
-    if (typeof subject !== 'function') {
-      log.warn(`No action was defined for command "${commandName}"`);
+    let commandParams = {};
+    storeContexts.forEach(context => {
+      commandParams[context] = this._store.getState()[context];
+    });
+
+    commandParams = Object.assign(
+      {},
+      commandParams, // Required store contexts
+      definitionOptions, // "Command configuration"
+      options // "Time of call" info
+    );
+
+    if (typeof commandFn !== 'function') {
+      console.warn(`No commandFn was defined for command "${commandName}"`);
       return;
     } else {
-      return action(params);
+      return commandFn(commandParams);
     }
   }
 }
