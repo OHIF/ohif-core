@@ -65,7 +65,7 @@ export class CommandsManager {
     const context = this.contexts[contextName];
 
     if (!context) {
-      return log.warn(`No context found with name "${contextName}"`);
+      return;
     }
 
     return context;
@@ -151,10 +151,10 @@ export class CommandsManager {
    *
    * @method
    * @param {String} commandName
-   * @param {Object} [options] - Extra options to pass the command. Like a mousedown event
+   * @param {Object} [options={}] - Extra options to pass the command. Like a mousedown event
    * @param {String} [contextName]
    */
-  runCommand(commandName, options, contextName) {
+  runCommand(commandName, options = {}, contextName) {
     const definition = this.getCommand(commandName, contextName);
     if (!definition) {
       log.warn(`Command "${commandName}" not found in current context`);
