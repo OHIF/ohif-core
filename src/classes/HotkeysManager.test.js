@@ -1,4 +1,7 @@
 import HotkeysManager from './HotkeysManager.js';
+import log from './../log.js';
+
+jest.mock('./../log.js');
 
 describe('HotkeysManager', () => {
   let hotkeysManager;
@@ -10,18 +13,10 @@ describe('HotkeysManager', () => {
   it('has expected properties', () => {
     const allProperties = Object.keys(hotkeysManager);
     const expectedProprties = [
-      'contexts',
-      'defaults',
-      'currentContextName',
-      'enabled',
-      'storeFunction',
+      'hotkeyDefinitions',
+      'hotkeyDefaults',
+      'isEnabled',
     ];
-
-    // this.contexts = {};
-    // this.defaults = {};
-    // this.currentContextName = null;
-    // this.enabled = true;
-    // this.storeFunction = null;
 
     const containsAllExpectedProperties = expectedProprties.every(expected =>
       allProperties.includes(expected)
