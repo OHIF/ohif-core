@@ -15,7 +15,12 @@ export class HotkeysManager {
     this.hotkeyDefaults = {};
     this.isEnabled = true;
 
-    //
+    if (!commandsManager) {
+      log.warn(
+        'HotkeysManager instantiated without a commandsManager. Hotkeys will be unable to find and run commands.'
+      );
+    }
+
     this._commandsManager = commandsManager;
   }
 
