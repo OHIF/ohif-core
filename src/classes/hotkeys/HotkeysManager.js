@@ -1,5 +1,4 @@
 import Mousetrap from './Mousetrap';
-import CommandsManager from '../CommandsManager.js';
 import log from './../../log.js';
 
 /**
@@ -11,10 +10,13 @@ import log from './../../log.js';
  */
 
 export class HotkeysManager {
-  constructor() {
+  constructor(commandsManager) {
     this.hotkeyDefinitions = {};
     this.hotkeyDefaults = {};
     this.isEnabled = true;
+
+    //
+    this._commandsManager = commandsManager;
   }
 
   /**
@@ -128,7 +130,7 @@ export class HotkeysManager {
    */
   _bindHotkeys(commandName, keys) {
     const isKeyDefined = keys === '' || keys === undefined;
-    if (!isKeyDefined) {
+    if (isKeyDefined) {
       return;
     }
 
@@ -139,7 +141,7 @@ export class HotkeysManager {
     }
 
     Mousetrap.bind(keys, evt => {
-      CommandsManager.runCommand(commandName, { evt });
+      this._commandsManager.runCommand(commandName, { evt });
     });
   }
 
