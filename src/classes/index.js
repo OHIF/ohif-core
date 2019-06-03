@@ -1,7 +1,6 @@
 import MetadataProvider from './MetadataProvider.js';
 import CommandsManager from './CommandsManager.js';
-import HotkeysContext from './hotkeys/HotkeysContext.js/index.js';
-import HotkeysManager from './hotkeys/HotkeysManager.js/index.js';
+import HotkeysManager from './hotkeys/index.js';
 import ImageSet from './ImageSet';
 import { StudyPrefetcher } from './StudyPrefetcher';
 import { StudyLoadingListener } from './StudyLoadingListener';
@@ -21,7 +20,6 @@ export {
   OHIFStudyMetadataSource,
   MetadataProvider,
   CommandsManager,
-  HotkeysContext,
   HotkeysManager,
   ImageSet,
   StudyPrefetcher,
@@ -41,7 +39,6 @@ const classes = {
   OHIFStudyMetadataSource,
   MetadataProvider,
   CommandsManager,
-  HotkeysContext,
   HotkeysManager,
   ImageSet,
   StudyPrefetcher,

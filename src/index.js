@@ -1,9 +1,7 @@
 import './lib';
 
-import CommandsManager from './CommandsManager.js';
+import classes, { CommandsManager, HotkeysManager } from './classes/';
 import DICOMWeb from './DICOMWeb';
-import HotkeysManager from './HotkeysManager.js';
-import classes from './classes/';
 import cornerstone from './cornerstone.js';
 import extensions from './classes/extensions/';
 import hangingProtocols from './hanging-protocols';
