@@ -29,20 +29,16 @@ export class HotkeysManager {
    * input.
    */
   disable() {
-    if (this.isEnabled) {
-      this.isEnabled.set(false);
-      hotkeys.pause();
-    }
+    this.isEnabled.set(false);
+    hotkeys.pause();
   }
 
   /**
    * Enables all hotkeys.
    */
   enable() {
-    if (!this.isEnabled) {
-      this.isEnabled.set(true);
-      hotkeys.unpause();
-    }
+    this.isEnabled.set(true);
+    hotkeys.unpause();
   }
 
   // TODO: Just... Get Hotkeys?

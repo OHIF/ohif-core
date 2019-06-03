@@ -10,6 +10,7 @@ describe('HotkeysManager', () => {
 
   beforeEach(() => {
     CommandsManager.mockClear();
+    log.warn.mockClear();
     commandsManager = new CommandsManager();
     hotkeysManager = new HotkeysManager(commandsManager);
   });
@@ -38,12 +39,31 @@ describe('HotkeysManager', () => {
     );
   });
 
-  // disable()
-  // enable()
+  describe('disable()', () => {
+    it('sets isEnabled property to false', () => {});
+
+    it('calls hotkeys.pause()', () => {});
+  });
+
+  describe('enable()', () => {
+    it('sets isEnabled property to true', () => {});
+
+    it('calls hotkeys.unpause()', () => {});
+  });
+
   // getContext
   // getCurrentContext
   // - from store, or class?
   // setHotkeysForContext
   // - isDefault? How do we revert?
   // unsetContext
+  // restoreDefaults()
+  // destroy()
+
+  describe('registerHotkeys()', () => {
+    it('logs a warning and returns undefined if a commandName is not provided', () => {});
+    it('updates hotkeyDefinitions property with registered keys', () => {});
+    it('calls hotkeys.bind for all keys in array', () => {});
+    it('calls hotkeys.unbind if commandName was previously registered, for each previously registered set of keys', () => {});
+  });
 });
