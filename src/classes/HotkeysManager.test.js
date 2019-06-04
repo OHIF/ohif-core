@@ -1,18 +1,22 @@
 import CommandsManager from './CommandsManager.js';
 import HotkeysManager from './HotkeysManager.js';
+import hotkeys from './hotkeys';
 import log from './../log.js';
 
 jest.mock('./CommandsManager.js');
+jest.mock('./hotkeys');
 jest.mock('./../log.js');
 
 describe('HotkeysManager', () => {
   let hotkeysManager, commandsManager;
 
   beforeEach(() => {
-    CommandsManager.mockClear();
-    log.warn.mockClear();
     commandsManager = new CommandsManager();
     hotkeysManager = new HotkeysManager(commandsManager);
+    CommandsManager.mockClear();
+    hotkeys.mockClear();
+    log.warn.mockClear();
+    jest.clearAllMocks();
   });
 
   it('has expected properties', () => {
@@ -40,15 +44,36 @@ describe('HotkeysManager', () => {
   });
 
   describe('disable()', () => {
-    it('sets isEnabled property to false', () => {});
+    beforeEach(() => hotkeys.pause.mockClear());
 
-    it('calls hotkeys.pause()', () => {});
+    it('sets isEnabled property to false', () => {
+      hotkeysManager.disable();
+
+      expect(hotkeysManager.isEnabled).toBe(false);
+    });
+
+    it('calls hotkeys.pause()', () => {
+      hotkeysManager.disable();
+
+      expect(hotkeys.pause.mock.calls.length).toBe(1);
+    });
   });
 
   describe('enable()', () => {
-    it('sets isEnabled property to true', () => {});
+    beforeEach(() => hotkeys.unpause.mockClear());
 
-    it('calls hotkeys.unpause()', () => {});
+    it('sets isEnabled property to true', () => {
+      hotkeysManager.disable();
+      hotkeysManager.enable();
+
+      expect(hotkeysManager.isEnabled).toBe(true);
+    });
+
+    it('calls hotkeys.unpause()', () => {
+      hotkeysManager.enable();
+
+      expect(hotkeys.unpause.mock.calls.length).toBe(1);
+    });
   });
 
   describe('destroy()', () => {

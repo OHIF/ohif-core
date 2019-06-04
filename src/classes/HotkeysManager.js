@@ -29,7 +29,7 @@ export class HotkeysManager {
    * input.
    */
   disable() {
-    this.isEnabled.set(false);
+    this.isEnabled = false;
     hotkeys.pause();
   }
 
@@ -37,7 +37,7 @@ export class HotkeysManager {
    * Enables all hotkeys.
    */
   enable() {
-    this.isEnabled.set(true);
+    this.isEnabled = true;
     hotkeys.unpause();
   }
 
@@ -86,6 +86,7 @@ export class HotkeysManager {
   }
 
   /**
+   * Uses most recent
    *
    * @returns {undefined}
    */
