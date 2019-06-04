@@ -76,15 +76,39 @@ describe('HotkeysManager', () => {
     });
   });
 
-  describe('destroy()', () => {
-    it('clears default and definition properties', () => {});
-    it('resets all hotkey bindings', () => {});
-  });
-
   describe('setHotkeys()', () => {
-    it('calls registerHotkeys for each hotkeyDefinition', () => {});
-    it('does not set this.defaultHotkeys by default', () => {});
-    it('sets this.defaultHotkeys when isDefaultDefinitions is true', () => {});
+    it('calls registerHotkeys for each hotkeyDefinition', () => {
+      const hotkeyDefinitions = [
+        { commandName: 'dance', keys: '+' },
+        { commandName: 'celebrate', keys: 'q' },
+      ];
+
+      hotkeysManager.registerHotkeys = jest.fn();
+      hotkeysManager.setHotkeys(hotkeyDefinitions);
+
+      const numberOfCalls = hotkeysManager.registerHotkeys.mock.calls.length;
+      const firstCallArgs = hotkeysManager.registerHotkeys.mock.calls[0];
+      const secondCallArgs = hotkeysManager.registerHotkeys.mock.calls[1];
+
+      expect(numberOfCalls).toBe(2);
+      expect(firstCallArgs).toEqual(['dance', '+']);
+      expect(secondCallArgs).toEqual(['celebrate', 'q']);
+    });
+    it('does not set this.hotkeyDefaults by default', () => {
+      const hotkeyDefinitions = [{ commandName: 'dance', keys: '+' }];
+
+      hotkeysManager.setHotkeys(hotkeyDefinitions);
+
+      expect(hotkeysManager.hotkeyDefaults).toEqual([]);
+    });
+    it('sets this.hotkeyDefaults when isDefaultDefinitions is true', () => {
+      const hotkeyDefinitions = [{ commandName: 'dance', keys: '+' }];
+      const isDefaultDefinitions = true;
+
+      hotkeysManager.setHotkeys(hotkeyDefinitions, isDefaultDefinitions);
+
+      expect(hotkeysManager.hotkeyDefaults).toEqual(hotkeyDefinitions);
+    });
   });
 
   describe('registerHotkeys()', () => {
@@ -97,5 +121,10 @@ describe('HotkeysManager', () => {
   describe('restoreDefaults()', () => {
     it('calls setsHotkeys with an empty array if there are no default hotkeys', () => {});
     it('setsHotkeys using previously cached default values', () => {});
+  });
+
+  describe('destroy()', () => {
+    it('clears default and definition properties', () => {});
+    it('resets all hotkey bindings', () => {});
   });
 });

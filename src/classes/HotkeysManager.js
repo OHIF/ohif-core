@@ -11,8 +11,8 @@ import log from './../log.js';
 
 export class HotkeysManager {
   constructor(commandsManager) {
-    this.hotkeyDefinitions = undefined;
-    this.hotkeyDefaults = {};
+    this.hotkeyDefinitions = {};
+    this.hotkeyDefaults = [];
     this.isEnabled = true;
 
     if (!commandsManager) {
@@ -56,7 +56,7 @@ export class HotkeysManager {
     });
 
     if (isDefaultDefinitions) {
-      this.defaultsHotkeys = hotkeyDefinitions;
+      this.hotkeyDefaults = hotkeyDefinitions;
     }
   }
 
@@ -91,14 +91,14 @@ export class HotkeysManager {
    * @returns {undefined}
    */
   restoreDefaults() {
-    this.setHotkeys(this.defaultsHotkeys);
+    this.setHotkeys(this.hotkeyDefaults);
   }
 
   /**
    *
    */
   destroy() {
-    this.hotkeyDefaults = {};
+    this.hotkeyDefaults = [];
     this.hotkeyDefinitions = {};
     hotkeys.reset();
   }
