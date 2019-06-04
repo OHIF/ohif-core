@@ -11,7 +11,7 @@ import log from './../log.js';
 
 export class HotkeysManager {
   constructor(commandsManager) {
-    this.hotkeyDefinitions = {};
+    this.hotkeyDefinitions = undefined;
     this.hotkeyDefaults = {};
     this.isEnabled = true;
 
@@ -41,18 +41,15 @@ export class HotkeysManager {
     hotkeys.unpause();
   }
 
-  // TODO: Just... Get Hotkeys?
-  // Or.. GetHotkeysForExtension?
-  getContext(contextName) {
-    return this.contexts[contextName];
-  }
-
   /**
+   * Registers a list of hotkeydefinitions. Optionally, sets the
+   * default hotkey bindings for all provided definitions. These
+   * values are used in `this.restoreDefaultBindings`.
    *
    * @param {HotkeyDefinition[]} hotkeyDefinitions
    * @param {Boolean} [isDefaultDefinitions]
    */
-  set(hotkeyDefinitions, isDefaultDefinitions = false) {
+  setHotkeys(hotkeyDefinitions, isDefaultDefinitions = false) {
     hotkeyDefinitions.forEach(definition => {
       const { commandName, keys } = definition;
       this.registerHotkeys(commandName, keys);
@@ -64,18 +61,9 @@ export class HotkeysManager {
   }
 
   /**
-   * Removes hotkey bindings, context, and defaults for the provided contextName
-   *
-   * @method
-   * @param {String} contextName
-   * @returns {undefined}
-   */
-  // unsetContext(contextName) {
-  //   delete this.contexts[contextName];
-  //   delete this.defaults[contextName];
-  // }
-
-  /**
+   * (unbinds and) binds the specified command to one or more key combinations.
+   * When a hotkey combination is triggered, the command name and active contexts
+   * are used to locate the correct command to call.
    *
    * @param {string} commandName
    * @param {String[]} keys
@@ -97,19 +85,12 @@ export class HotkeysManager {
     this._bindHotkeys(commandName, keys);
   }
 
-  unregister(command) {
-    const bindingKey = `keydown.hotkey.${this.name}.${command}`;
-    if (this.definitions[command]) {
-      $(document).unbind(bindingKey);
-      delete this.definitions[command];
-    }
-  }
-
   /**
    *
+   * @returns {undefined}
    */
   restoreDefaults() {
-    // TODO
+    this.setHotkeys(this.defaultsHotkeys);
   }
 
   /**

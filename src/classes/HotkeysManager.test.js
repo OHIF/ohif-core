@@ -51,19 +51,26 @@ describe('HotkeysManager', () => {
     it('calls hotkeys.unpause()', () => {});
   });
 
-  // getContext
-  // getCurrentContext
-  // - from store, or class?
-  // setHotkeysForContext
-  // - isDefault? How do we revert?
-  // unsetContext
-  // restoreDefaults()
-  // destroy()
+  describe('destroy()', () => {
+    it('clears default and definition properties', () => {});
+    it('resets all hotkey bindings', () => {});
+  });
+
+  describe('setHotkeys()', () => {
+    it('calls registerHotkeys for each hotkeyDefinition', () => {});
+    it('does not set this.defaultHotkeys by default', () => {});
+    it('sets this.defaultHotkeys when isDefaultDefinitions is true', () => {});
+  });
 
   describe('registerHotkeys()', () => {
     it('logs a warning and returns undefined if a commandName is not provided', () => {});
     it('updates hotkeyDefinitions property with registered keys', () => {});
     it('calls hotkeys.bind for all keys in array', () => {});
     it('calls hotkeys.unbind if commandName was previously registered, for each previously registered set of keys', () => {});
+  });
+
+  describe('restoreDefaults()', () => {
+    it('calls setsHotkeys with an empty array if there are no default hotkeys', () => {});
+    it('setsHotkeys using previously cached default values', () => {});
   });
 });
