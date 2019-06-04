@@ -1,4 +1,4 @@
-import log from '../../log'
+import log from '../../log';
 
 const defaultButtons = [
   // {
@@ -13,22 +13,22 @@ const defaultButtons = [
 const tools = (state = { buttons: defaultButtons }, action) => {
   switch (action.type) {
     case 'SET_TOOL_ACTIVE':
-      const item = state.buttons.find(button => button.command === action.tool)
-      let buttons = []
+      const item = state.buttons.find(button => button.command === action.tool);
+      let buttons = [];
 
       if (item && item.type === 'tool') {
         buttons = state.buttons.map(button => {
           if (button.command === action.tool) {
-            button.active = true
+            button.active = true;
           } else if (button.type === 'tool') {
-            button.active = false
+            button.active = false;
           }
 
-          return button
-        })
+          return button;
+        });
       } else {
-        buttons = state.buttons
-        log.warn(`Tool ${action.tool} not found`)
+        buttons = state.buttons;
+        log.warn(`Tool ${action.tool} not found`);
       }
 
       return {
@@ -39,8 +39,8 @@ const tools = (state = { buttons: defaultButtons }, action) => {
         buttons: action.buttons,
       };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default tools
+export default tools;
