@@ -1,8 +1,8 @@
+import DICOMWeb from '../DICOMWeb';
 import ImageSet from '../classes/ImageSet';
+import { api } from 'dicomweb-client';
 import { isImage } from './isImage';
 import plugins from '../plugins';
-import { api } from 'dicomweb-client';
-import DICOMWeb from '../DICOMWeb';
 
 /**
  *
@@ -83,52 +83,6 @@ function getSopClassUids(series) {
   return sopClassUids;
 }
 
-function getDisplaySetFromSopClassPluginsIfApplicable(
-  series,
-  study,
-  sopClassUids
-) {
-  // TODO: For now only use the plugins if all instances have the same sopClassUid
-  if (sopClassUids.length !== 1) {
-    console.warn(
-      'More than one SOPClassUid in the same series is not yet supported.'
-    );
-    return;
-  }
-
-  const sopClassUid = sopClassUids[0];
-
-  const { availablePlugins, PLUGIN_TYPES } = plugins;
-  const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
-    return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
-  });
-
-  // TODO: A bit weird that this is plugin.component
-  const sopClassHandlerPluginClasses = sopClassHandlerPlugins.map(plugin => {
-    return plugin.component;
-  });
-
-  const applicablePlugins = sopClassHandlerPluginClasses.filter(plugin => {
-    return plugin.sopClassUids.includes(sopClassUid);
-  });
-
-  // TODO: Sort by something
-  if (!applicablePlugins || !applicablePlugins.length) {
-    return;
-  }
-
-  const plugin = applicablePlugins[0];
-
-  const headers = DICOMWeb.getAuthorizationHeader();
-
-  const dicomWebClient = new dwc({
-    url: study.getData().wadoRoot,
-    headers,
-  });
-
-  return plugin.getDisplaySetFromSeries(series, study, dicomWebClient, headers);
-}
-
 /**
  * Creates a set of series to be placed in the Study Metadata
  * The series that appear in the Study Metadata must represent
@@ -138,33 +92,37 @@ function getDisplaySetFromSopClassPluginsIfApplicable(
  * it is easiest if the stack objects also contain information about
  * which study they are linked to.
  *
- * @param study The study instance metadata to be used
+ * @param {StudyMetadata} study The study instance metadata to be used
  * @returns {Array} An array of series to be placed in the Study Metadata
  */
 function createStacks(study) {
-  // Define an empty array of display sets
   const displaySets = [];
+  const anyDisplaySets = !study || !study.getSeriesCount();
 
-  if (!study || !study.getSeriesCount()) {
+  if (!anyDisplaySets) {
     return displaySets;
   }
 
   // Loop through the series (SeriesMetadata)
   study.forEachSeries(series => {
-    // If the series has no instances, skip it
-    if (!series.getInstanceCount()) {
+    const anyInstances = series.getInstanceCount() > 0;
+    if (!anyInstances) {
       return;
     }
 
     const sopClassUids = getSopClassUids(series);
 
-    let displaySet = getDisplaySetFromSopClassPluginsIfApplicable(
+    let displaySet = _getDisplaySetFromSopClassPlugin(
       series,
       study,
       sopClassUids
     );
 
+    const seriesData = series.getData();
+    const seriesDate = seriesData.seriesDate;
+
     if (displaySet) {
+      displaySet.seriesDate = seriesDate;
       displaySets.push(displaySet);
 
       return;
@@ -221,11 +179,61 @@ function createStacks(study) {
     }
   });
 
+  // TODO
+  displaySets.sort((a, b) => {
+    const seriesDateA = a.seriesDate || a.getAttribute('seriesDate');
+    const seriesDateB = b.seriesDate || b.getAttribute('seriesDate');
+
+    return seriesDateA - seriesDateB;
+  });
+
   return displaySets;
 }
 
 /**
- * Expose "createStacks"...
+ * @private
+ * @param {SeriesMetadata} series
+ * @param {StudyMetadata} study
+ * @param {string[]} sopClassUids
  */
+function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
+  // TODO: For now only use the plugins if all instances have the same sopClassUid
+  if (sopClassUids.length !== 1) {
+    console.warn(
+      'getDisplaySetFromSopClassPlugin: More than one SOPClassUid in the same series is not yet supported.'
+    );
+    return;
+  }
+
+  const firstSopClassUid = sopClassUids[0];
+
+  const { availablePlugins, PLUGIN_TYPES } = plugins;
+  const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
+    return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
+  });
+
+  // TODO: A bit weird that this is plugin.component
+  const sopClassHandlerPluginClasses = sopClassHandlerPlugins.map(plugin => {
+    return plugin.component;
+  });
+
+  const applicablePlugins = sopClassHandlerPluginClasses.filter(plugin => {
+    return plugin.sopClassUids.includes(firstSopClassUid);
+  });
+
+  // TODO: Sort by something
+  if (!applicablePlugins || !applicablePlugins.length) {
+    return;
+  }
+
+  const plugin = applicablePlugins[0];
+  const headers = DICOMWeb.getAuthorizationHeader();
+  const dicomWebClient = new dwc({
+    url: study.getData().wadoRoot,
+    headers,
+  });
+
+  return plugin.getDisplaySetFromSeries(series, study, dicomWebClient, headers);
+}
 
 export default createStacks;
