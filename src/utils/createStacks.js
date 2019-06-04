@@ -180,12 +180,7 @@ function createStacks(study) {
   });
 
   // TODO
-  displaySets.sort((a, b) => {
-    const seriesDateA = a.seriesDate || a.getAttribute('seriesDate');
-    const seriesDateB = b.seriesDate || b.getAttribute('seriesDate');
-
-    return seriesDateA - seriesDateB;
-  });
+  displaySets.sort(_sortBySeriesNumberThenByMostRecentSeriesDate);
 
   return displaySets;
 }
@@ -234,6 +229,26 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
   });
 
   return plugin.getDisplaySetFromSeries(series, study, dicomWebClient, headers);
+}
+
+/**
+ *
+ * @param {*} a - DisplaySet
+ * @param {*} b - DisplaySet
+ */
+function _sortBySeriesNumberThenByMostRecentSeriesDate(a, b) {
+  // By SeriesNumber
+  if (a.seriesNumber > b.seriesNumber) {
+    return 1;
+  } else if (a.seriesNumber < b.seriesNumber) {
+    return -1;
+  }
+
+  // ThenBy SeriesDate
+  const seriesDateA = a.seriesDate || a.getAttribute('seriesDate');
+  const seriesDateB = b.seriesDate || b.getAttribute('seriesDate');
+
+  return seriesDateA - seriesDateB;
 }
 
 export default createStacks;
