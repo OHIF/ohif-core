@@ -97,7 +97,7 @@ function getSopClassUids(series) {
  */
 function createStacks(study) {
   const displaySets = [];
-  const anyDisplaySets = !study || !study.getSeriesCount();
+  const anyDisplaySets = study || study.getSeriesCount();
 
   if (!anyDisplaySets) {
     return displaySets;
