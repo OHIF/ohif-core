@@ -238,9 +238,12 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
  */
 function _sortBySeriesNumberThenByMostRecentSeriesDate(a, b) {
   // By SeriesNumber
-  if (a.seriesNumber > b.seriesNumber) {
+  if (a.seriesNumber > b.seriesNumber || (a.seriesNumber && !b.seriesNumber)) {
     return 1;
-  } else if (a.seriesNumber < b.seriesNumber) {
+  } else if (
+    a.seriesNumber < b.seriesNumber ||
+    (!a.seriesNumber && b.seriesNumber)
+  ) {
     return -1;
   }
 
