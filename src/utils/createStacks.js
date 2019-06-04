@@ -4,6 +4,22 @@ import plugins from '../plugins';
 import { api } from 'dicomweb-client';
 import DICOMWeb from '../DICOMWeb';
 
+/**
+ *
+ * @typedef StudyMetadata
+ * @property {function} getSeriesCount - returns the number of series in the study
+ * @property {function} forEachSeries - function that invokes callback with each series and index
+ * @property {function} getStudyInstanceUID - returns the study's instance UID
+ *
+ */
+
+/**
+ * @typedef SeriesMetadata
+ * @property {function} getSeriesInstanceUID - returns the series's instance UID
+ * @property {function} getData - ???
+ * @property {function} forEachInstance - ???
+ */
+
 const dwc = api.DICOMwebClient;
 
 const isMultiFrame = instance => {
