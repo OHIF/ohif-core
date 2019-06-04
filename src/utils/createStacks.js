@@ -118,11 +118,7 @@ function createStacks(study) {
       sopClassUids
     );
 
-    const seriesData = series.getData();
-    const seriesDate = seriesData.seriesDate;
-
     if (displaySet) {
-      displaySet.seriesDate = seriesDate;
       displaySets.push(displaySet);
 
       return;
@@ -180,7 +176,7 @@ function createStacks(study) {
   });
 
   // TODO
-  displaySets.sort(_sortBySeriesNumberThenByMostRecentSeriesDate);
+  displaySets.sort(_sortBySeriesNumber);
 
   return displaySets;
 }
@@ -200,8 +196,7 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
     return;
   }
 
-  const firstSopClassUid = sopClassUids[0];
-
+  const sopClassUid = sopClassUids[0];
   const { availablePlugins, PLUGIN_TYPES } = plugins;
   const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
     return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
@@ -213,10 +208,10 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
   });
 
   const applicablePlugins = sopClassHandlerPluginClasses.filter(plugin => {
-    return plugin.sopClassUids.includes(firstSopClassUid);
+    return plugin.sopClassUids.includes(sopClassUid);
   });
 
-  // TODO: Sort by something
+  // TODO: Sort by something, so we can determine which plugin to use
   if (!applicablePlugins || !applicablePlugins.length) {
     return;
   }
@@ -236,22 +231,11 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
  * @param {*} a - DisplaySet
  * @param {*} b - DisplaySet
  */
-function _sortBySeriesNumberThenByMostRecentSeriesDate(a, b) {
-  // By SeriesNumber
-  if (a.seriesNumber > b.seriesNumber || (a.seriesNumber && !b.seriesNumber)) {
-    return 1;
-  } else if (
-    a.seriesNumber < b.seriesNumber ||
-    (!a.seriesNumber && b.seriesNumber)
-  ) {
-    return -1;
-  }
+function _sortBySeriesNumber(a, b) {
+  const seriesNumberAIsGreaterOrUndefined =
+    a.seriesNumber > b.seriesNumber || (!a.seriesNumber && b.seriesNumber);
 
-  // ThenBy SeriesDate
-  const seriesDateA = a.seriesDate || a.getAttribute('seriesDate');
-  const seriesDateB = b.seriesDate || b.getAttribute('seriesDate');
-
-  return seriesDateA - seriesDateB;
+  return seriesNumberAIsGreaterOrUndefined ? 1 : -1;
 }
 
 export default createStacks;
