@@ -75,9 +75,10 @@ export class HotkeysManager {
       return;
     }
 
-    const hotkeyExists = this.hotkeyDefinitions[commandName] !== undefined;
-    if (hotkeyExists) {
-      this._unbindHotkeys(commandName, keys);
+    const previouslyRegisteredKeys = this.hotkeyDefinitions[commandName];
+
+    if (previouslyRegisteredKeys) {
+      this._unbindHotkeys(commandName, previouslyRegisteredKeys);
     }
 
     // Set definition & bind
@@ -90,7 +91,7 @@ export class HotkeysManager {
    *
    * @returns {undefined}
    */
-  restoreDefaults() {
+  restoreDefaultBindings() {
     this.setHotkeys(this.hotkeyDefaults);
   }
 
@@ -137,7 +138,7 @@ export class HotkeysManager {
    * @returns {undefined}
    */
   _unbindHotkeys(commandName, keys) {
-    const isKeyDefined = keys === '' || keys === undefined;
+    const isKeyDefined = keys !== '' && keys !== undefined;
     if (!isKeyDefined) {
       return;
     }
