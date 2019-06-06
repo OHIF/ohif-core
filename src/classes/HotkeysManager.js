@@ -6,12 +6,13 @@ import log from './../log.js';
  *
  * @typedef {Object} HotkeyDefinition
  * @property {String} commandName - Command to call
+ * @property {String} label - Display name for hotkey
  * @property {String[]} keys - Keys to bind; Follows Mousetrap.js binding syntax
  */
 
 export class HotkeysManager {
   constructor(commandsManager) {
-    this.hotkeyDefinitions = {};
+    this.hotkeyDefinitions = [];
     this.hotkeyDefaults = [];
     this.isEnabled = true;
 
@@ -50,10 +51,7 @@ export class HotkeysManager {
    * @param {Boolean} [isDefaultDefinitions]
    */
   setHotkeys(hotkeyDefinitions, isDefaultDefinitions = false) {
-    hotkeyDefinitions.forEach(definition => {
-      const { commandName, keys } = definition;
-      this.registerHotkeys(commandName, keys);
-    });
+    hotkeyDefinitions.forEach(definition => this.registerHotkeys(definition));
 
     if (isDefaultDefinitions) {
       this.hotkeyDefaults = hotkeyDefinitions;
@@ -65,24 +63,25 @@ export class HotkeysManager {
    * When a hotkey combination is triggered, the command name and active contexts
    * are used to locate the correct command to call.
    *
-   * @param {string} commandName
-   * @param {String[]} keys
+   * @param {HotkeyDefinition} commandName
+   * @param {String} extension
    * @returns {undefined}
    */
-  registerHotkeys(commandName, keys, extension) {
+  registerHotkeys({ commandName, keys, label } = {}, extension) {
     if (!commandName) {
       log.warn(`No command was defined for hotkey "${keys}"`);
       return;
     }
 
-    const previouslyRegisteredKeys = this.hotkeyDefinitions[commandName];
+    const previouslyRegisteredDefinition = this.hotkeyDefinitions[commandName];
 
-    if (previouslyRegisteredKeys) {
+    if (previouslyRegisteredDefinition) {
+      const previouslyRegisteredKeys = previouslyRegisteredDefinition.keys;
       this._unbindHotkeys(commandName, previouslyRegisteredKeys);
     }
 
     // Set definition & bind
-    this.hotkeyDefinitions[commandName] = keys;
+    this.hotkeyDefinitions[commandName] = { keys, label };
     this._bindHotkeys(commandName, keys);
   }
 

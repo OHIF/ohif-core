@@ -79,20 +79,20 @@ describe('HotkeysManager', () => {
   describe('setHotkeys()', () => {
     it('calls registerHotkeys for each hotkeyDefinition', () => {
       const hotkeyDefinitions = [
-        { commandName: 'dance', keys: '+' },
-        { commandName: 'celebrate', keys: 'q' },
+        { commandName: 'dance', label: 'dance dance', keys: '+' },
+        { commandName: 'celebrate', label: 'celebrate everything', keys: 'q' },
       ];
 
       hotkeysManager.registerHotkeys = jest.fn();
       hotkeysManager.setHotkeys(hotkeyDefinitions);
 
       const numberOfCalls = hotkeysManager.registerHotkeys.mock.calls.length;
-      const firstCallArgs = hotkeysManager.registerHotkeys.mock.calls[0];
-      const secondCallArgs = hotkeysManager.registerHotkeys.mock.calls[1];
+      const firstCallArgs = hotkeysManager.registerHotkeys.mock.calls[0][0];
+      const secondCallArgs = hotkeysManager.registerHotkeys.mock.calls[1][0];
 
       expect(numberOfCalls).toBe(2);
-      expect(firstCallArgs).toEqual(['dance', '+']);
-      expect(secondCallArgs).toEqual(['celebrate', 'q']);
+      expect(firstCallArgs).toEqual(hotkeyDefinitions[0]);
+      expect(secondCallArgs).toEqual(hotkeyDefinitions[1]);
     });
     it('does not set this.hotkeyDefaults by default', () => {
       const hotkeyDefinitions = [{ commandName: 'dance', keys: '+' }];
@@ -115,18 +115,16 @@ describe('HotkeysManager', () => {
     it('logs a warning and returns undefined if a commandName is not provided', () => {
       const definition = { commandName: undefined, keys: '+' };
 
-      const result = hotkeysManager.registerHotkeys(
-        definition.commandName,
-        definition.keys
-      );
+      const result = hotkeysManager.registerHotkeys(definition);
 
       expect(result).toBe(undefined);
       expect(log.warn.mock.calls.length).toBe(1);
     });
     it('updates hotkeyDefinitions property with registered keys', () => {
-      const definition = { commandName: 'dance', keys: '+' };
+      const definition = { commandName: 'dance', label: 'hello', keys: '+' };
+      const expectedHotkeyDefinition = { label: 'hello', keys: '+' };
 
-      hotkeysManager.registerHotkeys(definition.commandName, definition.keys);
+      hotkeysManager.registerHotkeys(definition);
 
       const numOfHotkeyDefinitions = Object.keys(
         hotkeysManager.hotkeyDefinitions
@@ -135,12 +133,14 @@ describe('HotkeysManager', () => {
         hotkeysManager.hotkeyDefinitions[definition.commandName];
 
       expect(numOfHotkeyDefinitions).toBe(1);
-      expect(hotkeyDefinitionForRegisteredCommand).toBe(definition.keys);
+      expect(hotkeyDefinitionForRegisteredCommand).toEqual(
+        expectedHotkeyDefinition
+      );
     });
     it('calls hotkeys.bind for all keys in array', () => {
       const definition = { commandName: 'dance', keys: ['h', 'e', 'l', 'o'] };
 
-      hotkeysManager.registerHotkeys(definition.commandName, definition.keys);
+      hotkeysManager.registerHotkeys(definition);
 
       expect(hotkeys.bind.mock.calls.length).toBe(definition.keys.length);
       definition.keys.forEach((key, i) =>
@@ -155,15 +155,9 @@ describe('HotkeysManager', () => {
       const secondDefinition = { commandName: 'dance', keys: 'a' };
 
       // First call
-      hotkeysManager.registerHotkeys(
-        firstDefinition.commandName,
-        firstDefinition.keys
-      );
+      hotkeysManager.registerHotkeys(firstDefinition);
       // Second call
-      hotkeysManager.registerHotkeys(
-        secondDefinition.commandName,
-        secondDefinition.keys
-      );
+      hotkeysManager.registerHotkeys(secondDefinition);
 
       expect(hotkeys.unbind.mock.calls.length).toBe(
         firstDefinition.keys.length
