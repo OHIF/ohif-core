@@ -1,5 +1,5 @@
 /**
- * Returns the Alphabetic version of a PN
+ * Returns the Alphabetic, Ideographic,Phonetic version of a PN
  *
  * @param element - The group/element of the element (e.g. '00200013')
  * @param [defaultValue] - The default value to return if the element is not found
@@ -17,10 +17,15 @@ export default function getName(element, defaultValue) {
   if (!element.Value.length) {
     return defaultValue;
   }
-  // Return the Alphabetic component group
-  if (element.Value[0].Alphabetic) {
-    return element.Value[0].Alphabetic;
-  }
+  // Get  the Alphabetic component group
+  var alphabeticPersonName = element.Value[0].Alphabetic;
+  if (alphabeticPersonName) return alphabeticPersonName;
+  // Get the Ideographic component group
+  var ideographicPersonName = element.Value[0].Ideographic;
+  if (ideographicPersonName) return ideographicPersonName;
+  // Get the Phonetic component group
+  var phoneticPersonName = element.Value[0].Phonetic;
+  if (phoneticPersonName) return phoneticPersonName;
   // Orthanc does not return PN properly so this is a temporary workaround
   return element.Value[0];
 }
