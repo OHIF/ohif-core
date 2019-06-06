@@ -12,7 +12,7 @@ import log from './../log.js';
 
 export class HotkeysManager {
   constructor(commandsManager) {
-    this.hotkeyDefinitions = [];
+    this.hotkeyDefinitions = {};
     this.hotkeyDefaults = [];
     this.isEnabled = true;
 
