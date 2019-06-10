@@ -8,7 +8,7 @@ describe('Top level exports', () => {
       'redux',
       'classes',
       'metadata',
-      'hotkeys',
+      'HotkeysManager',
       'header',
       'cornerstone',
       'default', //
@@ -16,7 +16,7 @@ describe('Top level exports', () => {
       'ui',
       'user',
       'object',
-      'commands',
+      'CommandsManager',
       'log',
       'DICOMWeb',
       'OHIF', //
