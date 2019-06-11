@@ -66,9 +66,13 @@ const viewports = (state = defaultState, action) => {
       return Object.assign({}, state, { viewportSpecificData });
     case CLEAR_VIEWPORT:
       viewportSpecificData = cloneDeep(state.viewportSpecificData);
-      viewportSpecificData[action.viewportIndex] = {};
+      if (action.viewportIndex) {
+        viewportSpecificData[action.viewportIndex] = {};
+        return Object.assign({}, state, { viewportSpecificData });
+      } else {
+        return defaultState;
+      }
 
-      return Object.assign({}, state, { viewportSpecificData });
     default:
       return state;
   }
