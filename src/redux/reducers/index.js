@@ -12,7 +12,6 @@ const reducers = {
   commandContext,
   extensions,
   loading,
-  plugins,
   preferences,
   servers,
   studies,
