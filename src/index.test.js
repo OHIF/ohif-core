@@ -20,7 +20,6 @@ describe('Top level exports', () => {
       'log',
       'DICOMWeb',
       'OHIF', //
-      'plugins',
       'extensions',
       'measurements',
       'hangingProtocols',

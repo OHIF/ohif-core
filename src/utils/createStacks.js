@@ -2,7 +2,6 @@ import DICOMWeb from '../DICOMWeb';
 import ImageSet from '../classes/ImageSet';
 import { api } from 'dicomweb-client';
 import { isImage } from './isImage';
-import plugins from '../plugins';
 
 /**
  *

@@ -1,6 +1,7 @@
 import './lib';
 
 import classes, { CommandsManager, HotkeysManager } from './classes/';
+
 import DICOMWeb from './DICOMWeb';
 import cornerstone from './cornerstone.js';
 import extensions from './extensions/';
@@ -10,7 +11,6 @@ import log from './log.js';
 import measurements from './measurements';
 import metadata from './classes/metadata/';
 import object from './object.js';
-import plugins from './plugins.js';
 import redux from './redux/';
 import string from './string.js';
 //import './schema.js';
@@ -35,7 +35,6 @@ const OHIF = {
   CommandsManager,
   log,
   DICOMWeb,
-  plugins,
   extensions,
   viewer: {},
   measurements,
@@ -58,7 +57,6 @@ export {
   CommandsManager,
   log,
   DICOMWeb,
-  plugins,
   extensions,
   measurements,
   hangingProtocols,
