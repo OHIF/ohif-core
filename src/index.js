@@ -3,7 +3,7 @@ import './lib';
 import classes, { CommandsManager, HotkeysManager } from './classes/';
 import DICOMWeb from './DICOMWeb';
 import cornerstone from './cornerstone.js';
-import extensions from './classes/extensions/';
+import extensions from './extensions/';
 import hangingProtocols from './hanging-protocols';
 import header from './header.js';
 import log from './log.js';

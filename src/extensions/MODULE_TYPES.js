@@ -1,6 +1,7 @@
 export default {
-  VIEWPORT: 'viewportModule',
-  TOOLBAR: 'toolbarModule',
+  COMMANDS: 'commandsModule',
   PANEL: 'panelModule',
   SOP_CLASS_HANDLER: 'sopClassHandler',
+  TOOLBAR: 'toolbarModule',
+  VIEWPORT: 'viewportModule',
 };

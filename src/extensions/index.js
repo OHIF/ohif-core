@@ -5,11 +5,11 @@ import MODULE_TYPES from './MODULE_TYPES.js';
 // Each plugin registers an entry point function to be called
 // when the loading is complete.
 
-const extensions = {
+export default {
   // OHIFPlugin,
   ExtensionManager,
   MODULE_TYPES,
   // entryPoints: {},
 };
 
-export default extensions;
+export { ExtensionManager, MODULE_TYPES };

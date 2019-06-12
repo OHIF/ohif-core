@@ -1,26 +1,29 @@
 import ExtensionManager from './ExtensionManager.js';
+import log from './../log.js';
+
+jest.mock('./../log.js');
 
 describe('ExtensionManager.js', () => {
+  let extensionManager;
+
   beforeEach(() => {
+    extensionManager = new ExtensionManager();
+    log.warn.mockClear();
     jest.clearAllMocks();
   });
 
   describe('registerExtensions()', () => {
     it('calls registerExtension() for each extension', () => {
-      // Monkey patch
-      const original = ExtensionManager.registerExtension;
-      ExtensionManager.registerExtension = jest.fn();
+      extensionManager.registerExtension = jest.fn();
 
       // SUT
-      const fakeStore = { fakeStore: 'hi' };
       const fakeExtensions = [{ one: '1' }, { two: '2' }, { three: '3 ' }];
-      ExtensionManager.registerExtensions(fakeStore, fakeExtensions);
+      extensionManager.registerExtensions(fakeExtensions);
 
       // Assert
-      expect(ExtensionManager.registerExtension.mock.calls.length).toBe(3);
-
-      // Restore
-      ExtensionManager.registerExtension = original;
+      expect(extensionManager.registerExtension.mock.calls.length).toBe(3);
     });
   });
+
+  describe('registerExtension()', () => {});
 });
