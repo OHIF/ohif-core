@@ -1,10 +1,10 @@
 import './lib';
 
+import { ExtensionManager, MODULE_TYPES } from './extensions';
 import classes, { CommandsManager, HotkeysManager } from './classes/';
 
 import DICOMWeb from './DICOMWeb';
 import cornerstone from './cornerstone.js';
-import extensions from './extensions/';
 import hangingProtocols from './hanging-protocols';
 import header from './header.js';
 import log from './log.js';
@@ -20,44 +20,50 @@ import user from './user.js';
 import utils from './utils/';
 
 const OHIF = {
+  MODULE_TYPES,
+  //
+  CommandsManager,
+  ExtensionManager,
+  HotkeysManager,
+  //
   utils,
   studies,
   redux,
   classes,
   metadata,
-  HotkeysManager,
   header,
   cornerstone,
   string,
   ui,
   user,
   object,
-  CommandsManager,
   log,
   DICOMWeb,
-  extensions,
   viewer: {},
   measurements,
   hangingProtocols,
 };
 
 export {
+  MODULE_TYPES,
+  //
+  CommandsManager,
+  ExtensionManager,
+  HotkeysManager,
+  //
   utils,
   studies,
   redux,
   classes,
   metadata,
-  HotkeysManager,
   header,
   cornerstone,
   string,
   ui,
   user,
   object,
-  CommandsManager,
   log,
   DICOMWeb,
-  extensions,
   measurements,
   hangingProtocols,
 };
