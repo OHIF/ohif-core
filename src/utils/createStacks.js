@@ -1,4 +1,5 @@
 import DICOMWeb from '../DICOMWeb';
+import ExtensionsManager from './../extensions/index.js';
 import ImageSet from '../classes/ImageSet';
 import { api } from 'dicomweb-client';
 import { isImage } from './isImage';
@@ -186,7 +187,12 @@ function createStacks(study) {
  * @param {StudyMetadata} study
  * @param {string[]} sopClassUids
  */
-function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
+function _getDisplaySetFromSopClassPlugin(
+  sopClassHandlerPlugins, // TODO: Update Usage
+  series,
+  study,
+  sopClassUids
+) {
   // TODO: For now only use the plugins if all instances have the same sopClassUid
   if (sopClassUids.length !== 1) {
     console.warn(
@@ -196,10 +202,11 @@ function _getDisplaySetFromSopClassPlugin(series, study, sopClassUids) {
   }
 
   const sopClassUid = sopClassUids[0];
-  const { availablePlugins, PLUGIN_TYPES } = plugins;
-  const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
-    return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
-  });
+  // TODO: PASS IN array of SopClassPlugins
+  // const { availablePlugins, PLUGIN_TYPES } = plugins;
+  // const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
+  //   return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
+  // });
 
   // TODO: A bit weird that this is plugin.component
   const sopClassHandlerPluginClasses = sopClassHandlerPlugins.map(plugin => {
