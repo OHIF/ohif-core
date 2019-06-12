@@ -1,5 +1,6 @@
-import actions from './actions.js';
 import * as types from './constants/ActionTypes.js';
+
+import actions from './actions.js';
 
 describe('actions', () => {
   test('exports have not changed', () => {
@@ -14,7 +15,6 @@ describe('actions', () => {
       'clearStudyLoadingProgress',
       'setUserPreferences',
       'setCommandContext',
-      'addPlugin',
       'setAvailableButtons',
       'setExtensionData',
       'setTimepoints',

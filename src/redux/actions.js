@@ -3,11 +3,11 @@
  */
 
 import {
+  CLEAR_VIEWPORT,
+  SET_ACTIVE_SPECIFIC_DATA,
   SET_VIEWPORT,
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
-  CLEAR_VIEWPORT,
-  SET_ACTIVE_SPECIFIC_DATA,
 } from './constants/ActionTypes.js';
 
 /**
@@ -68,11 +68,6 @@ export const setCommandContext = state => ({
   state,
 });
 
-export const addPlugin = plugin => ({
-  type: 'ADD_PLUGIN',
-  plugin,
-});
-
 export const setAvailableButtons = buttons => ({
   type: 'SET_AVAILABLE_BUTTONS',
   buttons,
@@ -112,7 +107,6 @@ const actions = {
   clearStudyLoadingProgress,
   setUserPreferences,
   setCommandContext,
-  addPlugin,
   setAvailableButtons,
   setExtensionData,
   setTimepoints,
