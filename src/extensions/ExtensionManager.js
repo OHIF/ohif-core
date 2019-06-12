@@ -28,6 +28,13 @@ export default class ExtensionManager {
    * @param {Object} extension
    */
   registerExtension(extension) {
+    if (!extension) {
+      log.warn(
+        'Attempting to register a null/undefined extension. Exiting early.'
+      );
+      return;
+    }
+
     let extensionId = extension.id;
 
     if (!extensionId) {
@@ -42,38 +49,58 @@ export default class ExtensionManager {
       log.warn(
         `Extension ID ${extensionId} has already been registered. Exiting before duplicating modules.`
       );
-
       return;
     }
 
+    // Register Modules
     this.moduleTypeNames.forEach(moduleType => {
-      const getModuleFnName = 'get' + _capitalizeFirstCharacter(moduleType);
-      const getModuleFn = extension[getModuleFnName];
-      if (!getModuleFn) {
-        return;
+      const extensionModule = this._getExtensionModule(
+        moduleType,
+        extension,
+        extensionId
+      );
+
+      if (extensionModule) {
+        this.modules[moduleType].push({
+          extensionId,
+          module: extensionModule,
+        });
       }
+    });
 
-      let extensionModule;
+    // Track extension registration
+    this.registeredExtensionIds.push(extensionId);
+  }
 
-      try {
-        extensionModule = getModuleFn();
-        if (!extensionModule) {
-          log.warn(
-            `Null or undefined returned when registering the ${getModuleFnName} module for the ${extensionId} extension`
-          );
-          return;
-        }
-      } catch (ex) {
-        log.error(
-          `Exception thrown while trying to call ${getModuleFnName} for the ${extensionId} extension`
+  /**
+   * @private
+   * @param {string} moduleType
+   * @param {Object} extension
+   * @param {string} extensionId - Used for logging warnings
+   */
+  _getExtensionModule(moduleType, extension, extensionId) {
+    const getModuleFnName = 'get' + _capitalizeFirstCharacter(moduleType);
+    const getModuleFn = extension[getModuleFnName];
+
+    if (!getModuleFn) {
+      return;
+    }
+
+    try {
+      const extensionModule = getModuleFn();
+
+      if (!extensionModule) {
+        log.warn(
+          `Null or undefined returned when registering the ${getModuleFnName} module for the ${extensionId} extension`
         );
       }
 
-      this.modules[moduleType].push({
-        extensionId,
-        module: extensionModule,
-      });
-    });
+      return extensionModule;
+    } catch (ex) {
+      log.error(
+        `Exception thrown while trying to call ${getModuleFnName} for the ${extensionId} extension`
+      );
+    }
   }
 }
 
