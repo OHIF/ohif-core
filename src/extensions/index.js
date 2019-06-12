@@ -1,13 +1,15 @@
-import { OHIFPlugin } from './OHIFPlugin';
 import ExtensionManager from './ExtensionManager';
+import MODULE_TYPES from './MODULE_TYPES.js';
+// import { OHIFPlugin } from './OHIFPlugin';
 
 // Each plugin registers an entry point function to be called
 // when the loading is complete.
 
 const extensions = {
-  OHIFPlugin,
+  // OHIFPlugin,
   ExtensionManager,
-  entryPoints: {},
+  MODULE_TYPES,
+  // entryPoints: {},
 };
 
 export default extensions;
