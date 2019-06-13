@@ -2,10 +2,12 @@ import MODULE_TYPES from './MODULE_TYPES.js';
 import log from './../log.js';
 
 export default class ExtensionManager {
-  constructor() {
+  constructor({ commandsManager }) {
     this.modules = {};
     this.registeredExtensionIds = [];
     this.moduleTypeNames = Object.values(MODULE_TYPES);
+    //
+    this._commandsManager = commandsManager;
 
     this.moduleTypeNames.forEach(moduleType => {
       this.modules[moduleType] = [];
@@ -61,6 +63,8 @@ export default class ExtensionManager {
       );
 
       if (extensionModule) {
+        this._initSpecialModuleTypes(moduleType, extensionModule);
+
         this.modules[moduleType].push({
           extensionId,
           module: extensionModule,
@@ -101,6 +105,39 @@ export default class ExtensionManager {
         `Exception thrown while trying to call ${getModuleFnName} for the ${extensionId} extension`
       );
     }
+  }
+
+  _initSpecialModuleTypes(moduleType, extensionModule) {
+    switch (moduleType) {
+      case 'commandsModule': {
+        const { definitions } = extensionModule;
+        this._initCommandsModule(definitions);
+        break;
+      }
+      default:
+      // code block
+    }
+  }
+
+  /**
+   *
+   * @private
+   * @param {Object[]} commandDefinitions
+   */
+  _initCommandsModule(commandDefinitions) {
+    // TODO: Best way to pass this in?
+    const commandContext = 'ACTIVE_VIEWPORT::CORNERSTONE';
+
+    this._commandsManager.createContext(commandContext);
+    Object.keys(commandDefinitions).forEach(commandName => {
+      const commandDefinition = commandDefinitions[commandName];
+
+      this._commandsManager.registerCommand(
+        commandContext,
+        commandName,
+        commandDefinition
+      );
+    });
   }
 }
 
