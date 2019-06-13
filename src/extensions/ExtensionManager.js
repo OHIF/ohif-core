@@ -111,6 +111,10 @@ export default class ExtensionManager {
     switch (moduleType) {
       case 'commandsModule': {
         const { definitions } = extensionModule;
+        if (!definitions || Object.keys(definitions).length === 0) {
+          log.warn('Commands Module contains no command definitions');
+          return;
+        }
         this._initCommandsModule(definitions);
         break;
       }

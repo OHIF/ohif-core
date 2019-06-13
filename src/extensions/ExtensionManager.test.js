@@ -6,10 +6,14 @@ import log from './../log.js';
 jest.mock('./../log.js');
 
 describe('ExtensionManager.js', () => {
-  let extensionManager;
+  let extensionManager, commandsManager;
 
   beforeEach(() => {
-    extensionManager = new ExtensionManager();
+    commandsManager = {
+      createContext: jest.fn(),
+      registerCommand: jest.fn(),
+    };
+    extensionManager = new ExtensionManager({ commandsManager });
     log.warn.mockClear();
     jest.clearAllMocks();
   });
@@ -133,10 +137,45 @@ describe('ExtensionManager.js', () => {
 
         expect(modulesForType.length).toBe(1);
       });
+    });
 
-      // No logs
-      expect(log.warn.mock.calls.length).toBe(0);
-      expect(log.error.mock.calls.length).toBe(0);
+    it('calls commandsManager.registerCommand for each commandsModule command definition', () => {
+      const extension = {
+        id: 'hello-world',
+        getCommandsModule: () => {
+          return {
+            definitions: {
+              exampleDefinition: {
+                commandFn: () => {},
+                storeContexts: [],
+                options: {},
+              },
+            },
+          };
+        },
+      };
+
+      // SUT
+      extensionManager.registerExtension(extension);
+
+      expect(commandsManager.registerCommand.mock.calls.length).toBe(1);
+    });
+
+    it('logs a warning if the commandsModule contains no command definitions', () => {
+      const extension = {
+        id: 'hello-world',
+        getCommandsModule: () => {
+          return {};
+        },
+      };
+
+      // SUT
+      extensionManager.registerExtension(extension);
+
+      expect(log.warn.mock.calls.length).toBe(1);
+      expect(log.warn.mock.calls[0][0]).toContain(
+        'Commands Module contains no command definitions'
+      );
     });
   });
 });
