@@ -115,7 +115,7 @@ describe('ExtensionManager.js', () => {
         getViewportModule: () => {
           return {};
         },
-        getSopClassHandler: () => {
+        getSopClassHandlerModule: () => {
           return {};
         },
         getPanelModule: () => {
