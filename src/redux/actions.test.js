@@ -6,6 +6,7 @@ describe('actions', () => {
     const expectedExports = [
       'setViewportActive',
       'setViewportSpecificData',
+      'setViewportLayoutAndData',
       'setLayout',
       'clearViewportSpecificData',
       'setActiveViewportSpecificData',
@@ -19,6 +20,7 @@ describe('actions', () => {
       'setExtensionData',
       'setTimepoints',
       'setMeasurements',
+      'setServers',
       'setStudyData',
     ].sort();
 
