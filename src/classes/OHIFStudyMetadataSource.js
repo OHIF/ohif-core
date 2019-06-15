@@ -1,11 +1,10 @@
+import { studyMetadataManager, updateMetaDataManager } from '../utils';
+
 import OHIFError from './OHIFError';
-import { retrieveStudyMetadata } from '../studies/retrieveStudyMetadata.js';
 import { StudyMetadata } from './metadata/StudyMetadata';
-import { StudySummary } from './metadata/StudySummary';
 import { StudyMetadataSource } from './StudyMetadataSource.js';
-import { sortingManager } from '../utils/sortingManager.js';
-import { updateMetaDataManager } from '../utils/updateMetaDataManager';
-import studyMetadataManager from '../utils/studyMetadataManager';
+import { StudySummary } from './metadata/StudySummary';
+import { retrieveStudyMetadata } from '../studies/retrieveStudyMetadata.js';
 
 export class OHIFStudyMetadataSource extends StudyMetadataSource {
   /**
@@ -54,7 +53,7 @@ export class OHIFStudyMetadataSource extends StudyMetadataSource {
           );
 
           // Get Study display sets
-          const displaySets = sortingManager.getDisplaySets(studyMetadata);
+          const displaySets = studyMetadata.createDisplaySets();
 
           // Set studyMetadata display sets
           studyMetadata.setDisplaySets(displaySets);
