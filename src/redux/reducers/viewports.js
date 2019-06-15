@@ -5,6 +5,7 @@ import {
   SET_VIEWPORT,
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
+  SET_VIEWPORT_LAYOUT_AND_DATA,
   CLEAR_VIEWPORT,
   SET_SPECIFIC_DATA,
   SET_ACTIVE_SPECIFIC_DATA,
@@ -36,6 +37,11 @@ const viewports = (state = defaultState, action) => {
   let viewportSpecificData;
   let useActiveViewport = false;
   switch (action.type) {
+    case SET_VIEWPORT_LAYOUT_AND_DATA:
+      return Object.assign({}, state, {
+        viewportSpecificData: action.viewportSpecificData,
+        layout: action.layout,
+      });
     case SET_VIEWPORT_ACTIVE:
       return Object.assign({}, state, {
         activeViewportIndex: action.viewportIndex,
