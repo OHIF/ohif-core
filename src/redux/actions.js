@@ -42,11 +42,6 @@ export const setActiveViewportSpecificData = data => ({
 /**
  * NOT-VIEWPORT
  */
-export const setToolActive = tool => ({
-  type: 'SET_TOOL_ACTIVE',
-  tool,
-});
-
 export const setStudyLoadingProgress = (progressId, progressData) => ({
   type: 'SET_STUDY_LOADING_PROGRESS',
   progressId,
@@ -66,11 +61,6 @@ export const setUserPreferences = state => ({
 export const setCommandContext = state => ({
   type: 'SET_COMMAND_CONTEXT',
   state,
-});
-
-export const setAvailableButtons = buttons => ({
-  type: 'SET_AVAILABLE_BUTTONS',
-  buttons,
 });
 
 export const setExtensionData = (extension, data) => ({
@@ -102,12 +92,10 @@ const actions = {
   setLayout,
   clearViewportSpecificData,
   setActiveViewportSpecificData,
-  setToolActive,
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
   setUserPreferences,
   setCommandContext,
-  setAvailableButtons,
   setExtensionData,
   setTimepoints,
   setMeasurements,
