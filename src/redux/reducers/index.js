@@ -5,7 +5,6 @@ import preferences from './preferences';
 import servers from './servers';
 import studies from './studies';
 import timepointManager from './timepointManager';
-import tools from './tools';
 import viewports from './viewports';
 
 const reducers = {
@@ -16,7 +15,6 @@ const reducers = {
   servers,
   studies,
   timepointManager,
-  tools,
   viewports,
 };
 
