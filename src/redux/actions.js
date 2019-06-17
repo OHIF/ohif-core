@@ -28,21 +28,6 @@ export function setViewportActive(viewportIndex) {
       type: SET_VIEWPORT_ACTIVE,
       viewportIndex,
     });
-
-    // Set ACTIVE_VIEWPORT context based on Viewport Index
-    // const viewports = getState().viewports;
-    // const activeViewport = viewports.layout.viewports[viewportIndex];
-    // const moduleId = activeViewport.plugin;
-
-    // dispatch({
-    //   type: 'REMOVE_ACTIVE_CONTEXT',
-    //   item: 'ACTIVE_VIEWPORT',
-    // });
-
-    // dispatch({
-    //   type: 'ADD_ACTIVE_CONTEXT',
-    //   item: `ACTIVE_VIEWPORT::${moduleId.toUpperCase()}`,
-    // });
   };
 }
 

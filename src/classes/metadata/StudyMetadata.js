@@ -602,7 +602,7 @@ function getSopClassUids(series) {
  * @param {string[]} sopClassUids
  */
 function _getDisplaySetFromSopClassModule(
-  sopClassHandlerModules, // TODO: Update Usage
+  sopClassHandlerExtensions, // TODO: Update Usage
   series,
   study,
   sopClassUids
@@ -617,27 +617,20 @@ function _getDisplaySetFromSopClassModule(
 
   console.log('inside _getDisplaySetFromSopClassPlugin', sopClassUids);
   const sopClassUid = sopClassUids[0];
-  // TODO: PASS IN array of SopClassPlugins
-  // const { availablePlugins, PLUGIN_TYPES } = plugins;
-  // const sopClassHandlerPlugins = availablePlugins.filter(plugin => {
-  //   return plugin.type === PLUGIN_TYPES.SOP_CLASS_HANDLER;
-  // });
-
-  // TODO: A bit weird that this is plugin.component
-  const sopClassHandlerPluginClasses = sopClassHandlerModules.map(plugin => {
-    return plugin.component;
+  const sopClassHandlerModules = sopClassHandlerExtensions.map(extension => {
+    return extension.module;
   });
 
-  const applicablePlugins = sopClassHandlerPluginClasses.filter(plugin => {
-    return plugin.sopClassUids.includes(sopClassUid);
+  const handlersForSopClassUid = sopClassHandlerModules.filter(module => {
+    return module.sopClassUids.includes(sopClassUid);
   });
 
   // TODO: Sort by something, so we can determine which plugin to use
-  if (!applicablePlugins || !applicablePlugins.length) {
+  if (!handlersForSopClassUid || !handlersForSopClassUid.length) {
     return;
   }
 
-  const plugin = applicablePlugins[0];
+  const plugin = handlersForSopClassUid[0];
   const headers = DICOMWeb.getAuthorizationHeader();
   const dicomWebClient = new dwc({
     url: study.getData().wadoRoot,
