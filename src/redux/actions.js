@@ -5,9 +5,11 @@
 import {
   CLEAR_VIEWPORT,
   SET_ACTIVE_SPECIFIC_DATA,
+  SET_SERVERS,
   SET_VIEWPORT,
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
+  SET_VIEWPORT_LAYOUT_AND_DATA,
 } from './constants/ActionTypes.js';
 
 /**
@@ -85,10 +87,22 @@ export const setStudyData = (studyInstanceUid, data) => ({
   data,
 });
 
+export const setServers = servers => ({
+  type: SET_SERVERS,
+  servers,
+});
+
+export const setViewportLayoutAndData = (layout, viewportSpecificData) => ({
+  type: SET_VIEWPORT_LAYOUT_AND_DATA,
+  layout,
+  viewportSpecificData,
+});
+
 const actions = {
   // VIEWPORT
   setViewportActive,
   setViewportSpecificData,
+  setViewportLayoutAndData,
   setLayout,
   clearViewportSpecificData,
   setActiveViewportSpecificData,
@@ -100,6 +114,7 @@ const actions = {
   setTimepoints,
   setMeasurements,
   setStudyData,
+  setServers,
 };
 
 export default actions;
