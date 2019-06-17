@@ -68,11 +68,6 @@ export const setUserPreferences = state => ({
   state,
 });
 
-export const setCommandContext = state => ({
-  type: 'SET_COMMAND_CONTEXT',
-  state,
-});
-
 export const setExtensionData = (extension, data) => ({
   type: 'SET_EXTENSION_DATA',
   extension,
@@ -117,7 +112,6 @@ const actions = {
   setStudyLoadingProgress,
   clearStudyLoadingProgress,
   setUserPreferences,
-  setCommandContext,
   setExtensionData,
   setTimepoints,
   setMeasurements,

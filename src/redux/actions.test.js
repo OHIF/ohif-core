@@ -14,7 +14,6 @@ describe('actions', () => {
       'setStudyLoadingProgress',
       'clearStudyLoadingProgress',
       'setUserPreferences',
-      'setCommandContext',
       'setExtensionData',
       'setTimepoints',
       'setMeasurements',

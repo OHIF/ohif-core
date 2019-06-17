@@ -1,4 +1,3 @@
-import commandContext from './commandContext';
 import extensions from './extensions';
 import loading from './loading';
 import preferences from './preferences';
@@ -8,7 +7,6 @@ import timepointManager from './timepointManager';
 import viewports from './viewports';
 
 const reducers = {
-  commandContext,
   extensions,
   loading,
   preferences,
