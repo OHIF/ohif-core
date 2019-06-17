@@ -11,6 +11,7 @@ describe('ExtensionManager.js', () => {
   beforeEach(() => {
     commandsManager = {
       createContext: jest.fn(),
+      getContext: jest.fn(),
       registerCommand: jest.fn(),
     };
     extensionManager = new ExtensionManager({ commandsManager });

@@ -110,12 +110,12 @@ export default class ExtensionManager {
   _initSpecialModuleTypes(moduleType, extensionModule) {
     switch (moduleType) {
       case 'commandsModule': {
-        const { definitions } = extensionModule;
+        const { definitions, defaultContext } = extensionModule;
         if (!definitions || Object.keys(definitions).length === 0) {
           log.warn('Commands Module contains no command definitions');
           return;
         }
-        this._initCommandsModule(definitions);
+        this._initCommandsModule(definitions, defaultContext);
         break;
       }
       default:
@@ -128,16 +128,23 @@ export default class ExtensionManager {
    * @private
    * @param {Object[]} commandDefinitions
    */
-  _initCommandsModule(commandDefinitions) {
-    // TODO: Best way to pass this in?
-    const commandContext = 'ACTIVE_VIEWPORT::CORNERSTONE';
+  _initCommandsModule(commandDefinitions, defaultContext = 'VIEWER') {
+    if (!this._commandsManager.getContext(defaultContext)) {
+      this._commandsManager.createContext(defaultContext);
+    }
 
-    this._commandsManager.createContext(commandContext);
     Object.keys(commandDefinitions).forEach(commandName => {
       const commandDefinition = commandDefinitions[commandName];
+      const commandHasContextThatDoesNotExist =
+        commandDefinition.context &&
+        !this._commandsManager.getContext(commandDefinition.context);
+
+      if (commandHasContextThatDoesNotExist) {
+        this._commandsManager.createContext(commandDefinition.context);
+      }
 
       this._commandsManager.registerCommand(
-        commandContext,
+        commandDefinition.context || defaultContext,
         commandName,
         commandDefinition
       );
