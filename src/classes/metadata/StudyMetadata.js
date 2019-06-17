@@ -121,7 +121,6 @@ export class StudyMetadata extends Metadata {
       const sopClassUids = getSopClassUids(series);
 
       if (anySopClassHandlerModules) {
-        console.log('_getDisplaySetFromSopClassPlugin', sopClassUids);
         const displaySet = _getDisplaySetFromSopClassModule(
           sopClassHandlerModules,
           series,
@@ -615,7 +614,6 @@ function _getDisplaySetFromSopClassModule(
     return;
   }
 
-  console.log('inside _getDisplaySetFromSopClassPlugin', sopClassUids);
   const sopClassUid = sopClassUids[0];
   const sopClassHandlerModules = sopClassHandlerExtensions.map(extension => {
     return extension.module;
