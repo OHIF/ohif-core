@@ -22,7 +22,7 @@ export const setViewportSpecificData = (viewportIndex, data) => ({
 });
 
 export function setViewportActive(viewportIndex) {
-  return (dispatch, getState) => {
+  return (dispatch /* , getState */) => {
     // Set Active Viewport Index
     dispatch({
       type: SET_VIEWPORT_ACTIVE,
@@ -30,7 +30,19 @@ export function setViewportActive(viewportIndex) {
     });
 
     // Set ACTIVE_VIEWPORT context based on Viewport Index
-    console.log(getState());
+    // const viewports = getState().viewports;
+    // const activeViewport = viewports.layout.viewports[viewportIndex];
+    // const moduleId = activeViewport.plugin;
+
+    // dispatch({
+    //   type: 'REMOVE_ACTIVE_CONTEXT',
+    //   item: 'ACTIVE_VIEWPORT',
+    // });
+
+    // dispatch({
+    //   type: 'ADD_ACTIVE_CONTEXT',
+    //   item: `ACTIVE_VIEWPORT::${moduleId.toUpperCase()}`,
+    // });
   };
 }
 
