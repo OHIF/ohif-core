@@ -1,21 +1,22 @@
-import cloneDeep from 'lodash.clonedeep';
-import merge from 'lodash.merge';
-
 import {
+  CLEAR_VIEWPORT,
+  SET_ACTIVE_SPECIFIC_DATA,
+  SET_SPECIFIC_DATA,
   SET_VIEWPORT,
   SET_VIEWPORT_ACTIVE,
   SET_VIEWPORT_LAYOUT,
   SET_VIEWPORT_LAYOUT_AND_DATA,
-  CLEAR_VIEWPORT,
-  SET_SPECIFIC_DATA,
-  SET_ACTIVE_SPECIFIC_DATA,
 } from './../constants/ActionTypes.js';
+
+import cloneDeep from 'lodash.clonedeep';
+import merge from 'lodash.merge';
 
 const defaultState = {
   activeViewportIndex: 0,
   layout: {
     viewports: [
       {
+        // plugin: 'cornerstone',
         height: '100%',
         width: '100%',
       },
@@ -61,7 +62,9 @@ const viewports = (state = defaultState, action) => {
       return Object.assign({}, state, { viewportSpecificData });
     case SET_ACTIVE_SPECIFIC_DATA:
       useActiveViewport = true;
-    case SET_SPECIFIC_DATA:
+    // Allow fall-through
+    // eslint-disable-next-line
+    case SET_SPECIFIC_DATA: {
       const viewportIndex = useActiveViewport
         ? state.activeViewportIndex
         : action.viewportIndex;
@@ -70,6 +73,7 @@ const viewports = (state = defaultState, action) => {
       viewportSpecificData[viewportIndex] = merge({}, currentData, action.data);
 
       return Object.assign({}, state, { viewportSpecificData });
+    }
     case CLEAR_VIEWPORT:
       viewportSpecificData = cloneDeep(state.viewportSpecificData);
       if (action.viewportIndex) {
