@@ -49,17 +49,23 @@ const viewports = (state = defaultState, action) => {
       });
     case SET_VIEWPORT_LAYOUT:
       return Object.assign({}, state, { layout: action.layout });
-    case SET_VIEWPORT:
-      currentData =
-        cloneDeep(state.viewportSpecificData[action.viewportIndex]) || {};
+    case SET_VIEWPORT: {
+      const layout = cloneDeep(state.layout);
+      const hasPlugin = action.data && action.data.plugin;
+
       viewportSpecificData = cloneDeep(state.viewportSpecificData);
       viewportSpecificData[action.viewportIndex] = merge(
         {},
-        currentData,
+        viewportSpecificData[action.viewportIndex],
         action.data
       );
 
-      return Object.assign({}, state, { viewportSpecificData });
+      if (hasPlugin) {
+        layout.viewports[action.viewportIndex].plugin = action.data.plugin;
+      }
+
+      return Object.assign({}, state, { layout, viewportSpecificData });
+    }
     case SET_ACTIVE_SPECIFIC_DATA:
       useActiveViewport = true;
     // Allow fall-through
