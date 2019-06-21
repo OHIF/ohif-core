@@ -1,11 +1,11 @@
 import { QIDO, WADO } from './services/';
-import { loadStudy } from './loadStudy.js';
 import {
-  retrieveStudyMetadata,
   deleteStudyMetadataPromise,
+  retrieveStudyMetadata,
 } from './retrieveStudyMetadata.js';
-import retrieveStudiesMetadata from './retrieveStudiesMetadata.js';
+
 import getStudyBoxData from './getStudyBoxData';
+import retrieveStudiesMetadata from './retrieveStudiesMetadata.js';
 import searchStudies from './searchStudies';
 import sortStudy from './sortStudy';
 
@@ -20,7 +20,6 @@ const studies = {
   retrieveStudiesMetadata,
   getStudyBoxData,
   searchStudies,
-  loadStudy,
   sortStudy,
 };
 

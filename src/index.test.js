@@ -3,12 +3,17 @@ import * as OHIF from './index.js';
 describe('Top level exports', () => {
   test('have not changed', () => {
     const expectedExports = [
+      'MODULE_TYPES',
+      //
+      'CommandsManager',
+      'ExtensionManager',
+      'HotkeysManager',
+      //
       'utils',
       'studies',
       'redux',
       'classes',
       'metadata',
-      'HotkeysManager',
       'header',
       'cornerstone',
       'default', //
@@ -16,12 +21,9 @@ describe('Top level exports', () => {
       'ui',
       'user',
       'object',
-      'CommandsManager',
       'log',
       'DICOMWeb',
       'OHIF', //
-      'plugins',
-      'extensions',
       'measurements',
       'hangingProtocols',
     ].sort();

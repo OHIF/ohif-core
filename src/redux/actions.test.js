@@ -1,5 +1,6 @@
-import actions from './actions.js';
 import * as types from './constants/ActionTypes.js';
+
+import actions from './actions.js';
 
 describe('actions', () => {
   test('exports have not changed', () => {
@@ -10,13 +11,9 @@ describe('actions', () => {
       'setLayout',
       'clearViewportSpecificData',
       'setActiveViewportSpecificData',
-      'setToolActive',
       'setStudyLoadingProgress',
       'clearStudyLoadingProgress',
       'setUserPreferences',
-      'setCommandContext',
-      'addPlugin',
-      'setAvailableButtons',
       'setExtensionData',
       'setTimepoints',
       'setMeasurements',
@@ -30,9 +27,6 @@ describe('actions', () => {
   });
 
   describe('viewport action creators', () => {
-    // setViewportSpecificData,
-    // clearViewportSpecificData,
-
     it('should create an action to set the viewport specific data', () => {
       const data = {
         displaySetInstanceUid: 'ef859a23-4631-93ab-d26b-7940a822c699',

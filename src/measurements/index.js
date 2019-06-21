@@ -1,13 +1,16 @@
-import { TimepointApi, MeasurementApi } from './classes';
+import './configuration';
+
+import * as tools from './tools';
+
+import { MeasurementApi, TimepointApi } from './classes';
+
+import { ConformanceCriteria } from './conformance';
 import MeasurementHandlers from './measurementHandlers';
-import getLabel from './lib/getLabel';
 import getDescription from './lib/getDescription';
 import getImageAttributes from './lib/getImageAttributes';
 import getImageIdForImagePath from './lib/getImageIdForImagePath';
+import getLabel from './lib/getLabel';
 import ltTools from './ltTools';
-import * as tools from './tools';
-import './configuration';
-import { ConformanceCriteria } from './conformance';
 
 const measurements = {
   TimepointApi,

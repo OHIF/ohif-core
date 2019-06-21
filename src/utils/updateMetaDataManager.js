@@ -1,5 +1,5 @@
-import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import { WadoRsMetaDataBuilder } from '../classes/metadata/WadoRsMetaDataBuilder';
+import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import getWADORSImageId from './getWADORSImageId';
 
 function getRadiopharmaceuticalInfoMetaData(instance) {
@@ -70,7 +70,7 @@ const getWadoRsInstanceMetaData = (study, series, instance) => {
     .toJSON();
 };
 
-export function updateMetaDataManager(study) {
+export default function updateMetaDataManager(study) {
   study.seriesList.forEach(series => {
     series.instances.forEach(instance => {
       // Cache just images that are going to be loaded via WADO-RS
