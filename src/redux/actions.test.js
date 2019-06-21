@@ -27,9 +27,6 @@ describe('actions', () => {
   });
 
   describe('viewport action creators', () => {
-    // setViewportSpecificData,
-    // clearViewportSpecificData,
-
     it('should create an action to set the viewport specific data', () => {
       const data = {
         displaySetInstanceUid: 'ef859a23-4631-93ab-d26b-7940a822c699',

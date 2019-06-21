@@ -21,15 +21,10 @@ export const setViewportSpecificData = (viewportIndex, data) => ({
   data,
 });
 
-export function setViewportActive(viewportIndex) {
-  return (dispatch /* , getState */) => {
-    // Set Active Viewport Index
-    dispatch({
-      type: SET_VIEWPORT_ACTIVE,
-      viewportIndex,
-    });
-  };
-}
+export const setViewportActive = viewportIndex => ({
+  type: SET_VIEWPORT_ACTIVE,
+  viewportIndex,
+});
 
 export const setLayout = layout => ({
   type: SET_VIEWPORT_LAYOUT,
