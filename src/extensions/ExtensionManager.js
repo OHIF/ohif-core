@@ -22,7 +22,7 @@ export default class ExtensionManager {
    */
   registerExtensions(extensions) {
     extensions.forEach(extension => {
-      const hasConfiguration = extension.length && extension.length === 2;
+      const hasConfiguration = Array.isArray(extension);
 
       if (hasConfiguration) {
         const [ohifExtension, configuration] = extensions;
