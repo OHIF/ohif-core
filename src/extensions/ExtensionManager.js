@@ -15,12 +15,21 @@ export default class ExtensionManager {
   }
 
   /**
+   * An array of extensions, or an array of arrays that contains extension
+   * configuration pairs.
    *
    * @param {Object[]} extensions - Array of extensions
    */
   registerExtensions(extensions) {
     extensions.forEach(extension => {
-      this.registerExtension(extension);
+      const hasConfiguration = Array.isArray(extension);
+
+      if (hasConfiguration) {
+        const [ohifExtension, configuration] = extensions;
+        this.registerExtension(ohifExtension, configuration);
+      } else {
+        this.registerExtension(extension);
+      }
     });
   }
 
@@ -28,8 +37,9 @@ export default class ExtensionManager {
    *
    * TODO: Id Management: SopClassHandlers currently refer to viewport module by id; setting the extension id as viewport module id is a workaround for now
    * @param {Object} extension
+   * @param {Object} configuration
    */
-  registerExtension(extension) {
+  registerExtension(extension, configuration = {}) {
     if (!extension) {
       log.warn(
         'Attempting to register a null/undefined extension. Exiting early.'
@@ -52,6 +62,11 @@ export default class ExtensionManager {
         `Extension ID ${extensionId} has already been registered. Exiting before duplicating modules.`
       );
       return;
+    }
+
+    // preRegistrationHook
+    if (extension.preRegistration) {
+      extension.preRegistration(configuration);
     }
 
     // Register Modules
