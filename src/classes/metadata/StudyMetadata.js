@@ -641,7 +641,7 @@ function _getDisplaySetFromSopClassModule(
     dicomWebClient,
     headers
   );
-  if (displaySet) {
+  if (displaySet && !displaySet.modality) {
     const instance = series.getFirstInstance();
     displaySet.modality = instance.getRawValue('x00080060');
   }
