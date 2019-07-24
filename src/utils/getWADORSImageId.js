@@ -6,7 +6,7 @@ function getWADORSImageUrl(instance, frame) {
   }
 
   // We need to sum 1 because WADO-RS frame number is 1-based
-  frame = (frame || 0) + 1;
+  frame = frame ? parseInt(frame) + 1 : 1;
 
   // Replaces /frame/1 by /frame/{frame}
   wadorsuri = wadorsuri.replace(/frames\/(\d+)/, `frames/${frame}`);
