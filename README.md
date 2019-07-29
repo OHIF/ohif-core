@@ -9,7 +9,7 @@
 
 [![CircleCI][circleci-image]][circleci-url]
 [![codecov][codecov-image]][codecov-url]
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
 [![code style: prettier][prettier-image]][prettier-url]
 [![semantic-release][semantic-image]][semantic-url]
 
@@ -149,6 +149,7 @@ Thanks goes to these wonderful people
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/dlwire"><img src="https://avatars3.githubusercontent.com/u/1167291?v=4" width="100px;" alt="David Wire"/><br /><sub><b>David Wire</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=dlwire" title="Code">💻</a> <a href="https://github.com/OHIF/ohif-core/commits?author=dlwire" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://egor.lezhn.in"><img src="https://avatars0.githubusercontent.com/u/878990?v=4" width="100px;" alt="Egor Lezhnin"/><br /><sub><b>Egor Lezhnin</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=pavertomato" title="Code">💻</a></td>
   </tr>
 </table>
 
