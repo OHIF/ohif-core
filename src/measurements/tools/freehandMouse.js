@@ -1,8 +1,8 @@
 const displayFunction = data => {
   let meanValue = '';
-  const { meanStdDev, suffix } = data;
+  const { meanStdDev, unit } = data;
   if (meanStdDev && meanStdDev.mean) {
-    meanValue = meanStdDev.mean.toFixed(2) + suffix;
+    meanValue = `${meanStdDev.mean.toFixed(2)} ${unit}`;
   }
   return meanValue;
 };

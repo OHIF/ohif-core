@@ -1,8 +1,8 @@
 const displayFunction = data => {
   let lengthValue = '';
-  const { length, suffix } = data;
+  const { length, unit } = data;
   if (length) {
-    lengthValue = length.toFixed(2) + suffix;
+    lengthValue = `${length.toFixed(2)} ${unit}`;
   }
   return lengthValue;
 };
