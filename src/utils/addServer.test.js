@@ -28,13 +28,9 @@ describe('addServers', () => {
     ],
   };
 
-  let store = {};
-
-  beforeEach(() => {
-    store = {
-      dispatch: jest.fn(),
-    };
-  });
+  const store = {
+    dispatch: jest.fn(),
+  };
 
   test('should be able to add a server and dispatch to the store successfuly', () => {
     addServers(servers, store);
@@ -47,6 +43,20 @@ describe('addServers', () => {
         response_type: 'code',
         scope: 'openid',
         type: 'oidc',
+      },
+      type: 'ADD_SERVER',
+    });
+    expect(store.dispatch).toBeCalledWith({
+      server: {
+        imageRendering: 'wadors',
+        name: 'DCM4CHEE',
+        qidoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
+        qidoSupportsIncludeField: true,
+        requestOptions: { requestFromBrowser: true },
+        thumbnailRendering: 'wadors',
+        type: 'dicomWeb',
+        wadoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoUriRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/wado',
       },
       type: 'ADD_SERVER',
     });
