@@ -10,18 +10,18 @@ describe('absoluteUrl', () => {
       },
       writable: true,
     });
-    const expectedAbsoluteUrl = absoluteUrl('/path_3/path_to_destination');
-    expect(expectedAbsoluteUrl).toEqual(
+    const absoluteUrlOutput = absoluteUrl('/path_3/path_to_destination');
+    expect(absoluteUrlOutput).toEqual(
       '/path_1/path_2/path_3/path_to_destination'
     );
   });
 
   test('should return / when the path is not defined', () => {
-    const expectedAbsoluteUrl = absoluteUrl(undefined);
-    expect(expectedAbsoluteUrl).toBe('/');
+    const absoluteUrlOutput = absoluteUrl(undefined);
+    expect(absoluteUrlOutput).toBe('/');
   });
 
-  test('should return the original path when there is no context on the url', () => {
+  test('should return the original path when there path in the window.origin after the domain and port', () => {
     global.window = Object.create(window);
     const url = 'http://dummy.com';
     Object.defineProperty(window, 'location', {
@@ -30,11 +30,11 @@ describe('absoluteUrl', () => {
       },
       writable: true,
     });
-    const expectedAbsoluteUrl = absoluteUrl('path_1/path_2/path_3');
-    expect(expectedAbsoluteUrl).toEqual('/path_1/path_2/path_3');
+    const absoluteUrlOutput = absoluteUrl('path_1/path_2/path_3');
+    expect(absoluteUrlOutput).toEqual('/path_1/path_2/path_3');
   });
 
-  test('should be able to return multiples paths with the same name', () => {
+  test('should be able to return the absolute path even when the path contains duplicates', () => {
     global.window = Object.create(window);
     const url = 'http://dummy.com';
     Object.defineProperty(window, 'location', {
@@ -43,7 +43,7 @@ describe('absoluteUrl', () => {
       },
       writable: true,
     });
-    const expectedAbsoluteUrl = absoluteUrl('path_1/path_1/path_1');
-    expect(expectedAbsoluteUrl).toEqual('/path_1/path_1/path_1');
+    const absoluteUrlOutput = absoluteUrl('path_1/path_1/path_1');
+    expect(absoluteUrlOutput).toEqual('/path_1/path_1/path_1');
   });
 });
