@@ -38,7 +38,18 @@ describe('addServers', () => {
 
   test('should be able to add a server and dispatch to the store successfuly', () => {
     addServers(servers, store);
-    expect(store.dispatch).toBeCalled();
+    expect(store.dispatch).toBeCalledWith({
+      server: {
+        authority: 'http://127.0.0.1/auth/realms/ohif',
+        client_id: 'ohif-viewer',
+        post_logout_redirect_uri: '/logout-redirect.html',
+        redirect_uri: 'http://127.0.0.1/callback',
+        response_type: 'code',
+        scope: 'openid',
+        type: 'oidc',
+      },
+      type: 'ADD_SERVER',
+    });
   });
 
   test('should throw an error if servers list is not defined', () => {
