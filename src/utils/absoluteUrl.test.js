@@ -2,7 +2,9 @@ import absoluteUrl from './absoluteUrl';
 
 describe('absoluteUrl', () => {
   test('should return /path_1/path_2/path_3/path_to_destination when the window.location.origin is http://dummy.com/path_1/path_2 and the path is /path_3/path_to_destination', () => {
-    global.window = Object.create(window);
+    let global = {
+      window: Object.create(window),
+    };
     const url = 'http://dummy.com/path_1/path_2';
     Object.defineProperty(window, 'location', {
       value: {

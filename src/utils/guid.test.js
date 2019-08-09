@@ -4,6 +4,10 @@ describe('guid', () => {
   Math.random = jest.fn(() => 0.4677647565236618);
   const guidValue = guid();
 
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return 77bf77bf-77bf-77bf-77bf-77bf77bf77bf when the random value is fixed on 0.4677647565236618', () => {
     expect(guidValue).toBe('77bf77bf-77bf-77bf-77bf-77bf77bf77bf');
   });
