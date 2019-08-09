@@ -4,24 +4,24 @@
  * @return {string}
  */
 const guid = () => {
-  const getFourRandonValues = () => {
+  const getFourRandomValues = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)
       .substring(1);
   };
   return (
-    getFourRandonValues() +
-    getFourRandonValues() +
+    getFourRandomValues() +
+    getFourRandomValues() +
     '-' +
-    getFourRandonValues() +
+    getFourRandomValues() +
     '-' +
-    getFourRandonValues() +
+    getFourRandomValues() +
     '-' +
-    getFourRandonValues() +
+    getFourRandomValues() +
     '-' +
-    getFourRandonValues() +
-    getFourRandonValues() +
-    getFourRandonValues()
+    getFourRandomValues() +
+    getFourRandomValues() +
+    getFourRandomValues()
   );
 };
 
