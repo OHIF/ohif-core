@@ -3019,10 +3019,10 @@ dezalgo@^1.0.0, dezalgo@~1.0.3:
     asap "^2.0.0"
     wrappy "1"
 
-dicomweb-client@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/dicomweb-client/-/dicomweb-client-0.4.2.tgz#f1f5167d935810423ad2599e5160306bde2458ed"
-  integrity sha512-Raf2SVjWDrNaVIVt4CmfXWdKVacyEX5ux+pY2Qop0mhluG+OiCkbnESljz4PjglFRnprETEk6C0ELGDru0haew==
+dicomweb-client@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/dicomweb-client/-/dicomweb-client-0.5.2.tgz#aa5a4a6a5044b0702bb0a8a2662c86cd16901951"
+  integrity sha512-e11n2+g7HfBuMyopWq76W11eSZJ707g4U1XiO8URA+23aoe0g1kGAtlPB29NKXl7zX7RznTJ7wfRBxFkW6EJDA==
 
 diff-sequences@^24.3.0:
   version "24.3.0"

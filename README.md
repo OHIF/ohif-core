@@ -9,7 +9,7 @@
 
 [![CircleCI][circleci-image]][circleci-url]
 [![codecov][codecov-image]][codecov-url]
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
 [![code style: prettier][prettier-image]][prettier-url]
 [![semantic-release][semantic-image]][semantic-url]
 
@@ -146,6 +146,10 @@ Thanks goes to these wonderful people
     <td align="center"><a href="https://github.com/all-contributors/all-contributors-bot"><img src="https://avatars3.githubusercontent.com/u/46843839?v=4" width="100px;" alt="allcontributors[bot]"/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=allcontributors" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/ivan-aksamentov"><img src="https://avatars0.githubusercontent.com/u/9403403?v=4" width="100px;" alt="Ivan Aksamentov"/><br /><sub><b>Ivan Aksamentov</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=ivan-aksamentov" title="Code">💻</a> <a href="https://github.com/OHIF/ohif-core/commits?author=ivan-aksamentov" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://igoroctaviano.com"><img src="https://avatars0.githubusercontent.com/u/13886933?v=4" width="100px;" alt="Igor Octaviano"/><br /><sub><b>Igor Octaviano</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=igoroctaviano" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/dlwire"><img src="https://avatars3.githubusercontent.com/u/1167291?v=4" width="100px;" alt="David Wire"/><br /><sub><b>David Wire</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=dlwire" title="Code">💻</a> <a href="https://github.com/OHIF/ohif-core/commits?author=dlwire" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://egor.lezhn.in"><img src="https://avatars0.githubusercontent.com/u/878990?v=4" width="100px;" alt="Egor Lezhnin"/><br /><sub><b>Egor Lezhnin</b></sub></a><br /><a href="https://github.com/OHIF/ohif-core/commits?author=pavertomato" title="Code">💻</a></td>
   </tr>
 </table>
 
