@@ -94,4 +94,25 @@ describe('sortBy', () => {
 
     expect(data).toEqual(desiredSortedData);
   });
+
+  test('should return the same input if the sortBy function is not defined', () => {
+    let data = [
+      { score: 5, name: 'study_e', instance: 5, series: 5 },
+      { score: 3, name: 'study_c', instance: 3, series: 3 },
+      { score: 1, name: 'study_a', instance: 1, series: 1 },
+      { score: 4, name: 'study_d', instance: 4, series: 4 },
+      { score: 2, name: 'study_b', instance: 2, series: 2 },
+    ];
+    const desiredSortedData = [
+      { score: 5, name: 'study_e', instance: 5, series: 5 },
+      { score: 3, name: 'study_c', instance: 3, series: 3 },
+      { score: 1, name: 'study_a', instance: 1, series: 1 },
+      { score: 4, name: 'study_d', instance: 4, series: 4 },
+      { score: 2, name: 'study_b', instance: 2, series: 2 },
+    ];
+
+    data.sort();
+
+    expect(data).toEqual(desiredSortedData);
+  });
 });
